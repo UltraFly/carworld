@@ -24,7 +24,6 @@ string PathOf(const string &AString)
 	tmp.erase(&(*I),&(*tmp.end()));
 	//cout << "PathOf \"" << AString << "\" is \"" << tmp << "\"\n";
 	return tmp;
-
 }
 
 string TitleOf(const string &AString)
