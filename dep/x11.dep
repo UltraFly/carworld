@@ -1,0 +1,69 @@
+# DO NOT DELETE
+
+CWCamera.o: src/CWCamera.h src/CarWorldClasses.h src/H_Geometry.h
+CWCamera.o: src/H_Standard.h src/H_Input.h src/H_Main.h src/H_Keys.h
+CWCamera.o: src/H_Object.h src/H_Graphics.h src/H_Texture.h
+CWCamera.o: src/WorldBlock.h src/Tacho.h src/CWVehicle.h
+CWVehicle.o: src/CWVehicle.h src/CarWorldClasses.h src/H_Geometry.h
+CWVehicle.o: src/H_Standard.h src/H_Input.h src/H_Main.h src/H_Keys.h
+CWVehicle.o: src/H_Object.h src/H_Graphics.h src/H_Texture.h
+CWVehicle.o: src/WorldBlock.h src/Tacho.h src/CarWorld.h src/CWCamera.h
+CWVehicle.o: src/H_Variable.h src/H_XML.h
+CarWorld.o: src/H_Standard.h src/CarWorld.h src/CarWorldClasses.h
+CarWorld.o: src/H_Geometry.h src/H_Input.h src/H_Main.h src/H_Keys.h
+CarWorld.o: src/H_Object.h src/H_Graphics.h src/H_Texture.h
+CarWorld.o: src/WorldBlock.h src/Tacho.h src/CWCamera.h src/CWVehicle.h
+CarWorldClasses.o: src/CarWorldClasses.h src/H_Geometry.h
+CarWorldClasses.o: src/H_Standard.h src/H_Input.h src/H_Main.h
+CarWorldClasses.o: src/H_Keys.h src/H_Object.h src/H_Graphics.h
+CarWorldClasses.o: src/H_Texture.h src/WorldBlock.h src/Tacho.h
+CarWorldClasses.o: src/CarWorld.h src/CWCamera.h src/CWVehicle.h
+CarWorldClient.o: src/H_Standard.h src/CarWorldClient.h src/H_Main.h
+CarWorldClient.o: src/H_Keys.h src/H_Input.h src/H_Prompt.h
+CarWorldClient.o: src/H_Graphics.h src/H_Geometry.h src/H_Texture.h
+CarWorldClient.o: src/H_Variable.h src/H_Socket.h src/CarWorld.h
+CarWorldClient.o: src/CarWorldClasses.h src/H_Object.h src/WorldBlock.h
+CarWorldClient.o: src/Tacho.h src/CWCamera.h src/CWVehicle.h
+CarWorldClient.o: src/CarWorldServer.h src/CarWorldNet.h
+CarWorldMain.o: src/CarWorldClient.h src/H_Main.h src/H_Keys.h
+CarWorldMain.o: src/H_Standard.h src/H_Input.h src/H_Prompt.h
+CarWorldMain.o: src/H_Graphics.h src/H_Geometry.h src/H_Texture.h
+CarWorldMain.o: src/H_Variable.h src/H_Socket.h src/CarWorld.h
+CarWorldMain.o: src/CarWorldClasses.h src/H_Object.h src/WorldBlock.h
+CarWorldMain.o: src/Tacho.h src/CWCamera.h src/CWVehicle.h
+CarWorldMain.o: src/CarWorldServer.h src/CarWorldNet.h
+CarWorldNet.o: src/CarWorldNet.h src/CWVehicle.h src/CarWorldClasses.h
+CarWorldNet.o: src/H_Geometry.h src/H_Standard.h src/H_Input.h
+CarWorldNet.o: src/H_Main.h src/H_Keys.h src/H_Object.h src/H_Graphics.h
+CarWorldNet.o: src/H_Texture.h src/WorldBlock.h src/Tacho.h
+CarWorldServer.o: src/H_Standard.h src/CarWorldNet.h src/CWVehicle.h
+CarWorldServer.o: src/CarWorldClasses.h src/H_Geometry.h src/H_Input.h
+CarWorldServer.o: src/H_Main.h src/H_Keys.h src/H_Object.h
+CarWorldServer.o: src/H_Graphics.h src/H_Texture.h src/WorldBlock.h
+CarWorldServer.o: src/Tacho.h src/CarWorldServer.h src/H_Socket.h
+CarWorldServer.o: src/CarWorld.h src/CWCamera.h
+H_Geometry.o: src/H_Geometry.h src/H_Standard.h
+H_Graphics.o: src/H_Standard.h src/H_Graphics.h src/H_Main.h src/H_Keys.h
+H_Graphics.o: src/H_Geometry.h src/H_Texture.h
+H_Image.o: src/H_Standard.h src/H_Image.h
+H_Input.o: src/H_Geometry.h src/H_Standard.h src/H_Input.h src/H_Main.h
+H_Input.o: src/H_Keys.h
+H_Keys.o: src/H_Keys.h src/H_Standard.h
+H_Object.o: src/H_Graphics.h src/H_Standard.h src/H_Main.h src/H_Keys.h
+H_Object.o: src/H_Geometry.h src/H_Texture.h src/H_Object.h
+H_Prompt.o: src/H_Prompt.h src/H_Keys.h src/H_Standard.h src/H_Graphics.h
+H_Prompt.o: src/H_Main.h src/H_Geometry.h src/H_Texture.h
+H_Standard.o: src/H_Standard.h
+H_Texture.o: src/H_Graphics.h src/H_Standard.h src/H_Main.h src/H_Keys.h
+H_Texture.o: src/H_Geometry.h src/H_Texture.h src/H_Image.h
+H_Variable.o: src/H_Variable.h src/H_Standard.h
+H_XML.o: src/H_XML.h src/H_Variable.h src/H_Standard.h src/automat.h
+Tacho.o: src/Tacho.h src/H_Graphics.h src/H_Standard.h src/H_Main.h
+Tacho.o: src/H_Keys.h src/H_Geometry.h src/H_Texture.h
+WorldBlock.o: src/H_Standard.h src/WorldBlock.h src/H_Geometry.h
+WorldBlock.o: src/H_Object.h src/H_Graphics.h src/H_Main.h src/H_Keys.h
+WorldBlock.o: src/H_Texture.h
+X11Main.o: src/H_Prompt.h src/H_Keys.h src/H_Standard.h
+X11Main.o: src/H_Graphics.h src/H_Main.h src/H_Geometry.h
+X11Main.o: src/H_Texture.h src/H_Main.h src/x11/X11Internals.h
+X11Main.o: src/H_Keys.h
