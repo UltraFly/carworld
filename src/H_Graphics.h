@@ -11,7 +11,6 @@ using namespace std;
 #include <windows.h>
 #endif //WIN32
 
-#include <GL/gl.h>
 #include <map>
 #include <string>
 
@@ -30,7 +29,7 @@ using namespace std;
 
 //default values for variables
 #define HGL_SHADOWS_DEFAULT						2
-#define HGL_TEXTURE_MODE_DEFAULT				Hgl::NEAREST
+#define HGL_TEXTURE_MODE_DEFAULT				Hgl::LINEAR
 #define HGL_VERTEX_ARRAYS_DEFAULT				true
 #define HGL_EXT_COMPILED_VERTEX_ARRAYS_DEFAULT	true
 #define HGL_FINISH_DEFAULT						false
@@ -69,7 +68,7 @@ public:
 	Hgl(HWindow *w);
 	void MakeCurrent();
 	static void SwapBuffers();
-	static Hgl &Hgl::GetCurrent();
+	static Hgl &GetCurrent();
 	static map<string,Texture::Reference> &GetLoadedTextures();
 public:
 	enum Enum {
@@ -109,8 +108,8 @@ public:
 	static ostream &PrintDebug(ostream &out);
 	static void ResizeWindow(HRect &ClientRect);
 	static HRect GetViewPort();
-	static void WriteText(char *AText, const Point<2,GLfloat> &APosition);
-	static void WriteText(char *AText, const Point<3,GLfloat> &APosition);
+	static void WriteText(const char* AText, const Point<2,GLfloat> &APosition);
+	static void WriteText(const char* AText, const Point<3,GLfloat> &APosition);
 	static void LookFrom(const Ref & ARef);
 	//static void Relocate(const Point<3,GLfloat> &Location, const Point<3,GLfloat> &Direction, const Point<3,GLfloat> &Up);
 	//Relocate the following way:
@@ -165,6 +164,9 @@ private:
 	bool	gl_ext_compiled_vertex_array;
 	bool	gl_finish;
 };
+
+const char* ToStr(Hgl::Enum val);
+Hgl::Enum ToHglEnum(const char* str);
 
 istream &operator>> (istream &in, Hgl::Enum &A);
 ostream &operator<< (ostream &out, const Hgl::Enum &A);

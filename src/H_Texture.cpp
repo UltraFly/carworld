@@ -1,4 +1,5 @@
 
+#include "H_Standard.h"
 #include "H_Graphics.h"
 #include "H_Texture.h"
 #include "H_Image.h"
@@ -126,6 +127,6 @@ void Texture::Reference::LoadImage(const char *FileName)
 
 Texture::Reference::~Reference()
 {
-	//cerr << "deleting reference to " << (char*)Name << "\n";
+	//cout << "deleting reference to " << (char*)Name << "\n";
 	HGL_DELETE_TEXTURE(TexIndex);
 }

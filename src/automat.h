@@ -38,7 +38,7 @@ public:
 		transition *get_transition(char c)
 		{
 			//int transition_count = transitions.size();
-			for (list<transition>::iterator I = transitions.begin() ; I!=transitions.end() ; I++)
+			for (typename list<transition>::iterator I = transitions.begin() ; I!=transitions.end() ; I++)
 			{
 				if ((*I).input.find(c) != (*I).input.end())
 					return &(*I);

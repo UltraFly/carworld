@@ -1,7 +1,10 @@
 
-#include <string>
+//to avoid problems with non compliant microsoft compiler
+#define _CRT_SECURE_NO_DEPRECATE
 
 #include "H_Standard.h"
+
+#include <string>
 
 //CLASS HException:
 HException::HException(const string &s) throw() :
@@ -18,15 +21,29 @@ const char *HException::what() const throw()
 
 string PathOf(const string &AString)
 {
-	string tmp(AString);
+	/*string tmp(AString);
 	string::reverse_iterator I;
 	for (I = tmp.rbegin() ; (I!=tmp.rend() && ((*I) != '\\') && ((*I) != '/')) ; I++);
 	tmp.erase(&(*I),&(*tmp.end()));
 	//cout << "PathOf \"" << AString << "\" is \"" << tmp << "\"\n";
+	return tmp;*/
+	
+	int i;
+	char tmp[FILENAME_MAX];
+	//strcpy_s(tmp, ARRAY_SIZE(tmp), AString.c_str());
+	strcpy(tmp, AString.c_str());
+	for (i=AString.size()-1 ; i>=0 && AString[i]!='\\' && AString[i]!='/' ; i--);
+	/*if (i<0)
+		tmp = AString;
+	else
+		tmp = &AString[i];*/
+	tmp[i] = 0;
+
+	//cout << "PathOf \"" << AString << "\" is \"" << tmp << "\"\n";
 	return tmp;
 }
 
-string TitleOf(const string &AString)
+/*string TitleOf(const string &AString)
 {
 	string tmp(AString);
 	string::iterator I;
@@ -35,6 +52,24 @@ string TitleOf(const string &AString)
 	if (!tmp.empty() && ((tmp[0] == '\\')  || (tmp[0] == '/')))
 		tmp.erase(tmp.begin());
 	return tmp;
+}*/
+
+string TitleOf(const string &AString)
+{
+	return AString;
+	/*string tmp(AString);
+	string::iterator I;
+	for (I = tmp.end() ; (I!=tmp.begin() && (*I != '\\') && (*I != '/')) ; I--);
+	tmp.erase(tmp.begin(),I);
+	if (!tmp.empty() && ((tmp[0] == '\\')  || (tmp[0] == '/')))
+		tmp.erase(tmp.begin());
+	return tmp;*/
+	/*string tmp;
+	string::const_reverse_iterator I;
+	for (I=AString.rbegin() ; (I!=tmp.rend() && (*I != '\\') && (*I != '/')) ; I++)
+		tmp.push_back(*I);
+	return tmp;*/
+
 }
 
 istream &EatWhite(istream &in)
@@ -132,25 +167,38 @@ unsigned int Command::size() const
 
 void OpenDataFile(ifstream &infile, const char *FileName)
 {
-	char tmp[FILENAME_MAX];
+	//cout << "opening \"" << FileName << "\"" << endl;
+
+	string FullPath;
 //try as is
 	{
-		sprintf(tmp,"%s",FileName);
-		infile.open(tmp, ios::in | ios::binary);
+		FullPath = FileName;
+		//cout << "trying \"" << FullPath << "\"..." << endl;
+		infile.open(FullPath.c_str(), ios::in | ios::binary);
 	}
 //try in the home directory
 	if (!infile)
 	{
-		sprintf(tmp,"%s/.carworld/%s",getenv("HOME"),FileName);
-		infile.open(tmp, ios::in | ios::binary);
+		infile.clear();
+		string HomeDirectory = getenv("HOME");
+
+		FullPath = HomeDirectory;
+		FullPath += "/.carworld/";
+		FullPath += FileName;
+		//cout << "trying \"" << FullPath << "\"..." << endl;
+		infile.open(FullPath.c_str(), ios::in | ios::binary);
 	}
 //try in the installation directory
 	if (!infile)
 	{
-		sprintf(tmp,"/usr/share/carworld/%s",FileName);
-		infile.open(tmp, ios::in | ios::binary);
+		infile.clear();
+		FullPath = "/usr/share/carworld/";
+		FullPath += FileName;
+		//cout << "trying \"" << FullPath << "\"..." << endl;
+		infile.open(FullPath.c_str(), ios::in | ios::binary);
 	}
+
 	if (!infile)
 		throw HException(string("file : \"")+FileName+("\" failed to open."));
-	cout << "opened: " << tmp << endl;
+	cout << "opened: \"" << FullPath << "\"" << endl;
 }

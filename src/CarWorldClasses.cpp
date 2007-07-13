@@ -7,6 +7,7 @@
 #include "H_Graphics.h"
 
 //CLASS CWFeature
+CWFeature::~CWFeature() {}
 void CWFeature::reset() {}
 void CWFeature::update() {}
 void CWFeature::draw_init() {}

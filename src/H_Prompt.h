@@ -2,55 +2,30 @@
 #ifndef __H_PROMPT_H_
 #define __H_PROMPT_H_
 
-namespace std {}
+#include <iostream>
+#include <string>
+#include <list>
 using namespace std;
 
 #include "H_Keys.h"
-#include "H_Graphics.h"
-#include <iostream>
-#include <fstream>
-#include <string>
+#include "H_Geometry.h"
 
 class Hgl_streambuf : public streambuf
 {
 public:
-	//create a new prompt that draws on this camera
-	Hgl_streambuf(unsigned int ABufferSize = 10000);
-	string HitKey(ostream &out, H_KEY AKey, char c);
-	void draw();
+	Hgl_streambuf();
 	virtual ~Hgl_streambuf();
-	int pushChar(int c);
-protected:
-    virtual int overflow(int c = EOF) {return pushChar(c);}
-    virtual int underflow() {return 0;}
-private:
-	unsigned int nextIndex(int i);
-	unsigned int previousIndex(int i);
-	Point2D charCoord(int x, int y);
-	void drawLine(char *LineText, int &StartLine, int CharWidth, int CharHeight);
-	void Alloc(unsigned int ABufferSize);
-private:
-	//buffer
-	unsigned int bufferHead;
-	int charsInBuffer;
-	HVector<char> buffer;
-
-	//CommandLine
-	unsigned int CursorPos;
-	HVector<char> CommandLine;
-};
-
-class Hgl_ostream : public ostream
-{
-public:
-	Hgl_ostream(unsigned int ABufferSize = 10000);
-	virtual ~Hgl_ostream();
-	string HitKey(H_KEY AKey, char c);
+	string HitKey(SDLKey AKey, char c);
 	void draw();
+protected:
+    virtual int overflow(int c = EOF);
+    virtual int underflow();
 private:
-	Hgl_streambuf *rdHgl_streambuf() const;
+	Point2D charCoord(int x, int y);
+	void drawLine(const char* LineText, int &StartLine, int CharWidth, int CharHeight);
+private:
+	list<string > history;
+	string CommandLine;
 };
-
-extern ofstream herr;
 
 #endif //__H_PROMPT_H_

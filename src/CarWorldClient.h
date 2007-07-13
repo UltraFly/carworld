@@ -21,12 +21,12 @@ public:
 	CarWorldClient(bool full_screen);
 	virtual ~CarWorldClient();
 //overrided inherited methods
-	const char *name();
+	const char* name();
 	
 	void draw_init();
 	void draw_shutdown();
 
-	void key_down(H_KEY AHKey, char c);
+	void key_down(SDLKey AHKey, char c);
 	void resize(unsigned int width, unsigned int height);
 	void on_idle(unsigned int elapsed_time);
 
@@ -44,7 +44,7 @@ public:
 	void execute_cfg(const char *FileName);
 	void pars_command(const char *value);
 
-	void bind(H_KEY key,const char *command);
+	void bind(SDLKey key,const char *command);
 
 	void print_help();
 	void print_version();
@@ -54,10 +54,10 @@ public:
 
 	void write_cfg(ostream &out);
 public:
-	map<H_KEY,string> KeyBindings;
+	map<SDLKey,string> KeyBindings;
 private:
 //graphics
-	Hgl_ostream hout;
+	Hgl_streambuf hbuf;
 	Hgl *m_Hgl;
 //command line
 	bool IsPromptMode;

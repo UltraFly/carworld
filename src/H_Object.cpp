@@ -11,7 +11,7 @@ bool OFFObject::UseOptimizedDraw = false;
 
 const Color OFFObject::Polygon::DefaultColor = Grey;
 
-list<HPointer<Texture>::Ref> HPointer<Texture>::RefList;
+template<> list<HPointer<Texture>::Ref > HPointer<Texture>::RefList;
 
 //CLASS OFFObject::Point:
 OFFObject::Vertex::Vertex()
@@ -53,7 +53,7 @@ OFFObject::Polygon::Polygon() {}
 
 OFFObject::Polygon::~Polygon() {}
 
-void OFFObject::Polygon::InitNormal(const HVector<OFFObject::Vertex> &OFFVertexes)
+void OFFObject::Polygon::InitNormal(const vector<OFFObject::Vertex>& OFFVertexes)
 {
 	Normal = (OFFVertexes[IndexVertexes[2]].Position-OFFVertexes[IndexVertexes[0]].Position)
 		^(OFFVertexes[IndexVertexes[1]].Position-OFFVertexes[IndexVertexes[0]].Position);
@@ -375,7 +375,7 @@ void OFFObject::GLdraw_NoOpt(bool UseMaterial)
 {
 	if (UseMaterial)
 	{
-		for (HVector<Polygon>::iterator I=MyOFFPolygons.begin() ; I!=MyOFFPolygons.end() ; I++)
+		for (vector<Polygon>::iterator I=MyOFFPolygons.begin() ; I!=MyOFFPolygons.end() ; I++)
 		{
 			if (!IsSmooth)
 				Hgl::Normal(I->Normal);
@@ -395,7 +395,7 @@ void OFFObject::GLdraw_NoOpt(bool UseMaterial)
 	}
 	else
 	{
-		for (HVector<Polygon>::iterator I=MyOFFPolygons.begin() ; I!=MyOFFPolygons.end() ; I++)
+		for (vector<Polygon>::iterator I=MyOFFPolygons.begin() ; I!=MyOFFPolygons.end() ; I++)
 		{
 			Hgl::Begin(GL_POLYGON);
 			for (unsigned int i=0 ; i<I->IndexVertexes.size() ; i++)
@@ -418,7 +418,7 @@ void OFFObject::BuildCompiledLists()
 		3,
 		GL_FLOAT,
 		sizeof(OFFObject::Vertex),
-		&(MyOFFVertexes.ptr()->Position)
+		&(MyOFFVertexes[0].Position)
 	);
 	Hgl::LockArrays(0, MyOFFVertexes.size());
 
@@ -428,7 +428,7 @@ void OFFObject::BuildCompiledLists()
 			GL_TRIANGLES,           
 			TriIndexes.size(),         
 			GL_UNSIGNED_INT,           
-			TriIndexes
+			(const void*)&TriIndexes[0]
 		);
 	glEndList();
 
@@ -436,12 +436,12 @@ void OFFObject::BuildCompiledLists()
 	if (IsSmooth)
 	{
 		glEnableClientState(GL_NORMAL_ARRAY);
-		glNormalPointer(GL_FLOAT, sizeof(OFFObject::Vertex), &(MyOFFVertexes.ptr()->Normal));
+		glNormalPointer(GL_FLOAT, sizeof(OFFObject::Vertex), &(MyOFFVertexes[0].Normal));
 	}
 	if (MyTexture != 0)
 	{
 		glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-		glTexCoordPointer(2, GL_FLOAT, sizeof(OFFObject::Vertex), &(MyOFFVertexes.ptr()->TexCoord));
+		glTexCoordPointer(2, GL_FLOAT, sizeof(OFFObject::Vertex), &(MyOFFVertexes[0].TexCoord));
 	}
 	HGL_NEW_LIST(CompiledList);
 	if (MyTexture != 0)
@@ -454,7 +454,7 @@ void OFFObject::BuildCompiledLists()
 			GL_TRIANGLES,           
 			TriIndexes.size(),         
 			GL_UNSIGNED_INT,           
-			TriIndexes
+			(const void*)&TriIndexes[0]
 		);
 	}
 	else //les optimized path
@@ -471,7 +471,7 @@ void OFFObject::BuildCompiledLists()
 				GL_POLYGON,           
 				MyOFFPolygons[i].IndexVertexes.size(),         
 				GL_UNSIGNED_INT,           
-				MyOFFPolygons[i].IndexVertexes
+				(const void*)&MyOFFPolygons[i].IndexVertexes[0]
 			);
 		}
 	}

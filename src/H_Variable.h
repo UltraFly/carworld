@@ -21,14 +21,14 @@ public:
 	virtual const char *name() const = 0;
 	virtual const char *type() const = 0;
 	virtual void set_str(const string &) = 0;
-	virtual const char *get_str() = 0;
+	virtual string get_str() = 0;
 	virtual ~HVariable();
 public:
 	string m_name;
 };
 ostream &operator<< (ostream &out, HVariable &A);
 
-istream &operator>>(istrstream &in, bool &x);
+istream &operator>>(istringstream &in, bool &x);
 
 template <class T> class HVar : public HVariable
 {
@@ -72,15 +72,15 @@ public:
 
 	void set_str(const string &value)
 	{
-		istrstream in(value.c_str());
+		istringstream in(value.c_str());
 		T Tvalue;
 		in >> Tvalue;
 		set(Tvalue);
 	}
-	const char *get_str()
+	string get_str()
 	{
-		ostrstream out;
-		out << get() << ends;
+		ostringstream out;
+		out << get();
 		return out.str();
 	}
 };
@@ -128,15 +128,15 @@ public:
 
 	void set_str(const string &value)
 	{
-		istrstream in(value.c_str());
+		istringstream in(value.c_str());
 		T Tvalue;
 		in >> Tvalue;
 		set(Tvalue);
 	}
-	const char *get_str()
+	string get_str()
 	{
-		ostrstream out;
-		out << get() << ends;
+		ostringstream out;
+		out << get();
 		return out.str();
 	}
 };

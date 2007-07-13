@@ -4,16 +4,10 @@
 #define __H_STANDARD_H_
 
 #ifdef WIN32
-
 #pragma warning( disable : 4786 ) //disable "identifier name too long" warning
-#include <strstream> //should later be replaced by stringstream
-
-#else
-
-#include <strstream.h>
-
 #endif //WIN32
 
+#include <sstream>
 
 #include <string>
 #include <iostream>
@@ -42,6 +36,8 @@ typedef float REAL;
 #define H_MIN(a,b) (((a)>(b)) ? (b) : (a))
 #define H_MAX(a,b) (((a)>(b)) ? (a) : (b))
 
+#define ARRAY_SIZE(T) (sizeof(T)/sizeof(T[0]))
+
 using namespace std;
 
 class HException : public exception
@@ -61,47 +57,10 @@ istream &EatWhite(istream &in);
 
 template <class T> string to_string(T x)
 {
-	strstream tmp;
+	stringstream tmp;
 	tmp << x;
-	return string(tmp.str());
+	return tmp.str();
 }
-
-//class used to map an enum onto a string
-//usually for human readable IO
-//usually declared as static in a class
-template <class T1, class T2> class HMapper
-{
-public:
-	//the first pair is used for invalid returns...
-	//should be template on iterator but is not supported by VC6
-	HMapper(pair<T1,T2> *data_begin, pair<T1,T2> *data_end)
-	{
-		invalidT1 = data_begin->first;
-		invalidT2 = data_begin->second;
-		for (pair<T1,T2> *I=data_begin ; I!=data_end ; I++)
-			add(I->first,I->second);
-	}
-	void add(const T1 &value, const T2 &name)
-	{
-		T1_map[value] = name;
-		T2_map[name] = value;
-	}
-	T2 &find(const T1 &A)
-	{
-		map<T1,T2>::iterator I = T1_map.find(A);
-		return (I==T1_map.end()) ? invalidT2 : (*I).second;
-	}
-	T1 &find(const T2 &A)
-	{
-		map<T2,T1>::iterator I = T2_map.find(A);
-		return (I==T2_map.end()) ? invalidT1 : (*I).second;
-	}
-private:
-	map<T1,T2> T1_map;
-	map<T2,T1> T2_map;
-	T1 invalidT1;
-	T2 invalidT2;
-};
 
 template <class T> class HPointer
 {
@@ -117,7 +76,7 @@ private:
 		unsigned int count;
 	};
 	static list<Ref> RefList;
-	list<Ref>::iterator pos;
+	typename list<Ref>::iterator pos;
 public:
 	HPointer() {AddRef(NULL);}
 	HPointer(T *ptr) {AddRef(ptr);}
@@ -134,51 +93,6 @@ private:
 		{RefList.push_front(Ref()); pos = RefList.begin(); (*pos).reset(ptr);}
 	void UnRef() {if ((--(*pos).count)==0) RefList.erase(pos);}
 };
-
-//this template is to be used when a STL vector is needed but
-//we also need direct access to the pointer onto the elements
-//for optimisation reasons...
-template <class T> class HVector
-{
-public:
-	typedef T* iterator;
-	HVector() : m_data(NULL), m_size(0) {}
-	HVector(unsigned int n) : m_data(NULL), m_size(0) {resize(n);}
-	HVector(const HVector<T> &V) : m_data(NULL), m_size(0) {*this = V;}
-	//data is not conserved...
-	void resize(unsigned int n)
-	{
-		delete [] m_data;
-		if ((m_size=n)==0)
-			m_data=NULL;
-		else
-		{
-			m_data = new T[m_size];
-			if(m_data==NULL)
-			{
-				//string tmp;
-				//throw HException(tmp+"failed to allocate "+(m_size*sizeof(T))+" bytes");
-			}
-		}
-	}
-	HVector<T> &operator= (const HVector<T> &V)
-	{
-		resize(V.m_size);
-		for (unsigned int i=0; i<m_size; i++) m_data[i] = V.m_data[i];
-		return *this;
-	}
-	~HVector() {delete [] m_data;}
-	//T &operator[] (unsigned int i) const {return m_data[i];}
-	inline T *ptr() const {return m_data;}
-	inline operator T* () const {return m_data;};
-	inline unsigned int size() const {return m_size;}
-	inline iterator begin() const {return m_data;}
-	inline iterator end() const {return m_data+m_size;}
-private:
-	T *m_data;
-	unsigned int m_size;
-};
-
 
 class Command
 {

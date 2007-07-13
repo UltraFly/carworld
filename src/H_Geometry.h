@@ -86,7 +86,7 @@ template <unsigned int dim, class type>
 Point<dim,type> operator* (type e, const Point<dim,type> &A)
 {
 	Point<dim,type> tmp;
-	FOR_I(tmp.p[i]=e*p[i];)
+	FOR_I(tmp.p[i]=e*A.p[i];)
 	return tmp;
 }
 

@@ -33,12 +33,12 @@ public:
 	public:
 		Polygon();
 		~Polygon();
-		void InitNormal(const HVector<Vertex> &OFFVertexes);
+		void InitNormal(const vector<Vertex> &OFFVertexes);
 		void Invert();
 		istream &Read(istream &in);
 		ostream &Write(ostream &out) const;
 	public:
-		HVector<unsigned int> IndexVertexes;
+		vector<unsigned int> IndexVertexes;
 		Point3D Normal;
 		Color MyColor;
 		static const Color DefaultColor;
@@ -94,11 +94,11 @@ private:
 	Texture *MyTexture;
 	int CompiledList;
 	int CompiledList_NoMaterial;
-	HVector<Vertex> MyOFFVertexes;
-	HVector<Polygon> MyOFFPolygons;
+	vector<Vertex> MyOFFVertexes;
+	vector<Polygon> MyOFFPolygons;
 //TriIndexes is an array of indexes which represent the polygons
 //as triangles
-	HVector<unsigned int> TriIndexes;
+	vector<unsigned int> TriIndexes;
 
 	friend class Buffer;
 	friend istream &operator >> (istream &in, OFFObject::Vertex &AVertex);

@@ -1,93 +1,61 @@
 
-#generic opengl application Makefile, Marcus Hewat 1999
-#you can probably use this makefile for your opengl app by changing the APPNAME variable
-#send patches to hewat@club-internet.fr
+#generic opengl/SDL application Makefile, Marcus Hewat 1999
+#you can probably use this makefile for your opengl/SDL app by changing the APPNAME variable
+#send patches to hewat@users.sourceforge.net
 
 APPNAME=carworld
-VERSION=0.223
+VERSION=0.243
 RELEASE=1
-SRC_COMMON=src
+SRC=src
 DEST=obj
-BIN=bin
-DEP=dep
 DOC=doc
 
-LIBS_X11=-lm -lX11 -lXext -lGL
+EXECUTABLE=$(APPNAME)
+CPLUSPLUS=g++
+LINK=$(CPLUSPLUS)
+DEFAULT_CPPFLAGS=-Wall -ansi `sdl-config --cflags` -DUSE_POSIX_SOCKETS -o
+CPPFLAGS=$(DEFAULT_CPPFLAGS)
+CPPFLAGS_RELEASE=-O3
+CPPFLAGS_DEBUG=-g
+DEFAULT_LD_FLAGS=-lm -lGL -lGLU `sdl-config --libs` -o
+LDFLAGS=$(DEFAULT_LD_FLAGS)
 
 #switch on the unix name
-#to set compiler, OS and API specific variables
+#to set compiler and OS specific variables
 #if uname is CYGWIN I figure we are under Windows
 #should find something better...
 
+ifeq ($(shell uname),Linux)
+	LDFLAGS=-L/usr/X11R6/lib -lpthread $(DEFAULT_LD_FLAGS)
+endif
+
 ifeq ($(shell uname),CYGWIN_98-4.10)
-	EXECUTABLE=win_$(APPNAME).exe
-	API=win32
+	EXECUTABLE=$(APPNAME).exe
 	CPLUSPLUS=cl.exe
 	LINK=link.exe
 	CPPFLAGS=-nologo -ML -W3 -GR -GX -D WIN32 -D _WINDOWS -FD -Fo
 	CPPFLAGS_RELEASE=-D NDEBUG -Ox
-	CPPFLAGS_DEBUG=-D DEBUG -FR"$(DEST)\\" #-YX /Fd"$(DEST)\\" -GZ
-	LDFLAGS=opengl32.lib glu32.lib dxguid.lib dinput.lib kernel32.lib \
-		user32.lib gdi32.lib ws2_32.lib -nologo -subsystem:windows -incremental:no \
-		-pdb:"$(DEST)\win_carw.pdb" -machine:I386 -out:
+	CPPFLAGS_DEBUG=-D _DEBUG -FR"$(DEST)\\" #-YX /Fd"$(DEST)\\" -GZ
+	LDFLAGS=opengl32.lib dxguid.lib dinput.lib SDL.lib SDLmain.lib ws2_32.lib -nologo -subsystem:windows -incremental:no \
+		-pdb:"$(DEST)\$(APPNAME).pdb" -machine:I386 -out:
 endif
-ifeq ($(shell uname),BeOS)
-	EXECUTABLE=be_$(APPNAME)
-	API=beos
-	CPLUSPLUS=g++
-	LINK=$(CPLUSPLUS)
-	CPPFLAGS=-Wall -ansi -Wno-multichar -D USE_POSIX_SOCKETS -o 
-	CPPFLAGS_RELEASE=-O3
-	CPPFLAGS_DEBUG=-g
-	LDFLAGS=-lbe -lGL -lgame -ldevice -o
+
+ifeq ($(shell uname),Darwin)
+	CPPFLAGS=`sdl-config --libs` -framework OpenGL -Wall -ansi -Wno-multichar -D USE_POSIX_SOCKETS -o
+	LDFLAGS=`sdl-config --cflags --libs` -lSDL_image -framework OpenGL -Wall -ansi -Wno-multichar -o 
 endif
-ifeq ($(shell uname),Linux)
-	EXECUTABLE=linux_$(APPNAME)
-	API=x11
-	CPLUSPLUS=g++
-	LINK=$(CPLUSPLUS)
-	CPPFLAGS=-Wall -ansi -I/usr/X11R6/include -I/usr/include/X11 -D USE_POSIX_SOCKETS -D USE_LIN_JOY -o
-	CPPFLAGS_RELEASE=-O3
-	CPPFLAGS_DEBUG=-g
-	LDFLAGS=-L/usr/X11R6/lib $(LIBS_X11) -o
-endif
+
+
 ifeq ($(shell uname),SunOS)
-	EXECUTABLE=sun_$(APPNAME)
-	API=x11
-	CPLUSPLUS=g++
-	LINK=$(CPLUSPLUS)
-	CPPFLAGS=-Wall -ansi -I/usr/include/X11 -D USE_POSIX_SOCKETS -o 
-	CPPFLAGS_RELEASE=-O3
-	CPPFLAGS_DEBUG=-g
-	LDFLAGS=-L/usr/openwin/lib -R/usr/openwin/lib $(LIBS_X11) -lm -lsocket -lnsl -o 
-endif
-#the following are OSes are untested and might need tweeking
-ifeq ($(shell uname),HP-UX)
-	EXECUTABLE=hp_$(APPNAME)
-	API=x11
-	CPLUSPLUS=g++
-	LINK=$(CPLUSPLUS)
-	CPPFLAGS=-Wall -D USE_POSIX_SOCKETS -o
-	CPPFLAGS_RELEASE=-O9
-	CPPFLAGS_DEBUG=-g
-	LDFLAGS=$(LIBS_X11) -lm -o
-endif
-ifeq ($(shell uname),IRIX)
-	EXECUTABLE=sgi_$(APPNAME)
-	API=x11
-	CPLUSPLUS=CC
-	LINK=$(CPLUSPLUS)
-	CPPFLAGS=-D USE_POSIX_SOCKETS -o
-	CPPFLAGS_RELEASE=-O
-	CPPFLAGS_DEBUG=-g
-	#no -lXext?
-	LDFLAGS=$(LIBS_X11) -lm -o
+	CPPFLAGS=-I/usr/include/X11 $(DEFAULT_CPPFLAGS)
+	LDFLAGS=-L/usr/openwin/lib -R/usr/openwin/lib $(DEFAULT_LD_FLAGS) -lsocket -lnsl -o 
 endif
 
-#add API specific source directory to the source directories
-SRC=$(SRC_COMMON):src/$(API)
+ifeq ($(shell uname),MorphOS)
+	LINK=$(DEFAULT_CPPFLAGS) -noixemul
+endif
 
-DEP_FILE=$(DEP)/$(API).dep
+DEP_FILE=$(APPNAME).dep
 
 #tell make where to find the files
 vpath %.h $(SRC)
@@ -100,33 +68,30 @@ source_files=$(foreach dir,$(src_dirs),$(wildcard $(dir)/*.cpp))
 header_files=$(foreach dir,src src/win32 src/x11 src/beos,$(wildcard $(dir)/*.h))
 OBJECTS=$(notdir $(patsubst %.cpp,%.o,$(source_files)))
 
-#user targets
-#warning: default build is debug
-debug: $(BIN)
-	$(MAKE) $(BIN)/$(EXECUTABLE) CPPFLAGS="$(CPPFLAGS_DEBUG) $(CPPFLAGS)"
+release:
+	$(MAKE) $(EXECUTABLE) CPPFLAGS="$(CPPFLAGS_RELEASE) $(CPPFLAGS)"
+	strip $(EXECUTABLE)
 
-release: $(BIN)
-	$(MAKE) $(BIN)/$(EXECUTABLE) CPPFLAGS="$(CPPFLAGS_RELEASE) $(CPPFLAGS)"
-	strip $(BIN)/$(EXECUTABLE)
+debug:
+	$(MAKE) $(EXECUTABLE) CPPFLAGS="$(CPPFLAGS_DEBUG) $(CPPFLAGS)"
 
-install: release
-	-rm -rf /usr/bin/$(APPNAME) /usr/share/$(APPNAME)
-	install -m 755 -o 0 -g 0 $(BIN)/$(EXECUTABLE) /usr/bin/$(APPNAME)
-	install -d -m 755 -o 0 -g 0 /usr/share/$(APPNAME)
+install:
+	-rm -rf $(RPM_BUILD_ROOT)
+	mkdir -p $(RPM_BUILD_ROOT)/usr/bin
+	mkdir -p $(RPM_BUILD_ROOT)/usr/share
+	install -m 755 -o 0 -g 0 $(EXECUTABLE) $(RPM_BUILD_ROOT)/usr/bin/$(EXECUTABLE)
+	install -d -m 755 -o 0 -g 0 $(RPM_BUILD_ROOT)/usr/share/$(APPNAME)
 	cp -r data /usr/share/$(APPNAME)
 
 uninstall:
-	-rm -rf /usr/bin/$(APPNAME) /usr/share/$(APPNAME)
+	-rm -rf $(RPM_BUILD_ROOT)/usr/bin/$(APPNAME) $(RPM_BUILD_ROOT)/usr/share/$(APPNAME)
 
 clean:
-	-rm -rf $(DEST) $(BIN)/$(EXECUTABLE)
+	-rm -rf $(DEST) $(EXECUTABLE)
 
-realclean:
-	-rm -rf $(DEST) $(BIN) $(DOC) $(APPNAME)-$(VERSION)-$(RELEASE).spec log.txt
+realclean: clean
+	-rm -rf $(DOC) *.spec log.txt
 
-#BUG the dependency file needs to have its directory names removed manualy...
-#makedepend -f- -Y -Isrc:src:win32 src/*.cpp src/win32/*.cpp > dep/win32.dep
-#makedepend -f- -Y -Isrc:src:beos src/*.cpp src/beos/*.cpp > dep/beos.dep
 depend:
 	-makedepend -f- -Y -I$(SRC) $(source_files) > $(DEP_FILE)
 
@@ -144,27 +109,25 @@ rpm: realclean spec
 
 
 #internal targets
-$(BIN)/$(EXECUTABLE): $(BIN) $(DEST) $(OBJECTS)
+$(EXECUTABLE): $(DEST) $(OBJECTS)
 	cd $(DEST) ; $(LINK) $(OBJECTS) $(LDFLAGS)../$@
 
 $(DEST):
 	-mkdir $(DEST)
-
-$(BIN):
-	-mkdir $(BIN)
 
 $(OBJECTS): %.o: %.cpp
 	$(CPLUSPLUS) $(CPPFLAGS)$(DEST)/$@ -c $<
 
 #this is the text used to generate the spec file for the RPM package
 SPEC_TEXT="\
-\nSummary: car simulation useing OpenGL for rendering\
+\nSummary: car simulation using OpenGL for rendering\
 \nName: $(APPNAME)\
 \nVersion: $(VERSION)\
 \nRelease: $(RELEASE)\
 \nCopyright: GPL\
 \nGroup: Amusements/Games\
-\nSource: perso.club-internet.fr/hewat/$(APPNAME)/$(APPNAME)-$(VERSION).tar.gz\
+\nSource: http://superb-west.dl.sourceforge.net/sourceforge/$(APPNAME)/$(APPNAME)-$(VERSION).tar.gz\
+\nBuildRoot: /var/tmp/%{name}-buildroot\
 \n\
 \n%description\
 \nCar simulaton with an emphasis on dynamics useing OpenGL for rendering,\
@@ -180,11 +143,11 @@ SPEC_TEXT="\
 \nmake install\
 \n\
 \n%files\
-\n%doc README\
+\n%doc readme.txt\
 \n/usr/bin/$(APPNAME)\
 \n/usr/share/$(APPNAME)"
 
 spec:
 	echo -e $(SPEC_TEXT) > $(APPNAME)-$(VERSION)-$(RELEASE).spec
 
-include $(DEP_FILE)
+#include $(DEP_FILE)

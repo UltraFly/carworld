@@ -4,7 +4,7 @@
 #include "H_Object.h"
 #include "H_Graphics.h"
 #include "H_Variable.h"
-#include "H_XML.h"
+#include "h_xml.h"
 
 //CLASS CWCommand
 CWCommand::CWCommand() : GasBrake(0), Steer(0), SteerFeedBack(0), HandBrake(false)
@@ -65,8 +65,8 @@ void Wheel::Set(const Ref &ARef, CWCommand &ACommand, CarWorld &CW)
 	MyRef = ARef;
 
 //dissociate Gas from Break
-	REAL Gas = LIMIT(0.,ACommand.GasBrake,1.);
-	REAL Brake = LIMIT(0.,-ACommand.GasBrake,1.);
+	REAL Gas = LIMIT(0.f,ACommand.GasBrake,1.f);
+	REAL Brake = LIMIT(0.f,-ACommand.GasBrake,1.f);
 	Lock = ACommand.HandBrake;
 
 	MyRef.Rotate(MyRef.GetUp()*(ACommand.Steer*SteerFactor));
@@ -148,7 +148,7 @@ Point3D Wheel::CalcForce()
 		//but the load is limited to MaxLoad
 		//to avoid wierd reactions
 		//ex: at jump receptions
-		double MaxTraction = min(Load*Grip,MaxLoad*Grip);
+		REAL MaxTraction = min(Load*Grip,MaxLoad*Grip);
 		if (Traction.norm()>MaxTraction)
 			Traction.normalize(MaxTraction);
 		Force += Traction;
@@ -350,14 +350,14 @@ void CWVehicle::drawShape()
 		(*I).draw();
 
 	//don't draw the body if we are using this car's interior-camera
-	InCarCam *InCam = dynamic_cast<InCarCam*>(m_CarWorld->m_Camera);
+	InCarCam* InCam = dynamic_cast<InCarCam*>(m_CarWorld->m_Camera);
 	if ((InCam==NULL) || (InCam->m_Vehicle!=this))
 		Model.draw(MyRef.GetRef(Point3D(0,0,0)));
 }
 
 void CWVehicle::ProjectShadow(const Point3D &LightDirection)
 {
-	static Point3D ShadowPlane[3] = {Point3D(0,0,0),Point3D(1,0,0),Point3D(0,1,0)};
+	//static Point3D ShadowPlane[3] = {Point3D(0,0,0),Point3D(1,0,0),Point3D(0,1,0)};
 
 	Contact ShadowContact =
 		m_CarWorld->m_Landscape->GetContact(FixedVector(MyRef.Position,-LightDirection));
@@ -381,13 +381,13 @@ void CWVehicle::drawInfo()
 CWVehicleState CWVehicle::GetState()
 {
 	CWVehicleState tmp;
-	tmp.m_Ref = *dynamic_cast<Ref*>(&MyRef);
+	tmp.m_Ref = MyRef;
 	tmp.m_Command = MyCommand;
 	return tmp;
 }
 
 void CWVehicle::SetState(CWVehicleState &state)
 {
-	*dynamic_cast<Ref*>(&MyRef) = state.m_Ref;
+	*(Ref*)(&MyRef) = state.m_Ref;
 	MyCommand = state.m_Command;
 }

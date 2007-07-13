@@ -6,9 +6,6 @@
 #include "CarWorldClasses.h"
 #include "CWCamera.h"
 
-//version number is given x10e5 (to have 5 minor digits)
-#define CARWORLD_VERSION 22300
-
 //#define DEFAULT_VEHICLE "data/Vehicles/82porsch.vhc"
 #define DEFAULT_VEHICLE "data/Vehicles/truck.vhc"
 #define DEFAULT_LANDSCAPE "data/Landscape/landscape.txt"
@@ -24,7 +21,8 @@ class CarWorld
 public:
 	CarWorld(int TimeRefreshRate, const char *LandscapeFile);
 	~CarWorld();
-	void add(CWFeature *AFeature);
+	void add(CWFeature* AFeature);
+	void add(CWVehicle* AVehicle);
 	void next_camera();
 	void DrawOnScreen();
 

@@ -28,6 +28,7 @@ class CarWorld;
 class CWFeature
 {
 public:
+	virtual ~CWFeature();
 	virtual void reset();
 //make the feature move by one time increment
 	virtual void update();

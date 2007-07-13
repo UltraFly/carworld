@@ -1,6 +1,9 @@
 
 #ifdef USE_POSIX_SOCKETS
 
+#include <iostream>
+using namespace std;
+
 extern "C" {
 #include <unistd.h> //close
 //#include <stdlib.h> //rand
@@ -10,6 +13,10 @@ extern "C" {
 #include <netinet/in.h>
 #include <fcntl.h> //fcntl
 #include <netdb.h>
+#include <errno.h>
+
+#include <iostream>
+using namespace std;
 
 /*
 struct hostent
@@ -34,22 +41,22 @@ int send(int s, const  void *msg, int len, unsigned int flags);
 hostent *gethostbyname(const char *name); //netdb.h*/
 }
 
-#include <iostream> //cerr
+#include <iostream> //cout
 
-extern int errno;
+//extern int errno;
 
 //the beos "socket.h" header does ot define socklen_t
-#ifdef B_BEOS_VERSION
+#if defined(B_BEOS_VERSION) || defined(__MORPHOS__)
 #define socklen_t int
 #endif
 
 #include "H_Socket.h"
 
 //UTILS
-void write_error(const char *where, bool bad=true)
+void write_error(const char* Where, bool bad=true)
 {
 	if (bad)
-		cerr << "error(" << __FILE__ << "," << where << "): " << strerror(errno) << endl;
+		cout << "ERROR(" << __FILE__ << "," << Where << "): " << strerror(errno) << endl;
 }
 
 

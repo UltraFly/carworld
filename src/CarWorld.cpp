@@ -4,6 +4,7 @@
 #include "CarWorld.h"
 #include "H_Graphics.h"
 #include <stdio.h>
+#include <sstream>
 
 //CLASS CarWorld:
 CarWorld::CarWorld(int TimeRefreshRate, const char *LandscapeFile) :
@@ -41,21 +42,20 @@ CarWorld::~CarWorld()
 	for (list<CWFeature*>::iterator I=m_Features.begin() ; I!=m_Features.end() ; I++)
 		delete (*I);
 }
-void CarWorld::add(CWFeature *AFeature)
+void CarWorld::add(CWFeature* AFeature)
 {
 	AFeature->m_CarWorld = this;
 	m_Features.push_back(AFeature);
 	AFeature->reset();
-//if the feature being added is a vehicle, add the corresponding cameras
-	CWVehicle *AVehicle = dynamic_cast<CWVehicle*>(AFeature);
-	if (AVehicle != NULL)
-	{
-		//if (dynamic_cast<FixCam*>(m_Camera))
-			add(m_Camera = new InCarCam(AVehicle));
-		add(new FixCam(AVehicle));
-		add(new FollowCam(AVehicle));
-		add(new SateliteCam(AVehicle));
-	}
+}
+
+void CarWorld::add(CWVehicle* AVehicle)
+{
+	add((CWFeature*)AVehicle);
+	add(m_Camera = new InCarCam(AVehicle));
+	add(new FixCam(AVehicle));
+	add(new FollowCam(AVehicle));
+	add(new SateliteCam(AVehicle));
 }
 
 //precondition: m_Camera is a pointer to a CWFeature in m_Features
@@ -156,12 +156,10 @@ void CarWorld::DrawOnScreen()
 	glPushMatrix();
 	glLoadIdentity();
 
-	//static char HelpText[] = "F1:help F2:view F3:reset F4:joy F5:key";
-	char FPSCaption[100];
-	sprintf(FPSCaption, "%6.1ffps", fps);
+	ostringstream FPSCaption;
+	FPSCaption << fps;
 	Hgl::SetColor(White);
-	//Hgl::WriteText(HelpText, Point2D(-.5,.75)); //write help text
-	Hgl::WriteText(FPSCaption, Point2D(-.25,.75)); //write fps and speed
+	Hgl::WriteText(FPSCaption.str().c_str(), Point2D(-.25,.75)); //write fps and speed*/
 
 	//draw car info
 	Hgl::Translate(Point3D(.75,-.75,0));

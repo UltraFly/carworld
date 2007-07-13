@@ -8,14 +8,6 @@
 #include "H_Graphics.h"
 #include "H_Texture.h"
 
-//#include <GL/glu.h>
-
-extern "C" void gluLookAt( GLdouble eyex, GLdouble eyey, GLdouble eyez,
-                         GLdouble centerx, GLdouble centery, GLdouble centerz,
-                         GLdouble upx, GLdouble upy, GLdouble upz );
-extern "C" void gluPerspective( GLdouble fovy, GLdouble aspect,
-                              GLdouble zNear, GLdouble zFar );
-
 Hgl *Hgl::curr = NULL;
 
 const Color Black(0,0,0);
@@ -136,7 +128,7 @@ void level(Color &A)
 	}
 	if (A.y()>254)
 	{
-		if (!OverR) A.x() += (A.y()-1.)*0.5f;
+		if (!OverR) A.x() += (A.y()-1.f)*0.5f;
 		A.z() += (A.y()-1.f)*0.5f;
 		OverG=true;
 		A.y()=1.f;
@@ -230,12 +222,9 @@ void Hgl::ClearColor(const Color &AColor)
 
 ostream &Hgl::PrintVersion(ostream &out)
 {
-	out << "openGL renderer:  "
-		<< (char*)glGetString(GL_RENDERER) << endl;
-	out << "renderer vendor:  "
-		<< (char*)glGetString(GL_VENDOR) << endl;
-	out << "renderer version: "
-		<< (char*)glGetString(GL_VERSION) << endl;
+	out << "OpenGL renderer:  " << (const char*)glGetString(GL_RENDERER) << endl;
+	out << "OpenGL renderer vendor:  " << (const char*)glGetString(GL_VENDOR) << endl;
+	out << "OpenGL renderer version: " << (const char*)glGetString(GL_VERSION) << endl;
 	return out;
 }
 
@@ -284,25 +273,25 @@ static GLuint makeRasterFont()
 	return font;
 }
 
-static void t_chaine(GLuint &font, char *s)
+static void t_chaine(GLuint& font, const char* s)
 {
 	if (font==0)
 		font = makeRasterFont();
 
 	//glPushAttrib (GL_LIST_BIT);
 	glListBase(font);
-	glCallLists(strlen(s), GL_UNSIGNED_BYTE, (GLubyte *) s);
+	glCallLists(strlen(s), GL_UNSIGNED_BYTE, (const GLvoid *)s);
 	//glPopAttrib ();
 	glListBase(0);
 }
 
-void Hgl::WriteText(char *AText, const Point<3,GLfloat> &APosition)
+void Hgl::WriteText(const char* AText, const Point<3,GLfloat> &APosition)
 {
 	//glRasterPos3fv(APosition.p);
 	glRasterPos3f(APosition.x(),APosition.y(),APosition.z());
 	t_chaine(curr->fontOffset,AText);
 }
-void Hgl::WriteText(char *AText, const Point<2,GLfloat> &APosition)
+void Hgl::WriteText(const char* AText, const Point<2,GLfloat> &APosition)
 {
 	glRasterPos2f(APosition.x(),APosition.y());
 	t_chaine(curr->fontOffset,AText);
@@ -475,16 +464,18 @@ void Hgl::ShadowTransform(const Point<3,GLfloat> &LightPos, Point<3,GLfloat> APl
 
 void Hgl::ThrowError()
 {
-#ifdef _DEBUG
-	GLenum ErrorType = glGetError();
-	if (ErrorType!=GL_NO_ERROR)
-		throw HException(string("opengl error: ")+(const char *)gluErrorString(ErrorType));
-#endif //_DEBUG
+//BUG glGetError() is only defined from OpenGL 1.2 on so we need to test ...
+	//GLenum ErrorType = glGetError();
+	//if (ErrorType!=GL_NO_ERROR)
+	//	throw HException(string("opengl error: ")+(const char *)gluErrorString(ErrorType));
 }
 
 void Hgl::PurgeError()
 {
-	while (glGetError() != GL_NO_ERROR);
+//BUG glGetError() is only defined from OpenGL 1.2 on so we need to test ...
+//#ifdef
+//	while (glGetError() != GL_NO_ERROR);
+//#endif 
 }
 
 ostream &Hgl::PrintDebug(ostream &out)
@@ -619,29 +610,50 @@ void Hgl::SetFinish(bool value) {curr->gl_finish = value;}
 bool Hgl::GetFinish() {return curr->gl_finish;}
 
 //conversions of Hgl::Enum's to text and vice versa
-static pair<Hgl::Enum,string> EnumMapValues[] =
+struct HglEnumDesc
 {
-	pair<Hgl::Enum,string>(Hgl::INVALID_ENUM,			"GL_INVALID_ENUM"),
-	pair<Hgl::Enum,string>(Hgl::NONE,					"GL_NONE"),
-	pair<Hgl::Enum,string>(Hgl::LINEAR_MIPMAP_LINEAR,	"GL_LINEAR_MIPMAP_LINEAR"),
-	pair<Hgl::Enum,string>(Hgl::LINEAR,					"GL_LINEAR"),
-	pair<Hgl::Enum,string>(Hgl::NEAREST,				"GL_NEAREST"),
-	pair<Hgl::Enum,string>(Hgl::SHADOW,					"HGL_SHADOW")
+	Hgl::Enum val;
+	const char* name;
 };
 
-static HMapper<Hgl::Enum,string> EnumMap(
-	EnumMapValues,
-	EnumMapValues+(sizeof(EnumMapValues)/sizeof(pair<Hgl::Enum,string>))
-);
+static HglEnumDesc EnumMapValues[] =
+{
+	{Hgl::INVALID_ENUM,			"GL_INVALID_ENUM"},
+	{Hgl::NONE,					"GL_NONE"},
+	{Hgl::LINEAR_MIPMAP_LINEAR,	"GL_LINEAR_MIPMAP_LINEAR"},
+	{Hgl::LINEAR,				"GL_LINEAR"},
+	{Hgl::NEAREST,				"GL_NEAREST"},
+	{Hgl::SHADOW,				"HGL_SHADOW"}
+};
 
-istream &operator>> (istream &in, Hgl::Enum &A)
+const char* ToStr(Hgl::Enum val)
+{
+	for (unsigned int i=0 ; i<ARRAY_SIZE(EnumMapValues) ; i++)
+	{
+		if (val==EnumMapValues[i].val)
+			return EnumMapValues[i].name;
+	}
+	return "GL_INVALID_ENUM";
+}
+
+Hgl::Enum ToHglEnum(const char* str)
+{
+	for (unsigned int i=0 ; i<ARRAY_SIZE(EnumMapValues) ; i++)
+	{
+		if (strcmp(str, EnumMapValues[i].name)==0)
+			return EnumMapValues[i].val;
+	}
+	return Hgl::INVALID_ENUM;
+}
+
+istream& operator>> (istream &in, Hgl::Enum &A)
 {
 	string tmp;
 	getline(in,tmp,'\0');
-	A = EnumMap.find(tmp);
+	A = ToHglEnum(tmp.c_str());
 	return in;
 }
-ostream &operator<< (ostream &out, const Hgl::Enum &A)
+ostream& operator<< (ostream &out, const Hgl::Enum &A)
 {
-	return out << EnumMap.find(A);
+	return out << ToStr(A);
 }

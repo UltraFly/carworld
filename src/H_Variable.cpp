@@ -56,7 +56,7 @@ void HExecutableSet::add(HVariable *variable)
 HVariable::HVariable(const char *name) : m_name(name)
 {}
 
-istream &operator>>(istrstream &in, bool &x)
+istream& operator>>(istringstream& in, bool& x)
 {
 	int tmp;
 	in >> tmp;
@@ -64,7 +64,7 @@ istream &operator>>(istrstream &in, bool &x)
 	return in;
 }
 
-ostream &operator<< (ostream &out, HVariable &A)
+ostream& operator<< (ostream& out, HVariable& A)
 {
 	out << A.type() << " " << A.name() << " == " << A.get_str();
 	return out;

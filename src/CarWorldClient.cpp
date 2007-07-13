@@ -1,8 +1,8 @@
 
 #include "H_Standard.h"
 #include "CarWorldClient.h"
-#include "CarWorldServer.h"
 #include "CarWorldNet.h"
+#include "CWVersion.h"
 
 #include <stdio.h>
 #include <iostream>
@@ -61,13 +61,13 @@ public:
 	void exec(const Command &c)
 	{
 		if (c.size()==3)
-			CWC->bind(KeyMap.find(c[1]),c[2].c_str());
+			CWC->bind(ToSDLKey(c[1].c_str()), c[2].c_str());
 		else
 			cout << "usage: bind <key> \"<command line>\"\n";
 	}
 	void serialize(ostream &out)
 	{
-		map<H_KEY,string>::iterator I;
+		map<SDLKey,string>::iterator I;
 		for (I = CWC->KeyBindings.begin() ; I!=CWC->KeyBindings.end(); I++)
 		{
 			out << "bind " << (*I).first << " \"" << (*I).second << "\"\n";
@@ -90,13 +90,10 @@ CarWorldClient::CarWorldClient(bool full_screen) :
 	m_Vehicle(NULL),
 	m_CarWorld(NULL)
 {
-	m_window->SetAttrib(600,400,full_screen);
-	cout << "starting " << name() << " ...\n";
+	m_window->SetAttrib(640,480,full_screen);
 //switch cout to display in the on screen prompt + log
-	cout = hout;
+	cout.rdbuf(&hbuf);
 	cout << "starting " << name() << " ...\n\n";
-	cout << "HOST PLATFORM:\n";
-	cout << SystemDescription() << endl;
 	m_CarWorld = new CarWorld(TimeRefreshRate(),DEFAULT_LANDSCAPE);
 	m_Vehicle = new CWVehicle(DEFAULT_VEHICLE);
 	m_CarWorld->add(m_Vehicle);
@@ -104,7 +101,7 @@ CarWorldClient::CarWorldClient(bool full_screen) :
 
 void CarWorldClient::draw_init()
 {
-	cout = hout;
+	cout.rdbuf(&hbuf);
 
 	cout << "initiating graphics...\n";
 	m_Hgl = new Hgl(m_window);
@@ -114,7 +111,7 @@ void CarWorldClient::draw_init()
 	m_CarWorld->draw_init();
 
 	Hgl::ThrowError(); //check to see if everything is OK
-	
+
 	cout << "initiating input...\n";
 	RealJoystick = m_window->GetJoystick();
 	if (RealJoystick!=NULL)
@@ -122,8 +119,8 @@ void CarWorldClient::draw_init()
 	else
 		cout << "no joystick support.\n";
 	FakeJoystick = new KeyJoystick(m_window);
-	CurrentJoystick = dynamic_cast<HJoystick*>(FakeJoystick);
-	
+	CurrentJoystick = FakeJoystick;
+
 	cout << "\ninitiating command line parameters...\n";
 	HExecutableSet *m_HExecutableSet = new HExecutableSet();
 	m_HExecutableSet->add(new HVar<bool>("gl_finish", &Hgl::SetFinish,&Hgl::GetFinish));
@@ -135,11 +132,11 @@ void CarWorldClient::draw_init()
 	m_HExecutableSet->add(new HVar<bool>("draw_background",&(m_CarWorld->draw_background)));
 	m_HExecutableSet->add(new HVarObj<CarWorldClient,int>("r_mode", this, &CarWorldClient::set_r_mode,&CarWorldClient::get_r_mode));
 	m_HExecutableSet->add(new HVarObj<CarWorldClient,bool>("use_joystick",this, &CarWorldClient::set_joystick,&CarWorldClient::get_joystick));
-	m_HExecutableSet->add(new HVar<H_KEY>("accel",&(FakeJoystick->up_key)));
-	m_HExecutableSet->add(new HVar<H_KEY>("break",&(FakeJoystick->down_key)));
-	m_HExecutableSet->add(new HVar<H_KEY>("left",&(FakeJoystick->left_key)));
-	m_HExecutableSet->add(new HVar<H_KEY>("right",&(FakeJoystick->right_key)));
-	m_HExecutableSet->add(new HVar<H_KEY>("handbreak",&(FakeJoystick->button_key)));
+	m_HExecutableSet->add(new HVar<SDLKey>("accel",&(FakeJoystick->up_key)));
+	m_HExecutableSet->add(new HVar<SDLKey>("break",&(FakeJoystick->down_key)));
+	m_HExecutableSet->add(new HVar<SDLKey>("left",&(FakeJoystick->left_key)));
+	m_HExecutableSet->add(new HVar<SDLKey>("right",&(FakeJoystick->right_key)));
+	m_HExecutableSet->add(new HVar<SDLKey>("handbreak",&(FakeJoystick->button_key)));
 
 	m_Executables["set"] = m_HExecutableSet;
 	m_Executables["join"] = new JoinServer(this);
@@ -152,18 +149,18 @@ void CarWorldClient::draw_init()
 	m_Executables["exec"] = new ExecCFG(this);
 	m_Executables["dump"] = new MethodCall<OFFObject>(&m_Vehicle->Model,&OFFObject::debug_dump);
 
-	bind(HK_TAB,"toggleconsole");
-	bind(HK_F2, "next_camera");
-	bind(HK_F3, "reset");
-	bind(HK_F4, "set use_joystick 1");
-	bind(HK_F5, "set use_joystick 0");
+	bind(SDLK_TAB,"toggleconsole");
+	bind(SDLK_F2, "next_camera");
+	bind(SDLK_F3, "reset");
+	bind(SDLK_F4, "set use_joystick 1");
+	bind(SDLK_F5, "set use_joystick 0");
 
 	execute_cfg(ConfigurationFileName());
 }
 
 void CarWorldClient::draw_shutdown()
 {
-	cout = hout;
+	//cout.rdbuf(&hbuf);
 	//state must be saved while graphics variables are still valid...
 	ofstream cfg_file(ConfigurationFileName(), ios::out);
 	write_cfg(cfg_file);
@@ -171,11 +168,12 @@ void CarWorldClient::draw_shutdown()
 	m_Hgl->MakeCurrent();
 	m_CarWorld->draw_shutdown();
 	delete m_Hgl;
+	m_Hgl = NULL;
 }
 
 CarWorldClient::~CarWorldClient()
 {
-	cout = hout;
+	//cout.rdbuf(&hbuf);
 	delete FakeJoystick;
 	for (map<string,HExecutable *>::iterator I = m_Executables.begin(); I != m_Executables.end() ; I++)
 		delete (*I).second;
@@ -194,12 +192,13 @@ CarWorldClient::~CarWorldClient()
 
 const char *CarWorldClient::name()
 {
-	int majorv = CARWORLD_VERSION/100000;
+	/*int majorv = CARWORLD_VERSION/100000;
 	int minorv = (CARWORLD_VERSION%100000)/100;
 	int minorminorv = CARWORLD_VERSION%100;
 	static char CarWorldName[1024];
-	sprintf(CarWorldName,"Car World v%d.%.3d.%.2d",majorv,minorv,minorminorv);
-	return CarWorldName;
+	sprintf_s(CarWorldName,ARRAY_SIZE(CarWorldName),"Car World v%d.%.3d.%.2d",majorv,minorv,minorminorv);
+	return CarWorldName;*/
+	return CW_PRODUCT_NAME " " CW_VERSION_STR;
 }
 
 void CarWorldClient::toggleconsole()
@@ -243,7 +242,7 @@ void CarWorldClient::pars_command(const char *value)
 	}
 }
 
-void CarWorldClient::bind(H_KEY key,const char *command)
+void CarWorldClient::bind(SDLKey key,const char *command)
 {
 	KeyBindings[key] = command;
 }
@@ -272,7 +271,7 @@ void CarWorldClient::join(const char *host, short port)
 	ClientRequest request;
 	request.ClientNumber = 0;
 	request.DatagramType = CLIENT_CONNECT;
-	request.VersionNumber = CARWORLD_VERSION;
+	request.VersionNumber = CW_VERSION;
 	m_socket->Send((void*)&request,sizeof(request));
 //get the confirmation
 	ServerConfirm confirm;
@@ -326,16 +325,16 @@ bool CarWorldClient::get_joystick()
 	return (CurrentJoystick==RealJoystick);
 }
 
-void CarWorldClient::key_down(H_KEY AHKey, char c)
+void CarWorldClient::key_down(SDLKey AHKey, char c)
 {
-	cout = hout;
+	//cout.rdbuf(&hbuf);
 	if (IsPromptMode)
 	{
-		string ReturnedCommand(hout.HitKey(AHKey,c));
+		string ReturnedCommand(hbuf.HitKey(AHKey,c));
 		if (!ReturnedCommand.empty())
 			pars_command(ReturnedCommand.c_str());
 	}
-	map<H_KEY,string>::iterator I = KeyBindings.find(AHKey);
+	map<SDLKey,string>::iterator I = KeyBindings.find(AHKey);
 	if (I != KeyBindings.end())
 		pars_command((*I).second.c_str());
 	//else
@@ -344,7 +343,7 @@ void CarWorldClient::key_down(H_KEY AHKey, char c)
 
 void CarWorldClient::resize(unsigned int width, unsigned int weight)
 {
-	cout = hout;
+	//cout.rdbuf(&hbuf);
 	m_Hgl->MakeCurrent();
 	HRect ClientRect = HRect(0,0,(REAL)width,(REAL)weight);
 	Hgl::ResizeWindow(ClientRect);
@@ -400,7 +399,7 @@ void CarWorldClient::on_idle(unsigned int elapsed_time)
 {
 	if (m_window != NULL)
 	{
-		cout = hout;
+		//cout.rdbuf(&hbuf);
 		if (m_socket!=NULL)
 		{
 			static unsigned int time_since_send = 0;
@@ -427,11 +426,11 @@ void CarWorldClient::draw()
 {
 	if (m_window != NULL)
 	{
-		cout = hout;
+		//cout.rdbuf(&hbuf);
 		m_Hgl->MakeCurrent();
 		m_CarWorld->draw();
 		if (IsPromptMode)
-			hout.draw();
+			hbuf.draw();
 		else
 			m_CarWorld->DrawOnScreen();
 		Hgl::Finish();

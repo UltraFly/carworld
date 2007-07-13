@@ -1,120 +1,183 @@
 
 #include "H_Keys.h"
+#include "H_Standard.h"
 
-static pair<H_KEY,string> KeyMapValues[] =
+struct KeyDesc
 {
-	pair<H_KEY,string>(HK_INVALID,"INVALID"),
-	pair<H_KEY,string>(HK_LBUTTON,"MOUSE1"),
-	pair<H_KEY,string>(HK_RBUTTON,"MOUSE2"),
-	pair<H_KEY,string>(HK_CANCEL ,"CANCEL"),
-	pair<H_KEY,string>(HK_MBUTTON,"MOUSE3"),
-	pair<H_KEY,string>(HK_BACK   ,"BACK"),
-	pair<H_KEY,string>(HK_TAB    ,"TAB"),
-	pair<H_KEY,string>(HK_CLEAR  ,"CLR"),
-	pair<H_KEY,string>(HK_RETURN ,"RETURN"),
-	pair<H_KEY,string>(HK_SHIFT  ,"SHIFT"),
-	pair<H_KEY,string>(HK_CONTROL,"CTRL"),
-	pair<H_KEY,string>(HK_MENU   ,"MENU"),
-	pair<H_KEY,string>(HK_PAUSE  ,"PAUSE"),
-	pair<H_KEY,string>(HK_ESCAPE ,"ESC"),
-	pair<H_KEY,string>(HK_SPACE  ,"SPACE"),
-	pair<H_KEY,string>(HK_PRIOR  ,"PRIOR"),
-	pair<H_KEY,string>(HK_NEXT   ,"NEXT"),
-	pair<H_KEY,string>(HK_END    ,"END"),
-	pair<H_KEY,string>(HK_HOME   ,"HOME"),
-	pair<H_KEY,string>(HK_LEFT   ,"LEFTARROW"),
-	pair<H_KEY,string>(HK_UP     ,"UPARROW"),
-	pair<H_KEY,string>(HK_RIGHT  ,"RIGHTARROW"),
-	pair<H_KEY,string>(HK_DOWN   ,"DOWNARROW"),
-	pair<H_KEY,string>(HK_SELECT ,"SELECT"),
-	pair<H_KEY,string>(HK_PRINT  ,"PRINT"),
-	pair<H_KEY,string>(HK_EXECUTE,"EXECUTE"),
-	pair<H_KEY,string>(HK_INSERT ,"INSERT"),
-	pair<H_KEY,string>(HK_DELETE ,"DEL"),
-	pair<H_KEY,string>(HK_HELP   ,"HELP"),
-	pair<H_KEY,string>(HK_0      ,"0"),
-	pair<H_KEY,string>(HK_1      ,"1"),
-	pair<H_KEY,string>(HK_2      ,"2"),
-	pair<H_KEY,string>(HK_3      ,"3"),
-	pair<H_KEY,string>(HK_4      ,"4"),
-	pair<H_KEY,string>(HK_5      ,"5"),
-	pair<H_KEY,string>(HK_6      ,"6"),
-	pair<H_KEY,string>(HK_7      ,"7"),
-	pair<H_KEY,string>(HK_8      ,"8"),
-	pair<H_KEY,string>(HK_9      ,"9"),
-	pair<H_KEY,string>(HK_A      ,"a"),
-	pair<H_KEY,string>(HK_B      ,"b"),
-	pair<H_KEY,string>(HK_C      ,"c"),
-	pair<H_KEY,string>(HK_D      ,"d"),
-	pair<H_KEY,string>(HK_E      ,"e"),
-	pair<H_KEY,string>(HK_F      ,"f"),
-	pair<H_KEY,string>(HK_G      ,"g"),
-	pair<H_KEY,string>(HK_H      ,"h"),
-	pair<H_KEY,string>(HK_I      ,"i"),
-	pair<H_KEY,string>(HK_J      ,"j"),
-	pair<H_KEY,string>(HK_K      ,"k"),
-	pair<H_KEY,string>(HK_L      ,"l"),
-	pair<H_KEY,string>(HK_M      ,"m"),
-	pair<H_KEY,string>(HK_N      ,"n"),
-	pair<H_KEY,string>(HK_O      ,"o"),
-	pair<H_KEY,string>(HK_P      ,"p"),
-	pair<H_KEY,string>(HK_Q      ,"q"),
-	pair<H_KEY,string>(HK_R      ,"r"),
-	pair<H_KEY,string>(HK_S      ,"s"),
-	pair<H_KEY,string>(HK_T      ,"t"),
-	pair<H_KEY,string>(HK_U      ,"u"),
-	pair<H_KEY,string>(HK_V      ,"v"),
-	pair<H_KEY,string>(HK_W      ,"w"),
-	pair<H_KEY,string>(HK_X      ,"x"),
-	pair<H_KEY,string>(HK_Y      ,"y"),
-	pair<H_KEY,string>(HK_Z      ,"z"),
-	pair<H_KEY,string>(HK_NUMPAD0,"NUMPAD0"),
-	pair<H_KEY,string>(HK_NUMPAD1,"NUMPAD1"),
-	pair<H_KEY,string>(HK_NUMPAD2,"NUMPAD2"),
-	pair<H_KEY,string>(HK_NUMPAD3,"NUMPAD3"),
-	pair<H_KEY,string>(HK_NUMPAD4,"NUMPAD4"),
-	pair<H_KEY,string>(HK_NUMPAD5,"NUMPAD5"),
-	pair<H_KEY,string>(HK_NUMPAD6,"NUMPAD6"),
-	pair<H_KEY,string>(HK_NUMPAD7,"NUMPAD7"),
-	pair<H_KEY,string>(HK_NUMPAD8,"NUMPAD8"),
-	pair<H_KEY,string>(HK_NUMPAD9,"NUMPAD9"),
-	pair<H_KEY,string>(HK_MULTIPLY,"*"),
-	pair<H_KEY,string>(HK_ADD    ,"+"),
-	pair<H_KEY,string>(HK_SEPARATOR,"HK_SEPARATOR"), //?
-	pair<H_KEY,string>(HK_SUBTRACT,"-"),
-	pair<H_KEY,string>(HK_DECIMAL,"."),
-	pair<H_KEY,string>(HK_DIVIDE ,"/"),
-	pair<H_KEY,string>(HK_F1     ,"F1"),
-	pair<H_KEY,string>(HK_F2     ,"F2"),
-	pair<H_KEY,string>(HK_F3     ,"F3"),
-	pair<H_KEY,string>(HK_F4     ,"F4"),
-	pair<H_KEY,string>(HK_F5     ,"F5"),
-	pair<H_KEY,string>(HK_F6     ,"F6"),
-	pair<H_KEY,string>(HK_F7     ,"F7"),
-	pair<H_KEY,string>(HK_F8     ,"F8"),
-	pair<H_KEY,string>(HK_F9     ,"F9"),
-	pair<H_KEY,string>(HK_F10    ,"F10"),
-	pair<H_KEY,string>(HK_F11    ,"F11"),
-	pair<H_KEY,string>(HK_F12    ,"F12"),
-	pair<H_KEY,string>(HK_NUMLOCK,"NUM"),
-	pair<H_KEY,string>(HK_SCROLL ,"HK_SCROLL")
+	SDLKey key;
+	const char* name;
 };
 
-HMapper<H_KEY,string> KeyMap(
-	KeyMapValues,
-	KeyMapValues+(sizeof(KeyMapValues)/sizeof(pair<H_KEY,string>))
-);
-
-ostream &operator<<(ostream &out, const H_KEY key)
+static KeyDesc KeyMapValues[] =
 {
-	return out << KeyMap.find(key);
+	{SDLK_UNKNOWN, "UNKNOWN"},
+	{SDLK_BACKSPACE, "BACKSPACE"},
+	{SDLK_TAB, "TAB"},
+	{SDLK_CLEAR, "CLEAR"},
+	{SDLK_RETURN, "RETURN"},
+	{SDLK_PAUSE, "PAUSE"},
+	{SDLK_ESCAPE, "ESCAPE"},
+	{SDLK_SPACE, "SPACE"},
+	{SDLK_EXCLAIM, "EXCLAIM"},
+	{SDLK_QUOTEDBL, "QUOTEDBL"},
+	{SDLK_HASH, "HASH"},
+	{SDLK_DOLLAR, "DOLLAR"},
+	{SDLK_AMPERSAND, "AMPERSAND"},
+	{SDLK_QUOTE, "QUOTE"},
+	{SDLK_LEFTPAREN, "LEFTPAREN"},
+	{SDLK_RIGHTPAREN, "RIGHTPAREN"},
+	{SDLK_ASTERISK, "ASTERISK"},
+	{SDLK_PLUS, "PLUS"},
+	{SDLK_COMMA, "COMMA"},
+	{SDLK_MINUS, "MINUS"},
+	{SDLK_PERIOD, "PERIOD"},
+	{SDLK_SLASH, "SLASH"},
+	{SDLK_0, "0"},
+	{SDLK_1, "1"},
+	{SDLK_2, "2"},
+	{SDLK_3, "3"},
+	{SDLK_4, "4"},
+	{SDLK_5, "5"},
+	{SDLK_6, "6"},
+	{SDLK_7, "7"},
+	{SDLK_8, "8"},
+	{SDLK_9, "9"},
+	{SDLK_COLON, "COLON"},
+	{SDLK_SEMICOLON, "SEMICOLON"},
+	{SDLK_LESS, "LESS"},
+	{SDLK_EQUALS, "EQUALS"},
+	{SDLK_GREATER, "GREATER"},
+	{SDLK_QUESTION, "QUESTION"},
+	{SDLK_AT, "AT"},
+	{SDLK_LEFTBRACKET, "LEFTBRACKET"},
+	{SDLK_BACKSLASH, "BACKSLASH"},
+	{SDLK_RIGHTBRACKET, "RIGHTBRACKET"},
+	{SDLK_CARET, "CARET"},
+	{SDLK_UNDERSCORE, "UNDERSCORE"},
+	{SDLK_BACKQUOTE, "BACKQUOTE"},
+	{SDLK_a, "a"},
+	{SDLK_b, "b"},
+	{SDLK_c, "c"},
+	{SDLK_d, "d"},
+	{SDLK_e, "e"},
+	{SDLK_f, "f"},
+	{SDLK_g, "g"},
+	{SDLK_h, "h"},
+	{SDLK_i, "i"},
+	{SDLK_j, "j"},
+	{SDLK_k, "k"},
+	{SDLK_l, "l"},
+	{SDLK_m, "m"},
+	{SDLK_n, "n"},
+	{SDLK_o, "o"},
+	{SDLK_p, "p"},
+	{SDLK_q, "q"},
+	{SDLK_r, "r"},
+	{SDLK_s, "s"},
+	{SDLK_t, "t"},
+	{SDLK_u, "u"},
+	{SDLK_v, "v"},
+	{SDLK_w, "w"},
+	{SDLK_x, "x"},
+	{SDLK_y, "y"},
+	{SDLK_z, "z"},
+	{SDLK_DELETE, "DELETE"},
+	{SDLK_KP0, "KP0"},
+	{SDLK_KP1, "KP1"},
+	{SDLK_KP2, "KP2"},
+	{SDLK_KP3, "KP3"},
+	{SDLK_KP4, "KP4"},
+	{SDLK_KP5, "KP5"},
+	{SDLK_KP6, "KP6"},
+	{SDLK_KP7, "KP7"},
+	{SDLK_KP8, "KP8"},
+	{SDLK_KP9, "KP9"},
+	{SDLK_KP_PERIOD, "KP_PERIOD"},
+	{SDLK_KP_DIVIDE, "KP_DIVIDE"},
+	{SDLK_KP_MULTIPLY, "KP_MULTIPLY"},
+	{SDLK_KP_MINUS, "KP_MINUS"},
+	{SDLK_KP_PLUS, "KP_PLUS"},
+	{SDLK_KP_ENTER, "KP_ENTER"},
+	{SDLK_KP_EQUALS, "KP_EQUALS"},
+	{SDLK_UP, "UP"},
+	{SDLK_DOWN, "DOWN"},
+	{SDLK_RIGHT, "RIGHT"},
+	{SDLK_LEFT, "LEFT"},
+	{SDLK_INSERT, "INSERT"},
+	{SDLK_HOME, "HOME"},
+	{SDLK_END, "END"},
+	{SDLK_PAGEUP, "PAGEUP"},
+	{SDLK_PAGEDOWN, "PAGEDOWN"},
+	{SDLK_F1, "F1"},
+	{SDLK_F2, "F2"},
+	{SDLK_F3, "F3"},
+	{SDLK_F4, "F4"},
+	{SDLK_F5, "F5"},
+	{SDLK_F6, "F6"},
+	{SDLK_F7, "F7"},
+	{SDLK_F8, "F8"},
+	{SDLK_F9, "F9"},
+	{SDLK_F10, "F10"},
+	{SDLK_F11, "F11"},
+	{SDLK_F12, "F12"},
+	{SDLK_F13, "F13"},
+	{SDLK_F14, "F14"},
+	{SDLK_F15, "F15"},
+	{SDLK_NUMLOCK, "NUMLOCK"},
+	{SDLK_CAPSLOCK, "CAPSLOCK"},
+	{SDLK_SCROLLOCK, "SCROLLOCK"},
+	{SDLK_RSHIFT, "RSHIFT"},
+	{SDLK_LSHIFT, "LSHIFT"},
+	{SDLK_RCTRL, "RCTRL"},
+	{SDLK_LCTRL, "LCTRL"},
+	{SDLK_RALT, "RALT"},
+	{SDLK_LALT, "LALT"},
+	{SDLK_RMETA, "RMETA"},
+	{SDLK_LMETA, "LMETA"},
+	{SDLK_LSUPER, "LSUPER"},
+	{SDLK_RSUPER, "RSUPER"},
+	{SDLK_MODE, "MODE"},
+	{SDLK_COMPOSE, "COMPOSE"},
+	{SDLK_HELP, "HELP"},
+	{SDLK_PRINT, "PRINT"},
+	{SDLK_SYSREQ, "SYSREQ"},
+	{SDLK_BREAK, "BREAK"},
+	{SDLK_MENU, "MENU"},
+	{SDLK_POWER, "POWER"},
+	{SDLK_EURO, "EURO"},
+	{SDLK_UNDO, "UNDO"}
+};
+
+const char* ToStr(SDLKey key)
+{
+	for (unsigned int i=0 ; i<ARRAY_SIZE(KeyMapValues) ; i++)
+	{
+		if (key==KeyMapValues[i].key)
+			return KeyMapValues[i].name;
+	}
+	return "UNKNOWN";
 }
 
-istream &operator>>(istream &in, H_KEY &key)
+SDLKey ToSDLKey(const char* str)
+{
+	for (unsigned int i=0 ; i<ARRAY_SIZE(KeyMapValues) ; i++)
+	{
+		if (strcmp(str, KeyMapValues[i].name)==0)
+			return KeyMapValues[i].key;
+	}
+	return SDLK_UNKNOWN;
+}
+
+ostream &operator<<(ostream &out, const SDLKey key)
+{
+	return out << ToStr(key);
+}
+
+istream &operator>>(istream &in, SDLKey &key)
 {
 	string tmp;
 	getline(in,tmp,'\0');
-	key = KeyMap.find(tmp);
+	key = ToSDLKey(tmp.c_str());
 	return in;
 }
 

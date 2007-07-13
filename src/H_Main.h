@@ -9,6 +9,7 @@ using namespace std;
 #include <string>
 #include <iostream>
 #include "H_Keys.h"
+#include "H_Standard.h"
 
 #define BH_DEFAULT_X 100
 #define BH_DEFAULT_Y 100
@@ -17,6 +18,7 @@ using namespace std;
 class HJoystick
 {
 public:
+	virtual ~HJoystick();
 	virtual bool IsValid() = 0;
 	virtual const char *GetDescription() = 0;
 	virtual int GetNumAxis() = 0;
@@ -34,10 +36,11 @@ public:
 class HWindow
 {
 public:
+	virtual ~HWindow();
 	//to do with keyboard state: (asynchron)
-	virtual const char *GetKeyboardDescription() = 0;
-	virtual bool IsPressed(H_KEY k) = 0;
-	virtual HJoystick *GetJoystick() = 0;
+	virtual const char* GetKeyboardDescription() = 0;
+	virtual bool IsPressed(SDLKey k) = 0;
+	virtual HJoystick* GetJoystick() = 0;
 	//make this Window the current opengl rendering window
 	virtual void MakeCurrent() = 0;
 	virtual void SwapBuffers() = 0;
@@ -58,7 +61,6 @@ public:
 	HApplication();
 	virtual ~HApplication();
 
-//precision of the return value of ElapsedTime();
 	static int TimeRefreshRate();
 //for window title etc...
 	virtual const char *name() = 0;
@@ -86,19 +88,16 @@ public:
 	virtual void draw_init() = 0; //init is called after the window is opened
 	virtual void draw_shutdown() = 0; //init is called befor the window is closed
 	virtual void draw() = 0;
-	virtual void key_down(H_KEY AHKey, char c) = 0;
+	virtual void key_down(SDLKey AHKey, char c) = 0;
 	virtual void resize(unsigned int width, unsigned int height) = 0;
 public:
 //OS specific window
 	HWindow *m_window;
 };
 
-const char *SystemDescription();
 const char *ConfigurationFileName();
 void HErrorExit(const char *E);
 
-void Add(HApplication *app);
-//void Remove(HApplication *app);
-int EventLoop(int argc, char **argv);
+void Add(HglApplication *app);
 
 #endif //_H_MAIN_H_

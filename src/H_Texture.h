@@ -5,7 +5,14 @@
 namespace std {}
 using namespace std;
 
-#include <GL/gl.h>
+#ifdef __APPLE__
+#	include <OpenGL/gl.h>
+#	include <OpenGL/glu.h>
+#else
+#	include <GL/gl.h>
+#	include <GL/glu.h>
+#endif
+
 #include "H_Geometry.h"
 
 #include <map>
@@ -27,7 +34,7 @@ public:
 //opened image files, thus saving video memory.
 class Texture
 {
-private:
+public:
 	class Reference
 	{
 	public:

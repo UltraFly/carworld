@@ -1,5 +1,5 @@
 
-#include "H_XML.h"
+#include "h_xml.h"
 #include "automat.h"
 
 using namespace std;
