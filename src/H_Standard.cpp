@@ -177,10 +177,10 @@ void OpenDataFile(ifstream &infile, const char *FileName)
 		infile.open(FullPath.c_str(), ios::in | ios::binary);
 	}
 //try in the home directory
-	if (!infile)
+	const char* HomeDirectory = getenv("HOME");
+	if (!infile && HomeDirectory!=NULL)
 	{
 		infile.clear();
-		string HomeDirectory = getenv("HOME");
 
 		FullPath = HomeDirectory;
 		FullPath += "/.carworld/";
