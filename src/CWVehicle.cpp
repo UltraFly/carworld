@@ -4,7 +4,7 @@
 #include "H_Object.h"
 #include "H_Graphics.h"
 #include "H_Variable.h"
-#include "h_xml.h"
+#include "H_XML.h"
 
 //CLASS CWCommand
 CWCommand::CWCommand() : GasBrake(0), Steer(0), SteerFeedBack(0), HandBrake(false)
