@@ -83,8 +83,9 @@ BUGS
 *problem with BeOS version
 
 
-TODO (in order of what is being done)
-sound (plan to use openal)
-clean up file formats (use 3ds?)+make a better terrain editor (with Qt)...
-continue networked game
-use SDL opengl extention querying
+TODO
+-use SDL_image for image loading (+don't hardcode path to road texture)
+-use SDL opengl extention querying
+-use SDL for networked game
+-sound (with openal)
+-clean up file formats (use 3ds?)+make a better terrain editor (with Qt)...

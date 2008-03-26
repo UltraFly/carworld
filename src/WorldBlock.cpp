@@ -294,7 +294,7 @@ void WorldBlock::InitOffObject()
 	for (vector<MyTriangle>::iterator I = Triangles.begin() ; I!=Triangles.end() ; I++)
 		tmp.AddPolygon((*I).toOFFPolygon());
 
-	tmp.SetTexture("data/Landscape/CWRoad.ppm");
+	tmp.SetTexture("data/Landscape/CWRoad.png");
 
 	tmp.ReturnOffObject(MyOffObject);
 	MyOffObject.SetShading(false);

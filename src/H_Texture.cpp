@@ -2,7 +2,9 @@
 #include "H_Standard.h"
 #include "H_Graphics.h"
 #include "H_Texture.h"
-#include "H_Image.h"
+#include <SDL.h>
+#include <SDL_image.h>
+#include <SDL_opengl.h>
 
 //CLASS Texture
 Texture::Texture(const char *FileName) : MyReference(Reference::GetReference(FileName))
@@ -97,32 +99,76 @@ Texture::Reference::Reference() :
 	TexIndex(0)
 {}
 
+bool IsPowerOfTwo(int n)
+{
+	return (n & (n - 1))==0;
+}
+
 void Texture::Reference::LoadImage(const char *FileName)
 {
-	Name = FileName;
-
-	int GLWidth, GLHeight;
-	unsigned char *GLData = NULL;
-
-	//cout << "    " << FileName << "\n";
-
-	H_ReadImage(FileName,GLData,GLWidth,GLHeight);
-	
-//to do with textures:
-	glGenTextures (1, &TexIndex);
-	ApplyMode(Hgl::GetTextureMode());
-	/*my_gluBuild2DMipmaps(
-		(GLsizei)GLWidth, (GLsizei)GLHeight, (GLubyte*)GLData
-	);*/
-	/*gluBuild2DMipmaps(
-		GL_TEXTURE_2D, 3, (GLsizei)GLWidth, (GLsizei)GLHeight, GL_RGB,
-		GL_UNSIGNED_BYTE, (GLubyte*)GLData
-	);*/
-	glTexImage2D(GL_TEXTURE_2D, 0, 3,
-		GLWidth, GLHeight,
-		0 , GL_RGB, GL_UNSIGNED_BYTE,
-		GLData);
-	delete [] GLData;
+// This surface will tell us the details of the image
+	SDL_Surface* surface = IMG_Load(FileName);	
+	if (surface!=NULL)
+	{ 
+	// Check that the image's width is a power of 2
+		if (!IsPowerOfTwo(surface->w))
+		{
+			cout << "warning: image.bmp's width is not a power of 2" << endl;
+		}
+		
+	// Also check if the height is a power of 2
+		if (!IsPowerOfTwo(surface->h))
+		{
+			cout << "warning: image.bmp's height is not a power of 2" << endl;
+		}
+	 
+	// get the number of channels in the SDL surface
+		GLint nOfColors = surface->format->BytesPerPixel;
+		GLenum texture_format;
+		switch (nOfColors)
+		{
+		case 4:     // contains an alpha channel
+			{
+				if (surface->format->Rmask == 0x000000ff)
+						texture_format = GL_RGBA;
+				else
+						texture_format = GL_BGRA;
+			}
+			break;
+		case 3:     // no alpha channel
+			{
+				if (surface->format->Rmask == 0x000000ff)
+						texture_format = GL_RGB;
+				else
+						texture_format = GL_BGR;
+			}
+			break;
+		default:
+			throw HException(string("The image : \"")+FileName+("\" is not truecolor."));
+			break;
+		}
+	        
+		// Have OpenGL generate a TexIndex object handle for us
+		glGenTextures( 1, &TexIndex );
+	 
+		// Bind the TexIndex object
+		glBindTexture( GL_TEXTURE_2D, TexIndex );
+	 
+		// Set the TexIndex's stretching properties
+		//glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR );
+		//glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR );
+	 
+		// Edit the TexIndex object's image data using the information SDL_Surface gives us
+		glTexImage2D( GL_TEXTURE_2D, 0, nOfColors, surface->w, surface->h, 0,
+						  texture_format, GL_UNSIGNED_BYTE, surface->pixels );
+		
+		cout << "opened "<< surface->w << "x" << surface->h <<" image file: \"" << FileName << "\"" << endl;
+		SDL_FreeSurface(surface);
+	} 
+	else
+	{
+		throw HException(string("SDL could not load : \"")+FileName+ "\"." + string(SDL_GetError()));
+	}    
 }
 
 Texture::Reference::~Reference()

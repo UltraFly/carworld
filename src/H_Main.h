@@ -45,7 +45,7 @@ public:
 	virtual void MakeCurrent() = 0;
 	virtual void SwapBuffers() = 0;
 	//depending on implementation, SetAttrib might only work if called
-	//befor the window is opened
+	//before the window is opened
 	virtual void SetAttrib(int width, int height, bool fullscreen) = 0;
 public:
 	int m_width, m_height;
