@@ -17,10 +17,10 @@
 	<Configurations>
 		<Configuration
 			Name="Release|Win32"
-			OutputDirectory=".\..\..\$(ConfigurationName)"
-			IntermediateDirectory=".\..\..\$(ConfigurationName)"
+			OutputDirectory="../$(ConfigurationName)"
+			IntermediateDirectory="../$(ConfigurationName)"
 			ConfigurationType="1"
-			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC60.vsprops"
+			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults/UpgradeFromVC60.vsprops"
 			UseOfMFC="0"
 			ATLMinimizesCRunTimeLibraryUsage="false"
 			>
@@ -42,7 +42,7 @@
 				MkTypLibCompatible="true"
 				SuppressStartupBanner="true"
 				TargetEnvironment="1"
-				TypeLibraryName=".\..\..\obj/carworld.tlb"
+				TypeLibraryName="../obj/carworld.tlb"
 				HeaderFileName=""
 			/>
 			<Tool
@@ -56,8 +56,8 @@
 				RuntimeTypeInfo="true"
 				PrecompiledHeaderFile=""
 				AssemblerListingLocation=""
-				ObjectFile="$(IntDir)\"
-				ProgramDataBaseFileName="$(IntDir)\vc90.pdb"
+				ObjectFile="$(IntDir)/"
+				ProgramDataBaseFileName="$(IntDir)/vc90.pdb"
 				BrowseInformation="1"
 				WarningLevel="3"
 				SuppressStartupBanner="true"
@@ -76,7 +76,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="opengl32.lib glu32.lib ws2_32.lib SDL_image.lib SDL.lib SDLmain.lib"
-				OutputFile="../../carworld.exe"
+				OutputFile="../carworld.exe"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
 				ProgramDatabaseFile="$(IntDir)/carworld.pdb"
@@ -111,10 +111,10 @@
 		</Configuration>
 		<Configuration
 			Name="Debug|Win32"
-			OutputDirectory=".\..\..\$(ConfigurationName)"
-			IntermediateDirectory=".\..\..\$(ConfigurationName)"
+			OutputDirectory="../$(ConfigurationName)"
+			IntermediateDirectory="../$(ConfigurationName)"
 			ConfigurationType="1"
-			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC60.vsprops"
+			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults/UpgradeFromVC60.vsprops"
 			UseOfMFC="0"
 			ATLMinimizesCRunTimeLibraryUsage="false"
 			>
@@ -136,7 +136,7 @@
 				MkTypLibCompatible="true"
 				SuppressStartupBanner="true"
 				TargetEnvironment="1"
-				TypeLibraryName=".\..\..\obj/carworld.tlb"
+				TypeLibraryName="../objcarworld.tlb"
 				HeaderFileName=""
 			/>
 			<Tool
@@ -170,7 +170,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="opengl32.lib glu32.lib ws2_32.lib SDL_image.lib SDL.lib SDLmain.lib"
-				OutputFile="../../carworldd.exe"
+				OutputFile="../carworldd.exe"
 				LinkIncremental="2"
 				SuppressStartupBanner="true"
 				IgnoreDefaultLibraryNames="msvcrt.lib"
@@ -214,7 +214,7 @@
 			Filter="cpp;c;cxx;rc;def;r;odl;idl;hpj;bat"
 			>
 			<File
-				RelativePath="..\..\src\DXJoystick.cpp"
+				RelativePath="..\src\DXJoystick.cpp"
 				>
 				<FileConfiguration
 					Name="Release|Win32"
@@ -234,35 +234,15 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="..\..\src\DXJoystick.h"
+				RelativePath="..\src\DXJoystick.h"
 				>
 			</File>
 			<File
-				RelativePath="..\..\src\H_Main.h"
+				RelativePath="..\src\H_Main.h"
 				>
 			</File>
 			<File
-				RelativePath="..\..\src\H_PosixSocket.cpp"
-				>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						PreprocessorDefinitions=""
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						PreprocessorDefinitions=""
-					/>
-				</FileConfiguration>
-			</File>
-			<File
-				RelativePath="..\..\src\H_WinSocket.cpp"
+				RelativePath="..\src\H_PosixSocket.cpp"
 				>
 				<FileConfiguration
 					Name="Release|Win32"
@@ -282,7 +262,7 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="..\..\src\SDLJoystick.cpp"
+				RelativePath="..\src\H_WinSocket.cpp"
 				>
 				<FileConfiguration
 					Name="Release|Win32"
@@ -302,11 +282,31 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="..\..\src\SDLJoystick.h"
+				RelativePath="..\src\SDLJoystick.cpp"
+				>
+				<FileConfiguration
+					Name="Release|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						PreprocessorDefinitions=""
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Debug|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						PreprocessorDefinitions=""
+					/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath="..\src\SDLJoystick.h"
 				>
 			</File>
 			<File
-				RelativePath="..\..\src\SDLMain.cpp"
+				RelativePath="..\src\SDLMain.cpp"
 				>
 				<FileConfiguration
 					Name="Release|Win32"
@@ -330,35 +330,11 @@
 			Name="Generic"
 			>
 			<File
-				RelativePath="..\..\src\automat.h"
+				RelativePath="..\src\automat.h"
 				>
 			</File>
 			<File
-				RelativePath="..\..\src\H_Geometry.cpp"
-				>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						PreprocessorDefinitions=""
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						PreprocessorDefinitions=""
-					/>
-				</FileConfiguration>
-			</File>
-			<File
-				RelativePath="..\..\src\H_Geometry.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\src\H_Graphics.cpp"
+				RelativePath="..\src\H_Geometry.cpp"
 				>
 				<FileConfiguration
 					Name="Release|Win32"
@@ -378,35 +354,11 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="..\..\src\H_Graphics.h"
+				RelativePath="..\src\H_Geometry.h"
 				>
 			</File>
 			<File
-				RelativePath="..\..\src\H_Input.cpp"
-				>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						PreprocessorDefinitions=""
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						PreprocessorDefinitions=""
-					/>
-				</FileConfiguration>
-			</File>
-			<File
-				RelativePath="..\..\src\H_Input.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\src\H_Keys.cpp"
+				RelativePath="..\src\H_Graphics.cpp"
 				>
 				<FileConfiguration
 					Name="Release|Win32"
@@ -426,35 +378,11 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="..\..\src\H_Keys.h"
+				RelativePath="..\src\H_Graphics.h"
 				>
 			</File>
 			<File
-				RelativePath="..\..\src\H_Object.cpp"
-				>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						PreprocessorDefinitions=""
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						PreprocessorDefinitions=""
-					/>
-				</FileConfiguration>
-			</File>
-			<File
-				RelativePath="..\..\src\H_Object.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\src\H_Prompt.cpp"
+				RelativePath="..\src\H_Input.cpp"
 				>
 				<FileConfiguration
 					Name="Release|Win32"
@@ -474,15 +402,11 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="..\..\src\H_Prompt.h"
+				RelativePath="..\src\H_Input.h"
 				>
 			</File>
 			<File
-				RelativePath="..\..\src\H_Socket.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\src\H_Standard.cpp"
+				RelativePath="..\src\H_Keys.cpp"
 				>
 				<FileConfiguration
 					Name="Release|Win32"
@@ -502,35 +426,11 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="..\..\src\H_Standard.h"
+				RelativePath="..\src\H_Keys.h"
 				>
 			</File>
 			<File
-				RelativePath="..\..\src\H_Texture.cpp"
-				>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						PreprocessorDefinitions=""
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						PreprocessorDefinitions=""
-					/>
-				</FileConfiguration>
-			</File>
-			<File
-				RelativePath="..\..\src\H_Texture.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\src\H_Variable.cpp"
+				RelativePath="..\src\H_Object.cpp"
 				>
 				<FileConfiguration
 					Name="Release|Win32"
@@ -550,11 +450,11 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="..\..\src\H_Variable.h"
+				RelativePath="..\src\H_Object.h"
 				>
 			</File>
 			<File
-				RelativePath="..\..\src\H_XML.cpp"
+				RelativePath="..\src\H_Prompt.cpp"
 				>
 				<FileConfiguration
 					Name="Release|Win32"
@@ -574,7 +474,107 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="..\..\src\H_XML.h"
+				RelativePath="..\src\H_Prompt.h"
+				>
+			</File>
+			<File
+				RelativePath="..\src\H_Socket.h"
+				>
+			</File>
+			<File
+				RelativePath="..\src\H_Standard.cpp"
+				>
+				<FileConfiguration
+					Name="Release|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						PreprocessorDefinitions=""
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Debug|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						PreprocessorDefinitions=""
+					/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath="..\src\H_Standard.h"
+				>
+			</File>
+			<File
+				RelativePath="..\src\H_Texture.cpp"
+				>
+				<FileConfiguration
+					Name="Release|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						PreprocessorDefinitions=""
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Debug|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						PreprocessorDefinitions=""
+					/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath="..\src\H_Texture.h"
+				>
+			</File>
+			<File
+				RelativePath="..\src\H_Variable.cpp"
+				>
+				<FileConfiguration
+					Name="Release|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						PreprocessorDefinitions=""
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Debug|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						PreprocessorDefinitions=""
+					/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath="..\src\H_Variable.h"
+				>
+			</File>
+			<File
+				RelativePath="..\src\H_XML.cpp"
+				>
+				<FileConfiguration
+					Name="Release|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						PreprocessorDefinitions=""
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Debug|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						PreprocessorDefinitions=""
+					/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath="..\src\H_XML.h"
 				>
 			</File>
 		</Filter>
@@ -582,7 +582,7 @@
 			Name="CarWorld specific"
 			>
 			<File
-				RelativePath="..\..\src\CarWorld.cpp"
+				RelativePath="..\src\CarWorld.cpp"
 				>
 				<FileConfiguration
 					Name="Release|Win32"
@@ -602,35 +602,11 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="..\..\src\CarWorld.h"
+				RelativePath="..\src\CarWorld.h"
 				>
 			</File>
 			<File
-				RelativePath="..\..\src\CarWorldClasses.cpp"
-				>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						PreprocessorDefinitions=""
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						PreprocessorDefinitions=""
-					/>
-				</FileConfiguration>
-			</File>
-			<File
-				RelativePath="..\..\src\CarWorldClasses.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\src\CarWorldClient.cpp"
+				RelativePath="..\src\CarWorldClasses.cpp"
 				>
 				<FileConfiguration
 					Name="Release|Win32"
@@ -650,31 +626,11 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="..\..\src\CarWorldClient.h"
+				RelativePath="..\src\CarWorldClasses.h"
 				>
 			</File>
 			<File
-				RelativePath="..\..\src\CarWorldMain.cpp"
-				>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						PreprocessorDefinitions=""
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						PreprocessorDefinitions=""
-					/>
-				</FileConfiguration>
-			</File>
-			<File
-				RelativePath="..\..\src\CarWorldNet.cpp"
+				RelativePath="..\src\CarWorldClient.cpp"
 				>
 				<FileConfiguration
 					Name="Release|Win32"
@@ -694,35 +650,11 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="..\..\src\CarWorldNet.h"
+				RelativePath="..\src\CarWorldClient.h"
 				>
 			</File>
 			<File
-				RelativePath="..\..\src\CWCamera.cpp"
-				>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						PreprocessorDefinitions=""
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						PreprocessorDefinitions=""
-					/>
-				</FileConfiguration>
-			</File>
-			<File
-				RelativePath="..\..\src\CWCamera.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\src\CWVehicle.cpp"
+				RelativePath="..\src\CarWorldMain.cpp"
 				>
 				<FileConfiguration
 					Name="Release|Win32"
@@ -742,15 +674,7 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="..\..\src\CWVehicle.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\src\CWVersion.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\src\Tacho.cpp"
+				RelativePath="..\src\CarWorldNet.cpp"
 				>
 				<FileConfiguration
 					Name="Release|Win32"
@@ -770,11 +694,11 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="..\..\src\Tacho.h"
+				RelativePath="..\src\CarWorldNet.h"
 				>
 			</File>
 			<File
-				RelativePath="..\..\src\WorldBlock.cpp"
+				RelativePath="..\src\CWCamera.cpp"
 				>
 				<FileConfiguration
 					Name="Release|Win32"
@@ -794,12 +718,88 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="..\..\src\WorldBlock.h"
+				RelativePath="..\src\CWCamera.h"
+				>
+			</File>
+			<File
+				RelativePath="..\src\CWVehicle.cpp"
+				>
+				<FileConfiguration
+					Name="Release|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						PreprocessorDefinitions=""
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Debug|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						PreprocessorDefinitions=""
+					/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath="..\src\CWVehicle.h"
+				>
+			</File>
+			<File
+				RelativePath="..\src\CWVersion.h"
+				>
+			</File>
+			<File
+				RelativePath="..\src\Tacho.cpp"
+				>
+				<FileConfiguration
+					Name="Release|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						PreprocessorDefinitions=""
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Debug|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						PreprocessorDefinitions=""
+					/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath="..\src\Tacho.h"
+				>
+			</File>
+			<File
+				RelativePath="..\src\WorldBlock.cpp"
+				>
+				<FileConfiguration
+					Name="Release|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						PreprocessorDefinitions=""
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Debug|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						PreprocessorDefinitions=""
+					/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath="..\src\WorldBlock.h"
 				>
 			</File>
 		</Filter>
 		<File
-			RelativePath="..\..\readme.txt"
+			RelativePath="..\readme.txt"
 			>
 		</File>
 	</Files>
