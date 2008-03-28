@@ -4,6 +4,7 @@
 	Version="9,00"
 	Name="carworld"
 	ProjectGUID="{47BA3349-F605-42E6-A51E-F67398FFB0B4}"
+	RootNamespace="carworld"
 	TargetFrameworkVersion="131072"
 	>
 	<Platforms>
@@ -16,8 +17,8 @@
 	<Configurations>
 		<Configuration
 			Name="Release|Win32"
-			OutputDirectory=".\..\..\obj"
-			IntermediateDirectory=".\..\..\obj"
+			OutputDirectory=".\..\..\$(ConfigurationName)"
+			IntermediateDirectory=".\..\..\$(ConfigurationName)"
 			ConfigurationType="1"
 			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC60.vsprops"
 			UseOfMFC="0"
@@ -48,15 +49,15 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				InlineFunctionExpansion="1"
-				PreprocessorDefinitions="NDEBUG;WIN32;_WINDOWS;USE_WIN_SOCKETS"
+				PreprocessorDefinitions="NDEBUG;WIN32;USE_WIN_SOCKETS"
 				StringPooling="true"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
 				RuntimeTypeInfo="true"
-				PrecompiledHeaderFile=".\..\..\obj/carworld.pch"
-				AssemblerListingLocation=".\..\..\obj/"
-				ObjectFile=".\..\..\obj/"
-				ProgramDataBaseFileName=".\..\..\obj/"
+				PrecompiledHeaderFile=""
+				AssemblerListingLocation=""
+				ObjectFile="$(IntDir)\"
+				ProgramDataBaseFileName="$(IntDir)\vc90.pdb"
 				BrowseInformation="1"
 				WarningLevel="3"
 				SuppressStartupBanner="true"
@@ -78,7 +79,7 @@
 				OutputFile="../../carworld.exe"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
-				ProgramDatabaseFile=".\..\..\obj/carworld.pdb"
+				ProgramDatabaseFile="$(IntDir)/carworld.pdb"
 				SubSystem="2"
 				RandomizedBaseAddress="1"
 				DataExecutionPrevention="0"
@@ -96,7 +97,7 @@
 			<Tool
 				Name="VCBscMakeTool"
 				SuppressStartupBanner="true"
-				OutputFile=".\..\..\obj/carworld.bsc"
+				OutputFile="$(IntDir)/carworld.bsc"
 			/>
 			<Tool
 				Name="VCFxCopTool"
@@ -110,8 +111,8 @@
 		</Configuration>
 		<Configuration
 			Name="Debug|Win32"
-			OutputDirectory=".\..\..\obj"
-			IntermediateDirectory=".\..\..\obj"
+			OutputDirectory=".\..\..\$(ConfigurationName)"
+			IntermediateDirectory=".\..\..\$(ConfigurationName)"
 			ConfigurationType="1"
 			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC60.vsprops"
 			UseOfMFC="0"
@@ -141,15 +142,15 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				PreprocessorDefinitions="_DEBUG;WIN32;_WINDOWS;USE_WIN_SOCKETS"
+				PreprocessorDefinitions="_DEBUG;WIN32;USE_WIN_SOCKETS"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
 				RuntimeTypeInfo="true"
-				PrecompiledHeaderFile=".\..\..\obj/carworld.pch"
-				AssemblerListingLocation=".\..\..\obj/"
-				ObjectFile=".\..\..\obj/"
-				ProgramDataBaseFileName=".\..\..\obj/"
+				PrecompiledHeaderFile=""
+				AssemblerListingLocation=""
+				ObjectFile="$(IntDir)\"
+				ProgramDataBaseFileName="$(IntDir)\vc90.pdb"
 				BrowseInformation="1"
 				WarningLevel="3"
 				SuppressStartupBanner="true"
@@ -169,12 +170,12 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="opengl32.lib glu32.lib ws2_32.lib SDL_image.lib SDL.lib SDLmain.lib"
-				OutputFile="../../carworld.exe"
+				OutputFile="../../carworldd.exe"
 				LinkIncremental="2"
 				SuppressStartupBanner="true"
 				IgnoreDefaultLibraryNames="msvcrt.lib"
 				GenerateDebugInformation="true"
-				ProgramDatabaseFile=".\..\..\obj/carworld.pdb"
+				ProgramDatabaseFile="$(IntDir)/carworld.pdb"
 				SubSystem="2"
 				RandomizedBaseAddress="1"
 				DataExecutionPrevention="0"
@@ -192,7 +193,7 @@
 			<Tool
 				Name="VCBscMakeTool"
 				SuppressStartupBanner="true"
-				OutputFile=".\..\..\obj/carworld.bsc"
+				OutputFile="$(IntDir)/carworld.bsc"
 			/>
 			<Tool
 				Name="VCFxCopTool"
