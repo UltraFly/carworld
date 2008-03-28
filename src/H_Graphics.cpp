@@ -7,6 +7,7 @@
 #include <string>
 #include "H_Graphics.h"
 #include "H_Texture.h"
+#include <SDL.h>
 
 Hgl *Hgl::curr = NULL;
 
@@ -150,19 +151,14 @@ Hgl::Hgl(HWindow *w) :
 {
 	MakeCurrent();
 //initialize the function pointers to the glExtentions:
-#ifdef WIN32
-	glLockArrays = (PFNGLLOCKARRAYSPROC) wglGetProcAddress("glLockArraysEXT");
-	if (glLockArrays == NULL) //try the SGI equivalent
-		glLockArrays = (PFNGLLOCKARRAYSPROC) wglGetProcAddress("glLockArraysSGI");
+
+	glLockArrays = (PFNGLLOCKARRAYSEXTPROC) SDL_GL_GetProcAddress("glLockArraysEXT");
 	if (glLockArrays != NULL)
 		cout << "glLockArrays initiated...\n";
 
-	glUnlockArrays = (PFNGLUNLOCKARRAYSPROC) wglGetProcAddress("glUnlockArraysEXT");
-	if (glUnlockArrays == NULL) //try the SGI equivalent
-		glUnlockArrays = (PFNGLUNLOCKARRAYSPROC) wglGetProcAddress("glUnlockArraysSGI");
+	glUnlockArrays = (PFNGLUNLOCKARRAYSEXTPROC) SDL_GL_GetProcAddress("glUnlockArraysEXT");
 	if (glUnlockArrays != NULL)
 		cout << "glUnlockArrays initiated...\n";
-#endif //WIN32
 
 	//get gl extentions string
 	curr->GLExtentions = Command((char*)glGetString(GL_EXTENSIONS));

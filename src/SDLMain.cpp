@@ -1,8 +1,4 @@
 
-#ifdef WIN32
-#pragma warning( disable : 4786 ) //disable "identifier name too long" warning
-#endif
-
 #include "H_Standard.h"
 
 #include "H_Keys.h"

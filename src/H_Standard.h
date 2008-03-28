@@ -3,10 +3,6 @@
 #ifndef __H_STANDARD_H_
 #define __H_STANDARD_H_
 
-#ifdef WIN32
-#pragma warning( disable : 4786 ) //disable "identifier name too long" warning
-#endif //WIN32
-
 #include <sstream>
 
 #include <string>

@@ -4,7 +4,6 @@
 #include "H_Texture.h"
 #include <SDL.h>
 #include <SDL_image.h>
-#include <SDL_opengl.h>
 
 //CLASS Texture
 Texture::Texture(const char *FileName) : MyReference(Reference::GetReference(FileName))
@@ -153,11 +152,7 @@ void Texture::Reference::LoadImage(const char *FileName)
 	 
 		// Bind the TexIndex object
 		glBindTexture( GL_TEXTURE_2D, TexIndex );
-	 
-		// Set the TexIndex's stretching properties
-		//glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR );
-		//glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR );
-	 
+
 		// Edit the TexIndex object's image data using the information SDL_Surface gives us
 		glTexImage2D( GL_TEXTURE_2D, 0, nOfColors, surface->w, surface->h, 0,
 						  texture_format, GL_UNSIGNED_BYTE, surface->pixels );

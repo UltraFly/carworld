@@ -7,10 +7,6 @@ using namespace std;
 
 #include "H_Standard.h"
 
-#ifdef WIN32
-#include <windows.h>
-#endif //WIN32
-
 #include <map>
 #include <string>
 
@@ -47,17 +43,6 @@ typedef Point<3,GLfloat> Color;
 extern const Color Black;
 extern const Color White;
 extern const Color Grey;
-
-//compiled vertex array functions
-#ifndef PFNGLLOCKARRAYSPROC
-#ifdef WIN32
-	typedef void (APIENTRY * PFNGLLOCKARRAYSPROC) (GLint first, GLsizei count);
-	typedef void (APIENTRY * PFNGLUNLOCKARRAYSPROC) (void);
-#else
-	typedef void (* PFNGLLOCKARRAYSPROC) (GLint first, GLsizei count);
-	typedef void (* PFNGLUNLOCKARRAYSPROC) (void);
-#endif
-#endif
 
 
 //Hgl primitives:
@@ -148,8 +133,8 @@ private:
 //the window this object is associated with:
 	HWindow *m_window;
 //pointers to extention functions
-	PFNGLLOCKARRAYSPROC glLockArrays;
-	PFNGLUNLOCKARRAYSPROC glUnlockArrays;
+	PFNGLLOCKARRAYSEXTPROC glLockArrays;
+	PFNGLUNLOCKARRAYSEXTPROC glUnlockArrays;
 //members
 	static Hgl *curr;
 	map<string,Texture::Reference> LoadedTextures;

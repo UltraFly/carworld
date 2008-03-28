@@ -5,30 +5,12 @@
 namespace std {}
 using namespace std;
 
-#ifdef __APPLE__
-#	include <OpenGL/gl.h>
-#	include <OpenGL/glu.h>
-#else
-#	include <GL/gl.h>
-#	include <GL/glu.h>
-#endif
+#include <SDL_opengl.h>
 
 #include "H_Geometry.h"
 
 #include <map>
 #include <string>
-
-//This is the public interface for textures:
-/*
-class Texture
-{
-public:
-    Texture(const char *name);
-	void Use();
-	static void SetRenderMode(unsigned int NewRenderMode);
-    ~Texture();
-};
-*/
 
 //the Reference subclass is intended to eliminate multiply
 //opened image files, thus saving video memory.

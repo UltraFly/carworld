@@ -1,8 +1,4 @@
 
-#ifdef WIN32
-#pragma warning( disable : 4786 ) //disable "identifier name too long" warning
-#endif //WIN32
-
 #include "SDLJoystick.h"
 #include <SDL_joystick.h>
 

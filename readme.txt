@@ -6,6 +6,11 @@ DESCRIPTION
 carworld is a 3d networked driving simulator
 
 HISTORY
+*version 0.244:
+	use SDL_image for loading images
+	use PNG instead of PPM for image format
+	use Visual Studio 2008 (9.0)
+	use SDL opengl extention querying and remove most #ifdef WIN32
 *version v0.243: (28/06/06)
 	compiles with gcc 4.1
 	no more warnings compiling with Visual Studio .Net 2005 (8.0)
@@ -48,7 +53,7 @@ greatly appreciated. send them to me (hewat@users.sourceforge.net)
 
 REQUIERMENTS
 the SDL librairy http://www.libsdl.org
-OpenGL and the GLU utility librairy
+the SDL_image librairy
 
 RUN
 
@@ -84,8 +89,7 @@ BUGS
 
 
 TODO
--use SDL_image for image loading (+don't hardcode path to road texture)
--use SDL opengl extention querying
+-don't hardcode path to road texture
 -use SDL for networked game
 -sound (with openal)
 -clean up file formats (use 3ds?)+make a better terrain editor (with Qt)...
