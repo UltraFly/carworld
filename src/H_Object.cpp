@@ -345,7 +345,7 @@ void OFFObject::draw(const Ref &Position)
 		&& (MyTexture != 0)
 		&& (Hgl::GetTextureMode() != Hgl::NONE)
 	)
-		(*MyTexture).Use();
+		MyTexture->Use();
 	else
 		glDisable(GL_TEXTURE_2D);
 

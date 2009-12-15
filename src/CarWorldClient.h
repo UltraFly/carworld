@@ -24,7 +24,6 @@ public:
 	const char* name();
 	
 	void draw_init();
-	void draw_shutdown();
 
 	void key_down(SDLKey AHKey, char c);
 	void resize(unsigned int width, unsigned int height);

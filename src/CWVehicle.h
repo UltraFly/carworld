@@ -102,7 +102,6 @@ public:
 	void UpdateCWVehicleParams();
 
 	void draw_init();
-	//void draw_shutdown();
 	void draw();
 	void drawShape();
 	void ProjectShadow(const Point3D &LightDirection);

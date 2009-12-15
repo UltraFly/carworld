@@ -11,7 +11,6 @@ CWFeature::~CWFeature() {}
 void CWFeature::reset() {}
 void CWFeature::update() {}
 void CWFeature::draw_init() {}
-void CWFeature::draw_shutdown() {}
 void CWFeature::draw() {}
 
 
@@ -78,7 +77,11 @@ CWLandscape::CWLandscape(const char *file_name)
 	}
 }
 
-CWLandscape::~CWLandscape() {}
+CWLandscape::~CWLandscape()
+{
+	for(list<WorldBlock>::iterator I=MyWorldBlocks.begin() ; I!=MyWorldBlocks.end() ; I++)
+		I->GetContact(Point3D());
+}
 
 void CWLandscape::draw_init()
 {

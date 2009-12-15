@@ -32,11 +32,6 @@ void CarWorld::draw_init()
 	for (list<CWFeature*>::iterator I=m_Features.begin() ; I!=m_Features.end() ; I++)
 		(*I)->draw_init();
 }
-void CarWorld::draw_shutdown()
-{
-	for (list<CWFeature*>::iterator I=m_Features.begin() ; I!=m_Features.end() ; I++)
-		(*I)->draw_shutdown();
-}
 CarWorld::~CarWorld()
 {
 	for (list<CWFeature*>::iterator I=m_Features.begin() ; I!=m_Features.end() ; I++)

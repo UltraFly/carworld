@@ -158,26 +158,23 @@ void CarWorldClient::draw_init()
 	execute_cfg(ConfigurationFileName());
 }
 
-void CarWorldClient::draw_shutdown()
+CarWorldClient::~CarWorldClient()
 {
 	//cout.rdbuf(&hbuf);
 	//state must be saved while graphics variables are still valid...
 	ofstream cfg_file(ConfigurationFileName(), ios::out);
 	write_cfg(cfg_file);
 
-	m_Hgl->MakeCurrent();
-	m_CarWorld->draw_shutdown();
-	delete m_Hgl;
-	m_Hgl = NULL;
-}
-
-CarWorldClient::~CarWorldClient()
-{
 	//cout.rdbuf(&hbuf);
 	delete FakeJoystick;
 	for (map<string,HExecutable *>::iterator I = m_Executables.begin(); I != m_Executables.end() ; I++)
 		delete (*I).second;
 	delete m_CarWorld;
+
+	m_Hgl->MakeCurrent();
+	delete m_Hgl;
+	m_Hgl = NULL;
+
 	if (m_socket!=NULL)
 	{
 	//disconnect from the server

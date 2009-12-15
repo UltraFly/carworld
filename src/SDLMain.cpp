@@ -114,7 +114,6 @@ int HApplication::TimeRefreshRate()
 HglApplication::HglApplication() : m_window(new HSDLWindow()) {}
 HglApplication::~HglApplication() {delete m_window;}
 void HglApplication::draw_init() {}
-void HglApplication::draw_shutdown() {}
 void HglApplication::key_down(SDLKey AHKey, char c) {}
 void HglApplication::resize(unsigned int width, unsigned int height) {}
 void HglApplication::draw() {}
@@ -258,7 +257,6 @@ int main(int argc, char *argv[])
 			CurrentTime = NewTime;
 			app->draw();
 		}
-		app->draw_shutdown();
 		delete app;
 		app = NULL;
 		cout.rdbuf(cout_streambuf);

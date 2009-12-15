@@ -29,7 +29,6 @@ public:
 	void reset();
 	void update(int ElapsedTimeMs);
 	void draw_init();
-	void draw_shutdown();
 	void draw();
 
 public:

@@ -32,7 +32,7 @@ public:
 	private:
 		static map<string,Reference> &LoadedTextures();
 		string Name;
-		unsigned int ReferenceCount;
+		int ReferenceCount;
 		GLuint TexIndex;
 
 		friend class Texture;

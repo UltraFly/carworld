@@ -35,7 +35,6 @@ public:
 	//virtual bbox get_bbox() const;
 //drawing related
 	virtual void draw_init();
-	virtual void draw_shutdown();
 	virtual void draw();
 public:
 	CarWorld *m_CarWorld;
@@ -58,7 +57,6 @@ public:
 	CWLandscape(const char *file_name);
 	virtual ~CWLandscape();
 	void draw_init();
-	//void draw_shutdown();
 	void draw();
 	Contact GetContact(const FixedVector &AVector);
 	Contact GetContact(const Point3D &APoint);

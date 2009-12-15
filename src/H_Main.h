@@ -86,7 +86,6 @@ public:
 	void PrintAllScreenModes(ostream &out);
 //events
 	virtual void draw_init() = 0; //init is called after the window is opened
-	virtual void draw_shutdown() = 0; //init is called befor the window is closed
 	virtual void draw() = 0;
 	virtual void key_down(SDLKey AHKey, char c) = 0;
 	virtual void resize(unsigned int width, unsigned int height) = 0;
