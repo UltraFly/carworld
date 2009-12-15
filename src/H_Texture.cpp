@@ -16,6 +16,7 @@ string Texture::Title()
 
 void Texture::Use()
 {
+	Hgl::SetColor(Color(1,1,1));
 	glEnable(GL_TEXTURE_2D);
 	glBindTexture(GL_TEXTURE_2D, MyReference->TexIndex);
 }
