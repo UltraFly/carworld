@@ -162,6 +162,8 @@ void Texture::Reference::LoadImage(const char *FileName)
 		
 		cout << "opened "<< surface->w << "x" << surface->h <<" image file: \"" << FileName << "\"" << endl;
 		SDL_FreeSurface(surface);
+
+		ApplyMode(Hgl::GetCurrent().GetTextureMode());
 	} 
 	else
 	{
