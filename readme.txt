@@ -6,6 +6,10 @@ DESCRIPTION
 carworld is a 3d networked driving simulator
 
 HISTORY
+*version 0.245:
+	fixed "truck is dark" bug
+	fixed "textures are white on first launch" bug
+	fixed "crash on exit" bug
 *version 0.244:
 	use SDL_image for loading images
 	use PNG instead of PPM for image format
