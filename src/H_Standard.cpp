@@ -4,6 +4,9 @@
 
 #include "H_Standard.h"
 
+
+#include <string.h>
+
 #include <string>
 
 //CLASS HException:

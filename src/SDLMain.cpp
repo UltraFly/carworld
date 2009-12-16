@@ -151,7 +151,7 @@ const char* ConfigurationFileName()
 	return "carworld.cfg";
 }
 
-int find(int argc, char **argv, char *v)
+int find(int argc, char **argv, const char *v)
 {
 	int i=0;
 	while (i<argc && strcmp(argv[i],v)) i++;

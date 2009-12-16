@@ -4,7 +4,7 @@
 #send patches to hewat@users.sourceforge.net
 
 APPNAME=carworld
-VERSION=0.243
+VERSION=0.245
 RELEASE=1
 SRC=src
 DEST=obj
@@ -17,7 +17,7 @@ DEFAULT_CPPFLAGS=-Wall -ansi `sdl-config --cflags` -DUSE_POSIX_SOCKETS -o
 CPPFLAGS=$(DEFAULT_CPPFLAGS)
 CPPFLAGS_RELEASE=-O3
 CPPFLAGS_DEBUG=-g
-DEFAULT_LD_FLAGS=-lm -lGL -lGLU `sdl-config --libs` -o
+DEFAULT_LD_FLAGS=-lm -lGL -lGLU `sdl-config --libs` -lSDL_image -o
 LDFLAGS=$(DEFAULT_LD_FLAGS)
 
 #switch on the unix name

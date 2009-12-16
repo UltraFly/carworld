@@ -5,6 +5,7 @@
 #include "CWVersion.h"
 
 #include <stdio.h>
+#include <stdlib.h>
 #include <iostream>
 #include "H_Variable.h"
 

@@ -1,6 +1,7 @@
 
 #include "H_Keys.h"
 #include "H_Standard.h"
+#include <string.h>
 
 struct KeyDesc
 {

@@ -98,7 +98,7 @@ Texture::Reference::Reference() :
 	ReferenceCount(1),
 	TexIndex(0)
 {
-	int toto = 0;
+
 }
 
 bool IsPowerOfTwo(int n)

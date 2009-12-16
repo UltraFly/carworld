@@ -16,7 +16,7 @@ template <unsigned int dim, class type> class Point
 {
 //private:
 public:
-	typedef enum {X=0,Y=1,Z=2,W=3};
+	enum t_dimName {X=0,Y=1,Z=2,W=3};
 	type p[dim];
 public:
 	inline type &operator[] (unsigned int i) {return p[i];}
