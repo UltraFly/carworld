@@ -3,7 +3,7 @@
 #define _VERSION_H_
 
 #define CW_VERSION_MAJOR 0
-#define CW_VERSION_MINOR 245
+#define CW_VERSION_MINOR 246
 #define CW_VERSION_RELEASE 0
 
 #define STR(S) #S

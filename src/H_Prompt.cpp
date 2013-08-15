@@ -37,17 +37,17 @@ int Hgl_streambuf::underflow()
 	return 0;
 }
 
-string Hgl_streambuf::HitKey(SDLKey AKey, char c)
+string Hgl_streambuf::HitKey(SDL_Scancode AKey, SDL_Keycode c)
 {
 	switch (AKey)
 	{
-	case  SDLK_BACKSPACE:
+	case SDL_SCANCODE_BACKSPACE:
 		if (CommandLine.size()>1)
 		{
 			CommandLine.erase(CommandLine.size()-1, 1);
 		}
 		break;
-	case  SDLK_RETURN:
+	case SDL_SCANCODE_RETURN:
 		{
 			string ReturnedCommand = CommandLine;
 			ReturnedCommand.erase(0,1);
@@ -56,13 +56,20 @@ string Hgl_streambuf::HitKey(SDLKey AKey, char c)
 			CommandLine = ">";
 			return ReturnedCommand;
 		}
+		break;
 	default:
-		if (isprint(c))
+		/*if (isprint(c))
 		{
 			CommandLine += char(c);
-		}
+		}*/
+		break;
 	}
 	return string();
+}
+
+void Hgl_streambuf::textInput(const char* text)
+{
+	CommandLine += text;
 }
 
 Point2D Hgl_streambuf::charCoord(int x, int y)

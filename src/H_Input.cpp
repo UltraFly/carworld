@@ -4,11 +4,11 @@
 
 //CLASS KeyJoystick
 KeyJoystick::KeyJoystick(HWindow *w) :
-	up_key(SDLK_UP),
-	down_key(SDLK_DOWN),
-	left_key(SDLK_LEFT),
-	right_key(SDLK_RIGHT),
-	button_key(SDLK_SPACE),
+	up_key(SDL_SCANCODE_UP),
+	down_key(SDL_SCANCODE_DOWN),
+	left_key(SDL_SCANCODE_LEFT),
+	right_key(SDL_SCANCODE_RIGHT),
+	button_key(SDL_SCANCODE_SPACE),
 	speed(.1f),
 	m_HWindow(w),
 	Yaxis(0),
@@ -41,12 +41,12 @@ int KeyJoystick::GetNumButtons()
 
 void KeyJoystick::UpdateState()
 {
-    button = m_HWindow->IsPressed(button_key);
+    button = m_HWindow->IsPressed(button_key.value);
 
-    bool UpState = m_HWindow->IsPressed(up_key);
-    bool DownState = m_HWindow->IsPressed(down_key);
-    bool LeftState = m_HWindow->IsPressed(left_key);
-    bool RightState = m_HWindow->IsPressed(right_key);
+    bool UpState = m_HWindow->IsPressed(up_key.value);
+    bool DownState = m_HWindow->IsPressed(down_key.value);
+    bool LeftState = m_HWindow->IsPressed(left_key.value);
+    bool RightState = m_HWindow->IsPressed(right_key.value);
 	//assert(!(UpState && DownState && LeftState && RightState));
 
     if (LeftState) Xaxis = H_MIN(Xaxis+2*speed,1);

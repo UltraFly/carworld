@@ -39,17 +39,13 @@ public:
 	virtual ~HWindow();
 	//to do with keyboard state: (asynchron)
 	virtual const char* GetKeyboardDescription() = 0;
-	virtual bool IsPressed(SDLKey k) = 0;
+	virtual bool IsPressed(SDL_Scancode k) = 0;
 	virtual HJoystick* GetJoystick() = 0;
 	//make this Window the current opengl rendering window
 	virtual void MakeCurrent() = 0;
 	virtual void SwapBuffers() = 0;
-	//depending on implementation, SetAttrib might only work if called
-	//before the window is opened
-	virtual void SetAttrib(int width, int height, bool fullscreen) = 0;
-public:
-	int m_width, m_height;
-	bool m_fullscreen;
+	virtual int getWidth() = 0;
+	virtual int getHeight() = 0;
 };
 
 class HAppData;
@@ -66,9 +62,6 @@ public:
 	virtual const char *name() = 0;
 //elapsed time since last called
 	virtual void on_idle(unsigned int elapsed_time) = 0;
-public:
-//OS specific application data, do not access
-	HAppData *m_data;
 };
 
 //derive from this class to create a new graphic application
@@ -76,7 +69,7 @@ public:
 class HglApplication : public HApplication
 {
 public:
-	HglApplication();
+	HglApplication(int width, int height, bool full_screen);
 	virtual ~HglApplication();
 
 //screen mode manipulation:
@@ -87,7 +80,8 @@ public:
 //events
 	virtual void draw_init() = 0; //init is called after the window is opened
 	virtual void draw() = 0;
-	virtual void key_down(SDLKey AHKey, char c) = 0;
+	virtual void key_down(SDL_Scancode AHKey, SDL_Keycode c) = 0;
+	virtual void text_input(const char* text) = 0;
 	virtual void resize(unsigned int width, unsigned int height) = 0;
 public:
 //OS specific window

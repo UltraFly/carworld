@@ -23,11 +23,11 @@ public:
 	virtual bool GetButtonPos(int i);
 	virtual bool SetForceFeedback(REAL x, REAL y);
 public:
-	SDLKey up_key;
-	SDLKey down_key;
-	SDLKey left_key;
-	SDLKey right_key;
-	SDLKey button_key;
+	HKey up_key;
+	HKey down_key;
+	HKey left_key;
+	HKey right_key;
+	HKey button_key;
 	REAL speed;
 private:
 	HWindow *m_HWindow;

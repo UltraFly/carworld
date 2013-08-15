@@ -24,25 +24,20 @@ HJoystick::~HJoystick(){}
 class HSDLWindow : public HWindow
 {
 public:
-	HSDLWindow();
+	HSDLWindow(const char* name, int width, int height, bool full_screen);
 	virtual ~HSDLWindow();
-	virtual void SetAttrib(int width, int height, bool fullscreen);
-	bool IsPressed(SDLKey k);
+	bool IsPressed(SDL_Scancode k);
 	const char* GetKeyboardDescription();
 	HJoystick* GetJoystick();
 	virtual void MakeCurrent();
 	virtual void SwapBuffers();
-public:
+	virtual int getWidth();
+	virtual int getHeight();
+private:
+	SDL_Window* displayWindow;
+	SDL_GLContext glContext;
 };
 
-class HAppData
-{
-public:
-	HAppData();
-public:
-};
-
-HAppData::HAppData() {}
 
 void HErrorExit(const char *E)
 {
@@ -51,11 +46,31 @@ void HErrorExit(const char *E)
 }
 
 //CLASS HSDLWindow
-HSDLWindow::HSDLWindow()
-{}
+HSDLWindow::HSDLWindow(const char* name, int width, int height, bool full_screen)
+{
+	Uint32 flags = SDL_WINDOW_OPENGL;
+	if (full_screen)
+		flags |= SDL_WINDOW_FULLSCREEN_DESKTOP; //| SDL_WINDOW_BORDERLESS
+	else
+		flags |= SDL_WINDOW_RESIZABLE;
+	displayWindow = SDL_CreateWindow(
+		name,
+		SDL_WINDOWPOS_UNDEFINED,
+		SDL_WINDOWPOS_UNDEFINED,
+		width,
+		height,
+		flags
+	);
+
+	glContext = SDL_GL_CreateContext(displayWindow);
+
+	const GLubyte* glExtensions = glGetString(GL_EXTENSIONS);
+}
 
 HSDLWindow::~HSDLWindow()
 {
+	SDL_GL_DeleteContext(glContext);
+	SDL_DestroyWindow(displayWindow);
 }
 
 const char *HSDLWindow::GetKeyboardDescription()
@@ -63,9 +78,9 @@ const char *HSDLWindow::GetKeyboardDescription()
 	return "SDL keyboard";
 }
 
-bool HSDLWindow::IsPressed(SDLKey k)
+bool HSDLWindow::IsPressed(SDL_Scancode k)
 {
-	Uint8* keys = SDL_GetKeyState(NULL);
+	const Uint8* keys = SDL_GetKeyboardState(NULL);
 	if (keys==NULL)
 		return false;
 	return keys[k]!=0;
@@ -78,30 +93,32 @@ HJoystick* HSDLWindow::GetJoystick()
 
 void HSDLWindow::MakeCurrent()
 {
-//BUGBUG do we need this function for SDL?
-	//doing this simple test is a _lot_ faster...
-	/*static HSDLWindow* current = NULL;
-	if (current!=this)
-		wglMakeCurrent(hDC, hRC);
-	current = this;*/
+	SDL_GL_MakeCurrent(displayWindow, glContext);
 }
 
 void HSDLWindow::SwapBuffers()
 {
-	SDL_GL_SwapBuffers();
+	SDL_GL_SwapWindow(displayWindow);
 }
 
-void HSDLWindow::SetAttrib(int width, int height, bool fullscreen)
+int HSDLWindow::getWidth()
 {
-	m_width = width;
-	m_height = height;
-	m_fullscreen = fullscreen;
+	int w,h;
+	SDL_GetWindowSize(displayWindow, &w, &h);
+	return w;
+}
+
+int HSDLWindow::getHeight()
+{
+	int w,h;
+	SDL_GetWindowSize(displayWindow, &w, &h);
+	return h;
 }
 
 //default implementations for the application functions:
 //CLASS HApplication
-HApplication::HApplication() : m_data(new HAppData) {}
-HApplication::~HApplication() {delete m_data;}
+HApplication::HApplication() {}
+HApplication::~HApplication() {}
 const char* HApplication::name() {return "generic HApplication";}
 void HApplication::on_idle(unsigned int elapsed_time) {}
 
@@ -111,10 +128,10 @@ int HApplication::TimeRefreshRate()
 }
 
 //CLASS HglApplication
-HglApplication::HglApplication() : m_window(new HSDLWindow()) {}
+HglApplication::HglApplication(int width, int height, bool full_screen) : m_window(new HSDLWindow("cool", width,height,full_screen)) {}
 HglApplication::~HglApplication() {delete m_window;}
 void HglApplication::draw_init() {}
-void HglApplication::key_down(SDLKey AHKey, char c) {}
+void HglApplication::key_down(SDL_Scancode AHKey, SDL_Keycode c) {}
 void HglApplication::resize(unsigned int width, unsigned int height) {}
 void HglApplication::draw() {}
 
@@ -162,12 +179,13 @@ extern ofstream herr;
 
 int main(int argc, char *argv[])
 {
+	cout << "Hello" << endl;
 	streambuf* cout_streambuf = cout.rdbuf();
 	HglApplication* app = NULL;
 	try
 	{
-		bool full_screen = find(argc,argv,"-f")!=argc;
-		HglApplication* app = new CarWorldClient(full_screen);
+
+		SDL_Init(SDL_INIT_VIDEO | SDL_INIT_JOYSTICK | SDL_INIT_TIMER);
 
 		{
 			SDL_version CompileVer;
@@ -176,43 +194,17 @@ int main(int argc, char *argv[])
 		}
 
 		{
-			const SDL_version* DynamicVer = SDL_Linked_Version();
-			cout << "SDL run time version: " << (int)DynamicVer->major << "." << (int)DynamicVer->minor << "." << (int)DynamicVer->patch << endl;
+			SDL_version DynamicVer;
+			SDL_GetVersion(&DynamicVer);
+			cout << "SDL run time version: " << (int)DynamicVer.major << "." << (int)DynamicVer.minor << "." << (int)DynamicVer.patch << endl;
 		}
 
 		{
 			cout << ((SDL_BYTEORDER==SDL_LIL_ENDIAN) ? "little endian" : "big endian") << endl;
 		}
-
-		Uint32 flags = SDL_OPENGL;
-		if (full_screen)
-			flags |= SDL_FULLSCREEN;
-		else
-			flags |= SDL_RESIZABLE;
-		int bpp = 0; //the current display color depth
-		int width = app->m_window->m_width;
-		int height = app->m_window->m_height;
-		SDL_Init(SDL_INIT_VIDEO | SDL_INIT_JOYSTICK | SDL_INIT_TIMER);
-		SDL_EnableUNICODE(1);
-		SDL_Surface* screen = SDL_SetVideoMode(width, height, bpp, flags);
 		
-		{
-			char namebuf[256];
-			SDL_VideoDriverName(namebuf, sizeof(namebuf));
-			cout << "SDL video driver name: " << namebuf << endl;
-		}
-
-		if (screen==NULL)
-		{
-			cout << "ERROR: Couldn't set " << width << "x" << height << " GL video mode: " << SDL_GetError() << endl;
-			SDL_Quit();
-			return 2;
-		}
-		SDL_WM_SetCaption(app->name(), app->name());
-		
-	//do OpenGL init
-		app->draw_init();
-		app->resize(screen->w, screen->h);
+		bool full_screen = find(argc,argv,"-f")!=argc;
+		HglApplication* app = new CarWorldClient(full_screen);
 
 		bool done = false;
 		Uint32 CurrentTime = SDL_GetTicks();
@@ -230,20 +222,30 @@ int main(int argc, char *argv[])
 							done = true;
 						else
 						{
-							char a = '\0';
-							if (event.key.keysym.unicode<0x80 && event.key.keysym.unicode>0)
-								a = (char)event.key.keysym.unicode;
-							app->key_down(event.key.keysym.sym, a);
+							app->key_down(event.key.keysym.scancode, event.key.keysym.sym);
 						}
 					}
 					break;
-				case SDL_VIDEORESIZE:
+				case SDL_TEXTINPUT:
 					{
-	//BUG if i call SDL_SetVideoMode() on win32 i lose all textures and lists...
+						app->text_input(event.text.text);
+					}
+					break;
+			//BUG support window resizing here...
+				case SDL_WINDOWEVENT:
+					{
+						switch (event.window.event)
+						{
+						case SDL_WINDOWEVENT_RESIZED:
+//BUG if i call SDL_SetVideoMode() on win32 i lose all textures and lists...
 #ifndef WIN32
-						SDL_SetVideoMode(event.resize.w, event.resize.h, bpp, flags);
+							//SDL_SetVideoMode(event.window.data1, event.window.data2, bpp, flags);
 #endif //WIN32
-						app->resize(event.resize.w, event.resize.h);
+							app->resize(event.window.data1, event.window.data2);
+							break;
+						default:
+							break;
+						}
 					}
 					break;
 					

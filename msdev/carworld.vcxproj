@@ -43,12 +43,12 @@
     <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">../$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>C:\svn\shared\sdl\include;C:\svn\shared\SDL_image\include;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\svn\shared\sdl\lib;C:\svn\shared\SDL_image\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>C:\svn\shared\SDL2-2.0.0\include;C:\svn\shared\SDL2_image-2.0.0\include;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\svn\shared\SDL2-2.0.0\lib\x86;C:\svn\shared\SDL2_image-2.0.0\lib\x86;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <IncludePath>C:\svn\shared\sdl\include;C:\svn\shared\SDL_image\include;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\svn\shared\sdl\lib;C:\svn\shared\SDL_image\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>C:\svn\shared\SDL2-2.0.0\include;C:\svn\shared\SDL2_image-2.0.0\include;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\svn\shared\SDL2-2.0.0\lib\x86;C:\svn\shared\SDL2_image-2.0.0\lib\x86;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <Midl>
@@ -83,7 +83,7 @@
       <Culture>0x040c</Culture>
     </ResourceCompile>
     <Link>
-      <AdditionalDependencies>opengl32.lib;glu32.lib;ws2_32.lib;SDL_image.lib;SDL.lib;SDLmain.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>opengl32.lib;glu32.lib;ws2_32.lib;SDL2_image.lib;SDL2.lib;SDL2main.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ProgramDatabaseFile>$(IntDir)carworld.pdb</ProgramDatabaseFile>
       <SubSystem>Windows</SubSystem>
       <RandomizedBaseAddress>false</RandomizedBaseAddress>
@@ -129,7 +129,7 @@
       <Culture>0x040c</Culture>
     </ResourceCompile>
     <Link>
-      <AdditionalDependencies>opengl32.lib;glu32.lib;ws2_32.lib;SDL_image.lib;SDL.lib;SDLmain.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>opengl32.lib;glu32.lib;ws2_32.lib;SDL2_image.lib;SDL2.lib;SDL2main.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <ProgramDatabaseFile>$(IntDir)carworld.pdb</ProgramDatabaseFile>

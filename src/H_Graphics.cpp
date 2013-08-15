@@ -8,6 +8,7 @@
 #include "H_Graphics.h"
 #include "H_Texture.h"
 #include <SDL.h>
+#include <GL/glu.h>
 
 Hgl *Hgl::curr = NULL;
 
@@ -161,7 +162,8 @@ Hgl::Hgl(HWindow *w) :
 		cout << "glUnlockArrays initiated...\n";
 
 	//get gl extentions string
-	curr->GLExtentions = Command((char*)glGetString(GL_EXTENSIONS));
+	const GLubyte* glExtensions = glGetString(GL_EXTENSIONS);
+	curr->GLExtentions = Command((char*)glExtensions);
 
 	PrintVersion(cout);
 

@@ -24,8 +24,9 @@ public:
 	const char* name();
 	
 	void draw_init();
-
-	void key_down(SDLKey AHKey, char c);
+	
+	void key_down(SDL_Scancode AHKey, SDL_Keycode c);
+	void text_input(const char* text);
 	void resize(unsigned int width, unsigned int height);
 	void on_idle(unsigned int elapsed_time);
 
@@ -43,7 +44,7 @@ public:
 	void execute_cfg(const char *FileName);
 	void pars_command(const char *value);
 
-	void bind(SDLKey key,const char *command);
+	void bind(SDL_Scancode key,const char *command);
 
 	void print_help();
 	void print_version();
@@ -53,7 +54,7 @@ public:
 
 	void write_cfg(ostream &out);
 public:
-	map<SDLKey,string> KeyBindings;
+	map<SDL_Scancode,string> KeyBindings;
 private:
 //graphics
 	Hgl_streambuf hbuf;

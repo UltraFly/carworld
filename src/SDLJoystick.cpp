@@ -11,7 +11,7 @@ SDLJoystick::SDLJoystick(int index) :
 	if (index<0 || index>=NumJoy)
 		return;
 	joystick = SDL_JoystickOpen(device_index);
-	name = SDL_JoystickName(device_index);
+	name = SDL_JoystickName(joystick);
 	//SDL_JoystickEventState(SDL_QUERY, SDL_ENABLE or SDL_IGNORE);
 }
 

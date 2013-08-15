@@ -15,7 +15,8 @@ class Hgl_streambuf : public streambuf
 public:
 	Hgl_streambuf();
 	virtual ~Hgl_streambuf();
-	string HitKey(SDLKey AKey, char c);
+	string HitKey(SDL_Scancode AKey, SDL_Keycode c);
+	void textInput(const char* text);
 	void draw();
 protected:
     virtual int overflow(int c = EOF);
