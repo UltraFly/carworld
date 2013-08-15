@@ -8,7 +8,7 @@
 #include <stdlib.h>
 #include <iostream>
 #include "H_Variable.h"
-#include <SDL_Keyboard.h>
+#include <SDL_keyboard.h>
 
 #define CLIENT_TIMEOUT 200
 

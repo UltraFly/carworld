@@ -63,8 +63,6 @@ HSDLWindow::HSDLWindow(const char* name, int width, int height, bool full_screen
 	);
 
 	glContext = SDL_GL_CreateContext(displayWindow);
-
-	const GLubyte* glExtensions = glGetString(GL_EXTENSIONS);
 }
 
 HSDLWindow::~HSDLWindow()

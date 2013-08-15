@@ -4,7 +4,7 @@
 #send patches to hewat@users.sourceforge.net
 
 APPNAME=carworld
-VERSION=0.245
+VERSION=0.246
 RELEASE=1
 SRC=src
 DEST=obj
@@ -13,11 +13,11 @@ DOC=doc
 EXECUTABLE=$(APPNAME)
 CPLUSPLUS=g++
 LINK=$(CPLUSPLUS)
-DEFAULT_CPPFLAGS=-Wall -ansi `sdl-config --cflags` -DUSE_POSIX_SOCKETS -o
+DEFAULT_CPPFLAGS=-Wall -ansi `sdl2-config --cflags` -DUSE_POSIX_SOCKETS -o
 CPPFLAGS=$(DEFAULT_CPPFLAGS)
 CPPFLAGS_RELEASE=-O3
 CPPFLAGS_DEBUG=-g
-DEFAULT_LD_FLAGS=-lm -lGL -lGLU `sdl-config --libs` -lSDL_image -o
+DEFAULT_LD_FLAGS=-lm -lGL -lGLU `sdl2-config --libs` -lSDL2_image -o
 LDFLAGS=$(DEFAULT_LD_FLAGS)
 
 #switch on the unix name
@@ -36,13 +36,13 @@ ifeq ($(shell uname),CYGWIN_98-4.10)
 	CPPFLAGS=-nologo -ML -W3 -GR -GX -D WIN32 -D _WINDOWS -FD -Fo
 	CPPFLAGS_RELEASE=-D NDEBUG -Ox
 	CPPFLAGS_DEBUG=-D _DEBUG -FR"$(DEST)\\" #-YX /Fd"$(DEST)\\" -GZ
-	LDFLAGS=opengl32.lib dxguid.lib dinput.lib SDL.lib SDLmain.lib ws2_32.lib -nologo -subsystem:windows -incremental:no \
+	LDFLAGS=opengl32.lib dxguid.lib dinput.lib SDL2.lib SDL2main.lib ws2_32.lib -nologo -subsystem:windows -incremental:no \
 		-pdb:"$(DEST)\$(APPNAME).pdb" -machine:I386 -out:
 endif
 
 ifeq ($(shell uname),Darwin)
-	CPPFLAGS=`sdl-config --libs` -framework OpenGL -Wall -ansi -Wno-multichar -D USE_POSIX_SOCKETS -o
-	LDFLAGS=`sdl-config --cflags --libs` -lSDL_image -framework OpenGL -Wall -ansi -Wno-multichar -o 
+	CPPFLAGS=`sdl2-config --libs` -framework OpenGL -Wall -ansi -Wno-multichar -D USE_POSIX_SOCKETS -o
+	LDFLAGS=`sdl2-config --cflags --libs` -lSDL2_image -framework OpenGL -Wall -ansi -Wno-multichar -o 
 endif
 
 

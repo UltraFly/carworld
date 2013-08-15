@@ -5,8 +5,8 @@
 #include <iostream>
 using namespace std;
 
-#include <SDL_Scancode.h>
-#include <SDL_Keycode.h>
+#include <SDL_scancode.h>
+#include <SDL_keycode.h>
 
 class HKey
 {

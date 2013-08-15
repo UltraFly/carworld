@@ -2,8 +2,8 @@
 #include "H_Keys.h"
 #include "H_Standard.h"
 #include <string.h>
-#include <SDL_Keycode.h>
-#include <SDL_Keyboard.h>
+#include <SDL_keycode.h>
+#include <SDL_keyboard.h>
 
 ostream &operator<<(ostream &out, const HKey key)
 {
