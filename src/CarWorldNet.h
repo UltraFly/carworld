@@ -58,7 +58,7 @@ struct ServerConfirm
 {
 	int DatagramType; //SERVER_CONFIRM
 	int ClientNumber; //number assigned to the client
-	int VersionNumber; //CARWORLD_VERSION
+	//int VersionNumber; //CARWORLD_VERSION
 	int N;
 	int ClientNumbers[MAX_VEHICLES];
 //names and types of cars of other players

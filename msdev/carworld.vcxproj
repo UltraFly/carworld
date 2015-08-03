@@ -142,6 +142,7 @@
     </Manifest>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\src\CarWorldServer.cpp" />
     <ClCompile Include="..\src\SDLJoystick.cpp">
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release|x64'">%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -228,6 +229,7 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\src\CarWorldServer.h" />
     <ClInclude Include="..\src\H_Main.h" />
     <ClInclude Include="..\src\SDLJoystick.h" />
     <ClInclude Include="..\src\automat.h" />

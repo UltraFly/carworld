@@ -312,6 +312,7 @@ void CarWorldClient::join(const char *host, short port)
 				m_Opponents[new_id]->draw_init();
 			}
 		}
+		SDLNet_FreePacket(packet);
 	}
 }
 
