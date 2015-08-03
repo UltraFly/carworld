@@ -35,7 +35,7 @@ string PathOf(const string &AString)
 	char tmp[FILENAME_MAX];
 	//strcpy_s(tmp, ARRAY_SIZE(tmp), AString.c_str());
 	strcpy(tmp, AString.c_str());
-	for (i=AString.size()-1 ; i>=0 && AString[i]!='\\' && AString[i]!='/' ; i--);
+	for (i=int(AString.size())-1 ; i>=0 && AString[i]!='\\' && AString[i]!='/' ; i--);
 	/*if (i<0)
 		tmp = AString;
 	else
@@ -160,7 +160,7 @@ const string &Command::operator[] (unsigned int i) const
 		throw HException("in Command, tried to access invalid argument");
 	return data[i];
 }
-unsigned int Command::size() const
+size_t Command::size() const
 {
 	return data.size();
 }

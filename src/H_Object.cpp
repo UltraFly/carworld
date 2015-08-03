@@ -146,7 +146,7 @@ OFFObject::~OFFObject()
 	Release();
 }
 
-void OFFObject::Allocate(unsigned int NbVertexs, unsigned int NbPolygons)
+void OFFObject::Allocate(size_t NbVertexs, size_t NbPolygons)
 {
 	MyOFFPolygons.resize(NbPolygons);
 	MyOFFVertexes.resize(NbVertexs);
@@ -291,7 +291,7 @@ void OFFObject::InitMyData()
 		MyOFFVertexes[i].Normal.normalize();
 	
 	//figure out the number of triangles in the object
-	int NumTriangles = 0;
+	size_t NumTriangles = 0;
 	for (i=0 ; i<MyOFFPolygons.size() ; i++)
 		NumTriangles += MyOFFPolygons[i].IndexVertexes.size() - 2;
 	//now fill in NumTriangles with the correct indexes
@@ -427,7 +427,7 @@ void OFFObject::BuildCompiledLists()
 	HGL_NEW_LIST(CompiledList_NoMaterial);
 		glDrawElements(
 			GL_TRIANGLES,           
-			TriIndexes.size(),         
+			GLsizei(TriIndexes.size()),         
 			GL_UNSIGNED_INT,           
 			(const void*)&TriIndexes[0]
 		);
@@ -453,7 +453,7 @@ void OFFObject::BuildCompiledLists()
 		Hgl::SetColor(MyOFFPolygons[0].MyColor);
 		glDrawElements(
 			GL_TRIANGLES,           
-			TriIndexes.size(),         
+			GLsizei(TriIndexes.size()),         
 			GL_UNSIGNED_INT,           
 			(const void*)&TriIndexes[0]
 		);
@@ -470,7 +470,7 @@ void OFFObject::BuildCompiledLists()
 			}
 			glDrawElements(
 				GL_POLYGON,           
-				MyOFFPolygons[i].IndexVertexes.size(),         
+				GLsizei(MyOFFPolygons[i].IndexVertexes.size()),         
 				GL_UNSIGNED_INT,           
 				(const void*)&MyOFFPolygons[i].IndexVertexes[0]
 			);

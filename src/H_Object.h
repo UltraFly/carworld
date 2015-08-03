@@ -78,7 +78,7 @@ public:
 	bool GetShading();
 	static bool UseOptimizedDraw;
 private:
-	void Allocate(unsigned int NbVertex, unsigned int NbPolygons);
+	void Allocate(size_t NbVertex, size_t NbPolygons);
 	void Release();
 	//optimized GLdraw using vertex arrays and lists
 	void BuildCompiledLists();

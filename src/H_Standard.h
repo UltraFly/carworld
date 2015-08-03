@@ -98,7 +98,7 @@ public:
 	bool IsIn(const char *AArgument) const;
 	int FindArg(const char *AArgument) const;
 	const string &operator[] (unsigned int i) const;
-	unsigned int size() const;
+	size_t size() const;
 
 	friend istream &operator>> (istream &in, Command &A);
 private:

@@ -278,7 +278,7 @@ static void t_chaine(GLuint& font, const char* s)
 
 	//glPushAttrib (GL_LIST_BIT);
 	glListBase(font);
-	glCallLists(strlen(s), GL_UNSIGNED_BYTE, (const GLvoid *)s);
+	glCallLists(GLsizei(strlen(s)), GL_UNSIGNED_BYTE, (const GLvoid *)s);
 	//glPopAttrib ();
 	glListBase(0);
 }
@@ -499,10 +499,10 @@ ostream &Hgl::PrintDebug(ostream &out)
 	return out;
 }
 
-void Hgl::LockArrays(int first, int count)
+void Hgl::LockArrays(int first, size_t count)
 {
 	if (curr->gl_ext_compiled_vertex_array)
-		(*curr->glLockArrays)(first, count);
+		(*curr->glLockArrays)(GLint(first), GLsizei(count));
 }
 
 void Hgl::UnlockArrays()

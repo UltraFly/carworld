@@ -81,7 +81,7 @@ public:
 	static void Rotate(REAL teta, const Point<3,GLfloat> &Axe);	//rotate in rad around axe
 	static inline void Scale(REAL scale)
 		{glScalef(scale,scale,scale);}
-	static void LockArrays(int first, int count);
+	static void LockArrays(int first, size_t count);
 	static void UnlockArrays();
 	static inline void Begin(int type)
 		{glBegin((GLenum)type);}

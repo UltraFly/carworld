@@ -14,7 +14,7 @@ public:
 	bool Send(void* buffer, int size, int id);
 	bool Broadcast(void* buffer, int size);
 private:
-	int s;
+	long long int s;
 };
 
 class HSocClient
@@ -26,7 +26,7 @@ public:
 	int Recieve(void* buffer, int size);
 	bool Send(void* buffer, int size);
 private:
-	int s;
+	long long int s;
 };
 
 #endif //_H_SOCKET_H_
