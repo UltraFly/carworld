@@ -191,11 +191,13 @@ CarWorldClient::~CarWorldClient()
 	if (m_socket!=NULL)
 	{
 	//disconnect from the server
-		ClientDisconnect disc;
-		disc.ClientNumber = ID;
-		disc.DatagramType = CLIENT_DISCONNECT;
-		m_socket->Send((void*)&disc,sizeof(disc));
-		delete m_socket;
+		UDPpacket* packet = SDLNet_AllocPacket(sizeof(ClientDisconnect));
+		ClientDisconnect* disc = (ClientDisconnect*)packet->data;
+		disc->ClientNumber = ID;
+		disc->DatagramType = CLIENT_DISCONNECT;
+		SDLNet_UDP_Send(m_socket, 0, packet);
+		SDLNet_UDP_Close(m_socket);
+		SDLNet_FreePacket(packet);
 	}
 	cout << name() << " terminated.\n";
 }
@@ -273,35 +275,44 @@ void CarWorldClient::print_version()
 void CarWorldClient::join(const char *host, short port)
 {
 //close previous socket
-	delete m_socket;
+	SDLNet_UDP_Close(m_socket);
 //open the socket
 	cout << "trying to connect to: " << host << ":" << port << "...\n";
-	m_socket = new HSocClient(host,port);
-//request to join the game
-	ClientRequest request;
-	request.ClientNumber = 0;
-	request.DatagramType = CLIENT_CONNECT;
-	request.VersionNumber = CW_VERSION;
-	m_socket->Send((void*)&request,sizeof(request));
-//get the confirmation
-	ServerConfirm confirm;
-	m_socket->Recieve((void*)&confirm,sizeof(confirm));
-	ID = confirm.ClientNumber;
-//initiate the opponents:
-	m_Opponents.clear();
-	m_Opponents[ID] = m_Vehicle;
-	for (int i=0 ; i<confirm.N ; i++)
+	m_socket = SDLNet_UDP_Open(0);
+	IPaddress address;
+	SDLNet_ResolveHost(&address, host, port);
+	SDLNet_UDP_Bind(m_socket, 0, &address);
+	//request to join the game
 	{
-		int new_id = confirm.ClientNumbers[i];
-		if (new_id!=ID)
+		UDPpacket* packet = SDLNet_AllocPacket(sizeof(ClientRequest));
+		ClientRequest* request = (ClientRequest*)packet->data;
+		request->ClientNumber = 0;
+		request->DatagramType = CLIENT_CONNECT;
+		request->VersionNumber = CW_VERSION;
+		SDLNet_UDP_Send(m_socket, 0, packet);
+		SDLNet_FreePacket(packet);
+
+	}
+//get the confirmation
+	{
+		UDPpacket* packet = SDLNet_AllocPacket(sizeof(ServerConfirm));
+		SDLNet_UDP_Recv(m_socket, packet);
+		ServerConfirm* confirm = (ServerConfirm*)packet->data;
+		ID = confirm->ClientNumber;
+		//initiate the opponents:
+		m_Opponents.clear();
+		m_Opponents[ID] = m_Vehicle;
+		for (int i = 0; i<confirm->N; i++)
 		{
-			m_Opponents[new_id] = new CWVehicle(DEFAULT_VEHICLE);
-			m_CarWorld->add(m_Opponents[new_id]);
-			m_Opponents[new_id]->draw_init();
+			int new_id = confirm->ClientNumbers[i];
+			if (new_id != ID)
+			{
+				m_Opponents[new_id] = new CWVehicle(DEFAULT_VEHICLE);
+				m_CarWorld->add(m_Opponents[new_id]);
+				m_Opponents[new_id]->draw_init();
+			}
 		}
 	}
-//set non blocking socket
-	m_socket->SetBlocking(false);
 }
 
 void CarWorldClient::write_cfg(ostream &out)
@@ -369,22 +380,25 @@ void CarWorldClient::resize(unsigned int width, unsigned int weight)
 
 void CarWorldClient::SendState()
 {
-	ClientGamestate state;
-	state.ClientNumber = ID;
-	state.DatagramType = CLIENT_GAMESTATE;
-	state.vehicle = m_Vehicle->GetState();
-	m_socket->Send((void*)&state,sizeof(state));
+	UDPpacket* packet = SDLNet_AllocPacket(sizeof(ClientGamestate));
+	ClientGamestate* state = (ClientGamestate*)packet->data;
+	state->ClientNumber = ID;
+	state->DatagramType = CLIENT_GAMESTATE;
+	state->vehicle = m_Vehicle->GetState();
+	SDLNet_UDP_Send(m_socket, 0, packet);
+	SDLNet_FreePacket(packet);
 }
 
 bool CarWorldClient::RecieveState()
 {
-	ServerGamestate state;
-	if (m_socket->Recieve((void*)&state,sizeof(state))==sizeof(state))
+	UDPpacket* packet = SDLNet_AllocPacket(sizeof(ServerGamestate));
+	ServerGamestate* state = (ServerGamestate*)packet->data;
+	if (SDLNet_UDP_Recv(m_socket, packet)>0 && packet->len == sizeof(ServerGamestate))
 	{
 	//update the states of the opponents
-		for (int i=0 ; i<state.N ; i++)
+		for (int i=0 ; i<state->N ; i++)
 		{
-			int new_id = state.ClientNumbers[i];
+			int new_id = state->ClientNumbers[i];
 			if (new_id!=ID)
 			{
 				map<int,CWVehicle*>::iterator I = m_Opponents.find(new_id);
@@ -395,11 +409,13 @@ bool CarWorldClient::RecieveState()
 					m_CarWorld->add(m_Opponents[new_id]);
 					m_Opponents[new_id]->draw_init();
 				}
-				m_Opponents[new_id]->SetState(state.vehicle[i]);
+				m_Opponents[new_id]->SetState(state->vehicle[i]);
 			}
 		}
+		SDLNet_FreePacket(packet);
 		return true;
 	}
+	SDLNet_FreePacket(packet);
 	return false;
 }
 

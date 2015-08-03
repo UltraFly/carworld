@@ -10,7 +10,7 @@ using namespace std;
 #include "H_Input.h"
 #include "H_Prompt.h"
 #include "H_Variable.h"
-#include "H_Socket.h"
+#include "SDL_net.h"
 #include "CarWorld.h"
 
 #include <queue>
@@ -67,7 +67,7 @@ private:
 	KeyJoystick *FakeJoystick;
 	HJoystick *CurrentJoystick;
 //network
-	HSocClient *m_socket;
+	UDPsocket m_socket;
 	int ID;
 	void SendState();
 	bool RecieveState();
