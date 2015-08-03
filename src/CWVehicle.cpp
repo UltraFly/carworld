@@ -5,6 +5,7 @@
 #include "H_Graphics.h"
 #include "H_Variable.h"
 #include "H_XML.h"
+#include <algorithm>
 
 //CLASS CWCommand
 CWCommand::CWCommand() : GasBrake(0), Steer(0), SteerFeedBack(0), HandBrake(false)
@@ -148,7 +149,7 @@ Point3D Wheel::CalcForce()
 		//but the load is limited to MaxLoad
 		//to avoid wierd reactions
 		//ex: at jump receptions
-		REAL MaxTraction = min(Load*Grip,MaxLoad*Grip);
+		REAL MaxTraction = std::min(Load*Grip,MaxLoad*Grip);
 		if (Traction.norm()>MaxTraction)
 			Traction.normalize(MaxTraction);
 		Force += Traction;

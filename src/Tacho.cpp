@@ -1,5 +1,6 @@
 
 #include "Tacho.h"
+#include <algorithm>
 
 #define R_INT .8f
 #define R_EXT 1.f
@@ -72,7 +73,7 @@ void Tacho::draw(REAL Revs)
 	Point3D TipPt(0,-NEEDLE_LEN_F,0);
 	Point3D BackPtR(-NEEDLE_WIDTH,NEEDLE_LEN_B,0);
 	Point3D BackPtL(NEEDLE_WIDTH,NEEDLE_LEN_B,0);
-	REAL Angle = Step*(1+min(Revs,(MyRedLine+1000))/1000);
+	REAL Angle = Step*(1+std::min(Revs,(MyRedLine+1000))/1000);
 	ZRotate(TipPt,Angle);
 	ZRotate(BackPtL,Angle);
 	ZRotate(BackPtR,Angle);
