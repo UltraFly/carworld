@@ -191,7 +191,7 @@
     <ClInclude Include="..\src\WorldBlock.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\readme.txt" />
+    <None Include="..\README.md" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

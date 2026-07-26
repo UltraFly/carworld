@@ -143,7 +143,7 @@ SPEC_TEXT="\
 \nmake install\
 \n\
 \n%files\
-\n%doc readme.txt\
+\n%doc README.md\
 \n/usr/bin/$(APPNAME)\
 \n/usr/share/$(APPNAME)"
 
