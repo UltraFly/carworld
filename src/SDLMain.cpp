@@ -126,7 +126,7 @@ int HApplication::TimeRefreshRate()
 }
 
 //CLASS HglApplication
-HglApplication::HglApplication(int width, int height, bool full_screen) : m_window(new HSDLWindow("cool", width,height,full_screen)) {}
+HglApplication::HglApplication(int width, int height, bool full_screen) : m_window(new HSDLWindow("CarWorld", width,height,full_screen)) {}
 HglApplication::~HglApplication() {delete m_window;}
 void HglApplication::draw_init() {}
 void HglApplication::key_down(SDL_Scancode AHKey, SDL_Keycode c) {}
