@@ -12,9 +12,9 @@ CarWorld is a historical project that is being restored and modernized. The
 original SourceForge repository, website, release history, and available
 packages have been preserved on GitHub.
 
-The project now uses CMake and a vcpkg dependency manifest. The new build
-configuration is initially targeted at Visual Studio 2026 on 64-bit Windows,
-but it has not yet been compiled and verified with that toolchain.
+The project now uses CMake and a vcpkg dependency manifest. A 64-bit Windows
+Debug build has been verified with the MSVC 19.51 compiler supplied by Visual
+Studio 2026.
 
 ## Features
 
@@ -76,8 +76,9 @@ cmake --build --preset windows-debug
 The build copies the `data/` directory next to `carworld.exe`, allowing the
 program to find its runtime assets when launched from the build output.
 
-This configuration has not yet been compiled with Visual Studio 2026. Until
-that validation is complete, the original packages remain available from
+The Windows Debug configuration has been compiled successfully with Visual
+Studio 2026. Runtime behavior still needs broader testing; the original
+packages remain available from
 [GitHub Releases](https://github.com/UltraFly/carworld/releases).
 
 ## Running

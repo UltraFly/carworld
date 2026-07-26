@@ -28,7 +28,7 @@ VS_VERSION_INFO VERSIONINFO
  FILEFLAGS 0x0L
 #endif
  FILEOS VOS__WINDOWS32
- FILETYPE VFT_DLL
+ FILETYPE VFT_APP
  FILESUBTYPE 0x0L
 BEGIN
     BLOCK "StringFileInfo"
@@ -39,10 +39,10 @@ BEGIN
             VALUE "CompanyName", CW_AUTHOR
             VALUE "FileDescription", ""
             VALUE "FileVersion", CW_VERSION_STR
-            VALUE "InternalName", "win_carw"
+            VALUE "InternalName", "carworld"
             VALUE "LegalCopyright", CW_COPYRIGHT
             VALUE "LegalTrademarks", ""
-            VALUE "OriginalFilename", "win_carw.exe"
+            VALUE "OriginalFilename", "carworld.exe"
             VALUE "PrivateBuild", ""
             VALUE "ProductName", CW_PRODUCT_NAME
             VALUE "ProductVersion", CW_VERSION_STR
