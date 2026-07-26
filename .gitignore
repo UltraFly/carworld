@@ -1,0 +1,19 @@
+# CMake and IDE output
+/out/
+/build/
+/cmake-build-*/
+/.vs/
+
+# vcpkg manifest installation tree
+/vcpkg_installed/
+
+# Per-user CMake configuration
+CMakeUserPresets.json
+
+# Visual Studio user settings
+*.user
+*.suo
+
+# CarWorld runtime files
+/carworld.cfg
+/carworld.log

@@ -12,9 +12,9 @@ CarWorld is a historical project that is being restored and modernized. The
 original SourceForge repository, website, release history, and available
 packages have been preserved on GitHub.
 
-The current source predates modern build systems and has not yet been verified
-against current Linux or Windows toolchains. Build instructions will be
-expanded after reproducible builds are established.
+The project now uses CMake and a vcpkg dependency manifest. The new build
+configuration is initially targeted at Visual Studio 2026 on 64-bit Windows,
+but it has not yet been compiled and verified with that toolchain.
 
 ## Features
 
@@ -36,15 +36,48 @@ The source currently references:
 - SDL2_net
 - OpenGL and GLU
 
-Exact supported versions and platform packages have not yet been verified.
+The dependencies are acquired automatically through the repository's
+[`vcpkg.json`](vcpkg.json) manifest. OpenGL and GLU are provided by the target
+platform and located by CMake.
 
 ## Building
 
-The repository contains a legacy `Makefile` and Visual Studio project files in
-[`msdev/`](msdev/). They are retained for restoration work, but the build
-commands and dependency setup have not yet been validated on current systems.
+### Windows with Visual Studio 2026
 
-Until that validation is complete, the original packages are available from
+Install Visual Studio 2026 Community with the **Desktop development with C++**
+workload. Ensure its CMake tools, Windows SDK, and Git components are selected.
+
+Install vcpkg in a stable location and bootstrap it:
+
+```powershell
+git clone https://github.com/microsoft/vcpkg.git C:\Development\vcpkg
+C:\Development\vcpkg\bootstrap-vcpkg.bat
+$env:VCPKG_ROOT = "C:\Development\vcpkg"
+```
+
+To make `VCPKG_ROOT` available in future terminals, add it as a Windows user
+environment variable. Do not commit a machine-specific vcpkg path to the
+repository.
+
+Open the repository folder in Visual Studio. Visual Studio will detect
+[`CMakePresets.json`](CMakePresets.json); select **Windows x64 — Visual Studio
+2026**, then choose either the Debug or Release build preset. During the first
+configuration, vcpkg downloads and builds SDL2, SDL2_image, SDL2_net, and their
+transitive dependencies.
+
+The equivalent command-line workflow from a Visual Studio developer PowerShell
+is:
+
+```powershell
+cmake --preset windows-vs2026
+cmake --build --preset windows-debug
+```
+
+The build copies the `data/` directory next to `carworld.exe`, allowing the
+program to find its runtime assets when launched from the build output.
+
+This configuration has not yet been compiled with Visual Studio 2026. Until
+that validation is complete, the original packages remain available from
 [GitHub Releases](https://github.com/UltraFly/carworld/releases).
 
 ## Running

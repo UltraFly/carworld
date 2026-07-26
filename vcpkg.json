@@ -1,0 +1,13 @@
+{
+  "$schema": "https://raw.githubusercontent.com/microsoft/vcpkg-tool/main/docs/vcpkg.schema.json",
+  "name": "carworld",
+  "version": "0.247.0",
+  "description": "Open-source driving simulator and vehicle dynamics experiment",
+  "license": "GPL-3.0-only",
+  "builtin-baseline": "40f3c709db80acf154ac4b17a1f83c564ebd022e",
+  "dependencies": [
+    "sdl2",
+    "sdl2-image",
+    "sdl2-net"
+  ]
+}

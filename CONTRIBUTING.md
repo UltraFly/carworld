@@ -12,8 +12,8 @@ the project easier to build, run, understand, and maintain are welcome.
 
 ## Useful contributions
 
-- Reproducible Linux and Windows build instructions
-- Build-system modernization
+- Verifying and improving the CMake build on Windows, Linux, and macOS
+- Reproducible platform-specific build instructions
 - SDL2, SDL2_image, and SDL2_net compatibility fixes
 - Compiler-warning and portability fixes
 - Runtime bug reports with reproduction steps
