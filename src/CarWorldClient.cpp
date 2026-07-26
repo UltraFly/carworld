@@ -137,11 +137,6 @@ void CarWorldClient::draw_init()
 	Hgl::ThrowError(); //check to see if everything is OK
 
 	cout << "initiating input...\n";
-	RealJoystick = m_window->GetJoystick();
-	if (RealJoystick!=NULL)
-		cout << RealJoystick->GetDescription() << endl;
-	else
-		cout << "no joystick support.\n";
 	FakeJoystick = new KeyJoystick(m_window);
 	CurrentJoystick = FakeJoystick;
 
@@ -190,6 +185,7 @@ CarWorldClient::~CarWorldClient()
 	write_cfg(cfg_file);
 
 	//cout.rdbuf(&hbuf);
+	delete RealJoystick;
 	delete FakeJoystick;
 	for (map<string,HExecutable *>::iterator I = m_Executables.begin(); I != m_Executables.end() ; I++)
 		delete (*I).second;
@@ -349,8 +345,14 @@ int CarWorldClient::get_r_mode()
 
 void CarWorldClient::set_joystick(bool use_joystick)
 {
-	if (use_joystick && (RealJoystick!=NULL) && RealJoystick->IsValid())
-		CurrentJoystick = RealJoystick;
+	if (use_joystick)
+	{
+		CurrentJoystick = FakeJoystick;
+		delete RealJoystick;
+		RealJoystick = m_window->GetJoystick();
+		if ((RealJoystick!=NULL) && RealJoystick->IsValid())
+			CurrentJoystick = RealJoystick;
+	}
 	else
 	{
 		if (RealJoystick!=NULL)
