@@ -21,6 +21,7 @@ public:
 	virtual void UpdateState();
 	virtual REAL GetAxisPos(int i);
 	virtual bool GetButtonPos(int i);
+	virtual bool SetAcquire(bool Active);
 	virtual bool SetForceFeedback(REAL x, REAL y);
 public:
 	HKey up_key;

@@ -26,6 +26,7 @@ public:
 	virtual void UpdateState() = 0;
 	virtual REAL GetAxisPos(int i) = 0;
 	virtual bool GetButtonPos(int i) = 0;
+	virtual bool SetAcquire(bool Active) = 0;
 	virtual bool SetForceFeedback(REAL x,REAL y) =0;
 };
 
@@ -83,6 +84,7 @@ public:
 	virtual void key_down(SDL_Scancode AHKey, SDL_Keycode c) = 0;
 	virtual void text_input(const char* text) = 0;
 	virtual void resize(unsigned int width, unsigned int height) = 0;
+	virtual void set_active(bool active) = 0;
 public:
 //OS specific window
 	HWindow *m_window;

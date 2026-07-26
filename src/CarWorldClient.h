@@ -31,6 +31,7 @@ public:
 	void key_down(SDL_Scancode AHKey, SDL_Keycode c);
 	void text_input(const char* text);
 	void resize(unsigned int width, unsigned int height);
+	void set_active(bool active);
 	void on_idle(unsigned int elapsed_time);
 
 	void draw();

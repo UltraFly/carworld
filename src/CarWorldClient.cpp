@@ -352,13 +352,23 @@ void CarWorldClient::set_joystick(bool use_joystick)
 	if (use_joystick && (RealJoystick!=NULL) && RealJoystick->IsValid())
 		CurrentJoystick = RealJoystick;
 	else
+	{
+		if (RealJoystick!=NULL)
+			RealJoystick->SetForceFeedback(0,0);
 		CurrentJoystick = FakeJoystick;
+	}
 	cout << "now using: \"" << CurrentJoystick->GetDescription() << "\" for input\n";
 }
 
 bool CarWorldClient::get_joystick()
 {
 	return (CurrentJoystick==RealJoystick);
+}
+
+void CarWorldClient::set_active(bool active)
+{
+	if (RealJoystick!=NULL)
+		RealJoystick->SetAcquire(active);
 }
 
 void CarWorldClient::key_down(SDL_Scancode AHKey, SDL_Keycode c)

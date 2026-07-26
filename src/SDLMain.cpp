@@ -157,6 +157,7 @@ HglApplication::~HglApplication() {delete m_window;}
 void HglApplication::draw_init() {}
 void HglApplication::key_down(SDL_Scancode AHKey, SDL_Keycode c) {}
 void HglApplication::resize(unsigned int width, unsigned int height) {}
+void HglApplication::set_active(bool active) {(void)active;}
 void HglApplication::draw() {}
 
 
@@ -209,7 +210,7 @@ int main(int argc, char *argv[])
 	try
 	{
 
-		if (!SDL_Init(SDL_INIT_VIDEO | SDL_INIT_JOYSTICK))
+		if (!SDL_Init(SDL_INIT_VIDEO | SDL_INIT_JOYSTICK | SDL_INIT_HAPTIC))
 			throw HException(string("SDL could not initialize: ")+SDL_GetError());
 
 		{
@@ -269,6 +270,12 @@ int main(int argc, char *argv[])
 #endif //WIN32
 						app->resize(event.window.data1, event.window.data2);
 					}
+					break;
+				case SDL_EVENT_WINDOW_FOCUS_GAINED:
+					app->set_active(true);
+					break;
+				case SDL_EVENT_WINDOW_FOCUS_LOST:
+					app->set_active(false);
 					break;
 					
 				case SDL_EVENT_QUIT:

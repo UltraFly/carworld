@@ -83,7 +83,15 @@ bool KeyJoystick::GetButtonPos(int i)
 	return (i==0) ? button : 0;
 }
 
+bool KeyJoystick::SetAcquire(bool Active)
+{
+	(void)Active;
+	return true;
+}
+
 bool KeyJoystick::SetForceFeedback(REAL x, REAL y)
 {
+	(void)x;
+	(void)y;
 	return false;
 }

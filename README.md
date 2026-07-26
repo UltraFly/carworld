@@ -21,7 +21,7 @@ Studio 2026.
 - Classical-mechanics vehicle simulation using metric units
 - Configurable mass, inertia, suspension, damping, torque, and friction
 - OpenGL rendering with textured models and projected shadows
-- SDL-based windowing, input, image loading, and joystick support
+- SDL-based windowing, input, image loading, joystick, and force-feedback support
 - Interactive in-game console
 - Historical experimental networked client/server code (disabled by default)
 - Linux and Windows project files
@@ -92,9 +92,15 @@ Historical controls:
 | Arrow keys | Control the vehicle |
 | Space | Handbrake |
 | Tab | Open the in-game console |
-| F2–F5 | Change views and options |
+| F2 | Change camera |
+| F3 | Reset the vehicle |
+| F4 | Use the physical joystick or steering wheel |
+| F5 | Use keyboard controls |
 
 The application uses `carworld.cfg` as its historical configuration filename.
+When a physical input device is selected, CarWorld enables its continuous
+constant-force effect when SDL reports compatible haptic support. Detection or
+runtime errors are written to the application log.
 
 ## Networking
 
