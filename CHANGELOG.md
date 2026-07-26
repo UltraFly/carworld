@@ -4,6 +4,16 @@ This changelog preserves the release history recorded by the original
 SourceForge project. Dates and descriptions retain the meaning of the
 historical project documentation.
 
+## 0.247 — 26 July 2026
+
+- Moved project development from SourceForge to GitHub and imported the
+  original SVN history.
+- Replaced the legacy Makefile build system with CMake.
+- Added Visual Studio 2026 support and Windows ZIP packaging.
+- Fixed CRLF data parsing and Windows text-file handling.
+- Restored the historical project website and packages on GitHub.
+- Corrected the application window title.
+
 ## 0.245 — 16 December 2009
 
 - Fixed the dark truck rendering bug.
@@ -68,10 +78,3 @@ The preserved SourceForge package was published as `0.245.1`.
 ## 0.190
 
 - First release.
-
-## Repository migration — 26 July 2026
-
-- Imported the SourceForge SVN history into Git.
-- Moved project development to GitHub.
-- Preserved the historical project website with GitHub Pages.
-- Restored available SourceForge packages as GitHub Releases.
