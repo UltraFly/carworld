@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+	<meta http-equiv="content-type" content="text/html;charset=utf-8" />
+	<meta http-equiv="Content-Style-Type" content="text/css" />
+	<title>CarWorld driving simulator (Marcus Hewat)</title>
+</head>
+<body>
+	<h1 style="text-align: center;">Car World</h1>
+	<p>
+		this site is hosted by&nbsp;
+		<a href="http://sourceforge.net">
+			<img src="http://sourceforge.net/sflogo.php?group_id=11922&amp;type=2" style="border: 0px solid ; width: 125px; height: 37px;" alt="SourceForge.net Logo"/>
+		</a>
+	</p>
+
+	<table style="text-align: left; width: 100%;" border="0" cellpadding="0" cellspacing="0">
+		<tr>
+			<td style="vertical-align: top;">
+				<h3><a href="http://www.pledgebank.com/open3d">Support open graphics drivers!</a></h3>
+				Open Source or Free Software drivers are important because they enable the hardware to work
+				<b>out of the box</b> on all Free operating systems, including Linux, they guarantee that the support for the hardware will not be
+				discontinued so long as there are people using it, they guarante that functionnality of the hardware is not arbitrarily
+				limited by factors such as market segmentation, Digital Restrictions Management or anticompetitive mesures, they guarante the customer can
+				<b>choose</b> the platform he uses <b>even if he is presently tied to Windows</b>.<br/>
+				This is why, I belive that responsible consumers should purchase,
+				whenever possible, hardware with open drivers because <b>there is no conceivable downside for the consumer</b>, it empowers him to use his
+				purchase as he sees fit.<br/>
+				One day all PC hardware will have open drivers, that day users will never need to install a driver again.<br/>
+				For this reason, in march 2007, I setup a <a href="http://www.pledgebank.com/open3d">pledge to support manufacturers who release open graphics
+				drivers</a>. Since then, (as of december 2009) nVidia has maintained it's position with closed/obfuscated drivers while ATI/AMD has published specifications and
+				encouraged Open Source driver development for their hardware. I therefore encourage anyone looking to purchase a graphics card to <b>avoid nVidia
+				hardware and favor AMD/ATI hardware</b>.
+			</td>
+			<td style="vertical-align: top; text-align: center;">
+				<a href="http://www.opengl.org"><img style="border: 0px solid ; width: 220px; height: 108px;" alt="opengl logo" src="opengl_logo.jpg"/></a></td>
+			<td style="vertical-align: top; text-align: center;">
+				<a href="http://www.openal.org"><img style="border: 0px solid ; width: 160px; height: 86px;" alt="openal logo" src="openal_logo.jpg"/></a></td>
+			<td style="vertical-align: top; text-align: center;"><a href="http://www.libsdl.org"><img style="border: 0px solid ; width: 128px; height: 64px;" alt="sdl logo" src="sdl_logo.gif"/></a></td>
+		</tr>
+	</table>
+
+	<table style="text-align: left; width: 100%;" border="0" cellpadding="0" cellspacing="0">
+
+	    <tr>
+			<td style="vertical-align: top;">
+				<h3>About CarWorld</h3>
+				CarWorld is a small driving simulator/demo I use to test various things
+				of interest. It was mostly developed when I was a student. It is released with the full source code under the
+				<a href="http://www.gnu.org/copyleft/gpl.html">GNU General Public License</a>.
+				<h3>Where I am now</h3>
+				<p>I am now working at <a href="http://www.oktal.fr">OKTAL</a> where I work on 
+				<a href="http://www.scanersimulation.com">SCANeR Studio</a>
+				a vehicle dynamics evaluation tool and full scale driving simulator. We also promote the use of <a href="http://www.road-xml.org">Road XML</a>
+				an open format to describe road networks.</p>
+				<h3>The rendering</h3>
+				<p>
+					The two top pictures represent an slightly older
+					version (0.072) but graphically similar of CarWorld as it was
+					presented
+					for my project. 0.072 includes an OpenGL based renderer allowing
+				</p>
+				<ul>
+					<li>file input and displaying of texture mapped models
+						with interpolated surface normals, real time projected shadows (as seen
+						in the dino lights example). </li>
+				    <li>background object</li>
+				    <li>on screen command line to modify visual and simulation parameters </li>
+				</ul>
+				<h3>The mechanics </h3>
+				<ul>
+					<li>based on classical mechanics </li>
+					<li>uses standard metrics (Newtons, meters, seconds...) </li>
+					<li>there are no constraints on the environment surface </li>
+					<li>variable length time increments and variable increment number means "CarWorld time" is not dependent on frame rate. </li>
+					<li>adjustable simulation specs include: metrics, mass,
+						moment of inertia around rotation axis, suspension pre load,
+						compression
+						damping, rebound damping, engine torque output, air friction, surface
+						friction.</li>
+				</ul>
+			</td>
+		    <td style="vertical-align: top;">
+				<h3>Screenshots</h3>
+				<table style="text-align: left; width: 100%;" border="0" cellpadding="0" cellspacing="10">
+					<tr>
+			            <td style="vertical-align: top; text-align: center;">
+							<a href="cwscreen3.gif"><img alt="cwscreen3small" src="cwscreen3small.gif" style="border: 0px solid ; width: 256px; height: 188px;"/></a>
+						</td>
+			            <td style="vertical-align: top; text-align: center;">
+							<a href="cwscreen4.gif"><img alt="cwscreen4small" src="cwscreen4small.gif" style="border: 0px solid ; width: 256px; height: 188px;"/></a>
+			            </td>
+					</tr>
+					<tr>
+						<td style="vertical-align: top; text-align: center;">
+							<a href="cwscreen1.gif"><img alt="cwscreen1small" src="cwscreen1small.gif" style="border: 0px solid ; width: 256px; height: 192px;"/></a>
+						</td>
+			            <td style="vertical-align: top; text-align: center;">
+							<a href="cwscreen2.gif"><img alt="cwscreen2small" src="cwscreen2small.gif" style="border: 0px solid ; width: 256px; height: 192px;"/></a>
+						</td>
+					</tr>
+					<tr>
+			            <td style="vertical-align: top; text-align: center;">
+							<a href="screenshots"><img alt="thumbnail" src="screenshots/carworld-0.239_morphos_small.jpg"/><br />more screenshots and ports</a>
+			            </td>
+			            <td style="vertical-align: top;">&nbsp;</td>
+			          </tr>
+				</table>
+			</td>
+	    </tr>
+	</table>
+
+	<h3>What CarWorld needs to run
+	</h3>
+	<p>&nbsp;&nbsp;&nbsp; <span style="text-decoration: underline;">Some</span>
+	versions of CarWorld have been tested on Linux, HP-UNIX, IRIX and Windows95/98/NT/2k/XP/Vista/7, Mac OSX and BeOS but
+	it should however compile under any OS with OpenGL and supported by the SDL.
+	I develop under Windows and Linux. It uses the <a href="http://www.libsdl.org">SDL librairy</a>
+	</p>
+	<ul>
+	  <li>for Windows you will need the <a href="http://www.microsoft.com/downloads/details.aspx?FamilyID=9b2da534-3e03-4391-8a4d-074b9f2bc1bf">C/C++ runtime libraries msvcr90.dll and msvcp90.dll</a></li>
+	  <li>for Linux, install the SDL and SDL_image rpms/debs.</li>
+	</ul>
+	<h3>history</h3>
+	<ul>
+		<li>0.245: (16/12/09) fixed crash on exit, missing textures on first launch, incorrect vehicle lighting</li>
+		<li>0.243: (28/06/06) compiles with gcc 4.1, no more warnings compiling with Visual Studio .Net 2005 (8.0)</li>
+		<li>0.242: (08/06/06) compiles with Visual Studio .Net 2005 (8.0) and gcc 4.0.4</li>
+		<li>0.239: (07/04/04) Ported to SDL, compiles with VC6 and gcc 3.3.1, server mode does not work</li>
+		<li>0.223: (20/09/00) Networked mode now works under Windows95/98 (problem under NT...)</li>
+		<li>0.222: (19/07/00) truck straightened out, rpm package target added to makefile</li>
+		<li>0.219: (15/06/00) DirectX force feedback</li>
+		<li>0.215: (19/04/00) slightly better network support, first BeOS port, applied patches sent in</li>
+		<li>0.205: preliminary support for networked gaming (under UNIX/Linux only for now)</li>
+		<li>0.198: bug fixes, support for Linux joystick etc...</li>
+		<li>0.190: first release</li>
+	</ul>
+
+	<ul>
+	  <li>SourceForge: <a href="http://sourceforge.net/projects/carworld/">developer web page</a></li>
+	  <li>Developers: <a href="doc/hierarchy.html">documentation generated by doxygen</a></li>
+	  <li>author/feed back: <a href="mailto:hewat@users.sourceforge.net">email Marcus Hewat</a></li>
+	  <li>back to <a href="http://marcus.hewat.fr/">Marcus Hewat's home page</a></li>
+	  <li><a href="http://www.oktal.fr">OKTAL</a> where I am currently working on
+		<a href="http://www.callasprosper.com/index.php?menu=software">Callas/Prosper</a>
+			a vehicle dynamics evaluation tool and driving simulator.
+	  </li>
+	</ul>
+	<h3>Download</h3>
+	<p>
+		<a href="http://sourceforge.net/project/showfiles.php?group_id=11922">Download carworld</a>
+	</p>
+	<p>
+		<a href="http://validator.w3.org/check?uri=referer"><img
+			src="http://www.w3.org/Icons/valid-xhtml10"
+			alt="Valid XHTML 1.0 Strict" height="31" width="88" /></a>
+	</p>
+</body>
+</html>
