@@ -89,4 +89,25 @@ add_custom_command(
 )
 
 install(TARGETS carworld RUNTIME DESTINATION . BUNDLE DESTINATION .)
+if(WIN32)
+    install(FILES
+        "$<TARGET_FILE_DIR:carworld>/SDL2.dll"
+        "$<TARGET_FILE_DIR:carworld>/SDL2_image.dll"
+        "$<TARGET_FILE_DIR:carworld>/SDL2_net.dll"
+        "$<TARGET_FILE_DIR:carworld>/libpng16.dll"
+        "$<TARGET_FILE_DIR:carworld>/z.dll"
+        DESTINATION .
+    )
+endif()
 install(DIRECTORY data DESTINATION .)
+install(FILES README.md CHANGELOG.md LICENSE DESTINATION .)
+
+if(WIN32)
+    set(CPACK_GENERATOR "ZIP")
+    set(CPACK_PACKAGE_NAME "carworld")
+    set(CPACK_PACKAGE_VENDOR "Marcus Hewat")
+    set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "${PROJECT_DESCRIPTION}")
+    set(CPACK_PACKAGE_FILE_NAME "carworld-${PROJECT_VERSION}-windows-x64")
+    set(CPACK_INCLUDE_TOPLEVEL_DIRECTORY ON)
+    include(CPack)
+endif()
