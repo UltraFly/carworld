@@ -1,160 +1,198 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<!doctype html>
+<html lang="en">
 <head>
-	<meta http-equiv="content-type" content="text/html;charset=utf-8" />
-	<meta http-equiv="Content-Style-Type" content="text/css" />
-	<title>CarWorld driving simulator (Marcus Hewat)</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="CarWorld is an open-source, cross-platform driving simulator and vehicle dynamics experiment by Marcus Hewat.">
+  <meta name="theme-color" content="#101923">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="CarWorld driving simulator">
+  <meta property="og:description" content="An open-source, cross-platform driving simulator and vehicle dynamics experiment.">
+  <meta property="og:url" content="https://ultrafly.github.io/carworld/">
+  <meta property="og:image" content="https://ultrafly.github.io/carworld/cwscreen4.gif">
+  <title>CarWorld — Open-source driving simulator</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-	<h1 style="text-align: center;">Car World</h1>
-	<p>
-		this project is hosted by&nbsp;
-		<a href="https://github.com/UltraFly/carworld">
-			GitHub
-		</a>
-	</p>
+  <a class="skip-link" href="#main">Skip to main content</a>
 
-	<table style="text-align: left; width: 100%;" border="0" cellpadding="0" cellspacing="0">
-		<tr>
-			<td style="vertical-align: top;">
-				<h3><a href="http://www.pledgebank.com/open3d">Support open graphics drivers!</a></h3>
-				Open Source or Free Software drivers are important because they enable the hardware to work
-				<b>out of the box</b> on all Free operating systems, including Linux, they guarantee that the support for the hardware will not be
-				discontinued so long as there are people using it, they guarante that functionnality of the hardware is not arbitrarily
-				limited by factors such as market segmentation, Digital Restrictions Management or anticompetitive mesures, they guarante the customer can
-				<b>choose</b> the platform he uses <b>even if he is presently tied to Windows</b>.<br/>
-				This is why, I belive that responsible consumers should purchase,
-				whenever possible, hardware with open drivers because <b>there is no conceivable downside for the consumer</b>, it empowers him to use his
-				purchase as he sees fit.<br/>
-				One day all PC hardware will have open drivers, that day users will never need to install a driver again.<br/>
-				For this reason, in march 2007, I setup a <a href="http://www.pledgebank.com/open3d">pledge to support manufacturers who release open graphics
-				drivers</a>. Since then, (as of december 2009) nVidia has maintained it's position with closed/obfuscated drivers while ATI/AMD has published specifications and
-				encouraged Open Source driver development for their hardware. I therefore encourage anyone looking to purchase a graphics card to <b>avoid nVidia
-				hardware and favor AMD/ATI hardware</b>.
-			</td>
-			<td style="vertical-align: top; text-align: center;">
-				<a href="https://www.opengl.org"><img style="border: 0px solid ; width: 220px; height: 108px;" alt="opengl logo" src="opengl_logo.jpg"/></a></td>
-			<td style="vertical-align: top; text-align: center;">
-				<a href="https://www.openal.org"><img style="border: 0px solid ; width: 160px; height: 86px;" alt="openal logo" src="openal_logo.jpg"/></a></td>
-			<td style="vertical-align: top; text-align: center;"><a href="https://www.libsdl.org"><img style="border: 0px solid ; width: 128px; height: 64px;" alt="sdl logo" src="sdl_logo.gif"/></a></td>
-		</tr>
-	</table>
+  <header class="site-header">
+    <nav class="nav container" aria-label="Primary navigation">
+      <a class="wordmark" href="./" aria-label="CarWorld home">Car<span>World</span></a>
+      <div class="nav-links">
+        <a href="#about">About</a>
+        <a href="#features">Features</a>
+        <a href="screenshots/">Screenshots</a>
+        <a href="#history">History</a>
+        <a class="button button-small" href="https://github.com/UltraFly/carworld/releases">Download</a>
+      </div>
+    </nav>
+  </header>
 
-	<table style="text-align: left; width: 100%;" border="0" cellpadding="0" cellspacing="0">
+  <main id="main">
+    <section class="hero">
+      <div class="container hero-grid">
+        <div class="hero-copy">
+          <p class="eyebrow">Open source since 2000</p>
+          <h1>A small driving simulator with a long history.</h1>
+          <p class="lede">CarWorld is a cross-platform driving simulator and experimental test bed for real-time rendering, vehicle dynamics and networking.</p>
+          <div class="hero-actions">
+            <a class="button" href="https://github.com/UltraFly/carworld/releases">Get the latest release</a>
+            <a class="text-link" href="https://github.com/UltraFly/carworld">View source on GitHub <span aria-hidden="true">→</span></a>
+          </div>
+          <p class="status"><span aria-hidden="true"></span> Historical project, preserved and maintained on GitHub</p>
+        </div>
+        <a class="hero-image" href="cwscreen4.gif">
+          <img src="cwscreen4.gif" width="815" height="599" alt="CarWorld showing a red sports car on a road in a mountainous landscape">
+          <span>View full-size screenshot</span>
+        </a>
+      </div>
+    </section>
 
-	    <tr>
-			<td style="vertical-align: top;">
-				<h3>About CarWorld</h3>
-				CarWorld is a small driving simulator/demo I use to test various things
-				of interest. It was mostly developed when I was a student. It is released with the full source code under the
-				<a href="https://www.gnu.org/licenses/gpl.html">GNU General Public License</a>.
-				<h3>Where I am now</h3>
-				<p>I am now working at <a href="http://www.oktal.fr">OKTAL</a> where I work on 
-				<a href="http://www.scanersimulation.com">SCANeR Studio</a>
-				a vehicle dynamics evaluation tool and full scale driving simulator. We also promote the use of <a href="http://www.road-xml.org">Road XML</a>
-				an open format to describe road networks.</p>
-				<h3>The rendering</h3>
-				<p>
-					The two top pictures represent an slightly older
-					version (0.072) but graphically similar of CarWorld as it was
-					presented
-					for my project. 0.072 includes an OpenGL based renderer allowing
-				</p>
-				<ul>
-					<li>file input and displaying of texture mapped models
-						with interpolated surface normals, real time projected shadows (as seen
-						in the dino lights example). </li>
-				    <li>background object</li>
-				    <li>on screen command line to modify visual and simulation parameters </li>
-				</ul>
-				<h3>The mechanics </h3>
-				<ul>
-					<li>based on classical mechanics </li>
-					<li>uses standard metrics (Newtons, meters, seconds...) </li>
-					<li>there are no constraints on the environment surface </li>
-					<li>variable length time increments and variable increment number means "CarWorld time" is not dependent on frame rate. </li>
-					<li>adjustable simulation specs include: metrics, mass,
-						moment of inertia around rotation axis, suspension pre load,
-						compression
-						damping, rebound damping, engine torque output, air friction, surface
-						friction.</li>
-				</ul>
-			</td>
-		    <td style="vertical-align: top;">
-				<h3>Screenshots</h3>
-				<table style="text-align: left; width: 100%;" border="0" cellpadding="0" cellspacing="10">
-					<tr>
-			            <td style="vertical-align: top; text-align: center;">
-							<a href="cwscreen3.gif"><img alt="cwscreen3small" src="cwscreen3small.gif" style="border: 0px solid ; width: 256px; height: 188px;"/></a>
-						</td>
-			            <td style="vertical-align: top; text-align: center;">
-							<a href="cwscreen4.gif"><img alt="cwscreen4small" src="cwscreen4small.gif" style="border: 0px solid ; width: 256px; height: 188px;"/></a>
-			            </td>
-					</tr>
-					<tr>
-						<td style="vertical-align: top; text-align: center;">
-							<a href="cwscreen1.gif"><img alt="cwscreen1small" src="cwscreen1small.gif" style="border: 0px solid ; width: 256px; height: 192px;"/></a>
-						</td>
-			            <td style="vertical-align: top; text-align: center;">
-							<a href="cwscreen2.gif"><img alt="cwscreen2small" src="cwscreen2small.gif" style="border: 0px solid ; width: 256px; height: 192px;"/></a>
-						</td>
-					</tr>
-					<tr>
-			            <td style="vertical-align: top; text-align: center;">
-							<a href="screenshots"><img alt="thumbnail" src="screenshots/carworld-0.239_morphos_small.jpg"/><br />more screenshots and ports</a>
-			            </td>
-			            <td style="vertical-align: top;">&nbsp;</td>
-			          </tr>
-				</table>
-			</td>
-	    </tr>
-	</table>
+    <section class="section" id="about">
+      <div class="container split">
+        <div>
+          <p class="eyebrow">About the project</p>
+          <h2>Built to explore how cars move—and how worlds are rendered.</h2>
+        </div>
+        <div class="prose">
+          <p>CarWorld is a driving simulator and demonstration program created by Marcus Hewat, mostly while he was a student. It became a practical place to test ideas in graphics, mechanics, input and networked simulation.</p>
+          <p>The source code is available under the <a href="https://www.gnu.org/licenses/gpl-3.0.html">GNU General Public License v3.0</a>. The project has run on Linux, Windows, macOS, HP-UX, IRIX, BeOS and MorphOS.</p>
+        </div>
+      </div>
+    </section>
 
-	<h3>What CarWorld needs to run
-	</h3>
-	<p>&nbsp;&nbsp;&nbsp; <span style="text-decoration: underline;">Some</span>
-	versions of CarWorld have been tested on Linux, HP-UNIX, IRIX and Windows95/98/NT/2k/XP/Vista/7, Mac OSX and BeOS but
-	it should however compile under any OS with OpenGL and supported by the SDL.
-	I develop under Windows and Linux. It uses the <a href="https://www.libsdl.org">SDL librairy</a>
-	</p>
-	<ul>
-	  <li>for Windows you will need the <a href="http://www.microsoft.com/downloads/details.aspx?FamilyID=9b2da534-3e03-4391-8a4d-074b9f2bc1bf">C/C++ runtime libraries msvcr90.dll and msvcp90.dll</a></li>
-	  <li>for Linux, install the SDL and SDL_image rpms/debs.</li>
-	</ul>
-	<h3>history</h3>
-	<ul>
-		<li>0.245: (16/12/09) fixed crash on exit, missing textures on first launch, incorrect vehicle lighting</li>
-		<li>0.243: (28/06/06) compiles with gcc 4.1, no more warnings compiling with Visual Studio .Net 2005 (8.0)</li>
-		<li>0.242: (08/06/06) compiles with Visual Studio .Net 2005 (8.0) and gcc 4.0.4</li>
-		<li>0.239: (07/04/04) Ported to SDL, compiles with VC6 and gcc 3.3.1, server mode does not work</li>
-		<li>0.223: (20/09/00) Networked mode now works under Windows95/98 (problem under NT...)</li>
-		<li>0.222: (19/07/00) truck straightened out, rpm package target added to makefile</li>
-		<li>0.219: (15/06/00) DirectX force feedback</li>
-		<li>0.215: (19/04/00) slightly better network support, first BeOS port, applied patches sent in</li>
-		<li>0.205: preliminary support for networked gaming (under UNIX/Linux only for now)</li>
-		<li>0.198: bug fixes, support for Linux joystick etc...</li>
-		<li>0.190: first release</li>
-	</ul>
+    <section class="section section-dark" id="features">
+      <div class="container">
+        <p class="eyebrow">Under the hood</p>
+        <h2>Rendering and mechanics</h2>
+        <div class="feature-grid">
+          <article class="feature-card">
+            <p class="feature-number">01</p>
+            <h3>Real-time rendering</h3>
+            <p>An OpenGL renderer for textured models, interpolated surface normals, projected shadows and background objects.</p>
+          </article>
+          <article class="feature-card">
+            <p class="feature-number">02</p>
+            <h3>Classical mechanics</h3>
+            <p>Simulation in standard SI units with configurable mass, inertia, suspension, damping, torque and friction.</p>
+          </article>
+          <article class="feature-card">
+            <p class="feature-number">03</p>
+            <h3>Independent timing</h3>
+            <p>Variable simulation increments keep CarWorld time independent of the rendering frame rate.</p>
+          </article>
+          <article class="feature-card">
+            <p class="feature-number">04</p>
+            <h3>Portable foundations</h3>
+            <p>Built on SDL and OpenGL, with support developed and contributed across many operating systems.</p>
+          </article>
+        </div>
+      </div>
+    </section>
 
-	<ul>
-	  <li>SourceForge: <a href="https://sourceforge.net/projects/carworld/">archived project page</a></li>
-	  <li>Developers: <a href="https://github.com/UltraFly/carworld/tree/main/src">source code on GitHub</a></li>
-	  <li>author/feed back: <a href="https://github.com/UltraFly/carworld/issues">CarWorld issues on GitHub</a></li>
-	  <li>back to <a href="http://marcus.hewat.fr/">Marcus Hewat's home page</a></li>
-	  <li><a href="http://www.oktal.fr">OKTAL</a> where I am currently working on
-		<a href="http://www.callasprosper.com/index.php?menu=software">Callas/Prosper</a>
-			a vehicle dynamics evaluation tool and driving simulator.
-	  </li>
-	</ul>
-	<h3>Download</h3>
-	<p>
-		<a href="https://github.com/UltraFly/carworld/releases">Download CarWorld releases</a>
-	</p>
-	<p>
-		<a href="http://validator.w3.org/check?uri=referer"><img
-			src="http://www.w3.org/Icons/valid-xhtml10"
-			alt="Valid XHTML 1.0 Strict" height="31" width="88" /></a>
-	</p>
+    <section class="section" id="screenshots">
+      <div class="container">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">From the archive</p>
+            <h2>CarWorld in action</h2>
+          </div>
+          <a class="text-link" href="screenshots/">See all platforms <span aria-hidden="true">→</span></a>
+        </div>
+        <div class="gallery">
+          <a href="cwscreen3.gif">
+            <img src="cwscreen3small.gif" width="256" height="188" loading="lazy" alt="CarWorld rendered track and vehicle scene">
+          </a>
+          <a href="cwscreen4.gif">
+            <img src="cwscreen4small.gif" width="256" height="188" loading="lazy" alt="Red sports car driving through a mountainous landscape">
+          </a>
+          <a href="cwscreen1.gif">
+            <img src="cwscreen1small.gif" width="256" height="192" loading="lazy" alt="Early CarWorld vehicle dynamics demonstration">
+          </a>
+          <a href="cwscreen2.gif">
+            <img src="cwscreen2small.gif" width="256" height="192" loading="lazy" alt="Early CarWorld textured 3D scene">
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section-tint" id="requirements">
+      <div class="container split">
+        <div>
+          <p class="eyebrow">Build requirements</p>
+          <h2>Portable by design.</h2>
+        </div>
+        <div class="prose">
+          <p>CarWorld is written in C++ and uses SDL2, SDL2_image, SDL2_net, OpenGL and GLU. See the repository documentation for the currently known build instructions.</p>
+          <p class="note"><strong>Please note:</strong> the modernized build has not yet been verified. Historical binaries are available from GitHub Releases.</p>
+          <div class="link-row">
+            <a class="button button-dark" href="https://github.com/UltraFly/carworld#building">Build instructions</a>
+            <a class="text-link" href="https://github.com/UltraFly/carworld/releases">Binary releases <span aria-hidden="true">→</span></a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="history">
+      <div class="container history-layout">
+        <div>
+          <p class="eyebrow">Release history</p>
+          <h2>More than a decade of experiments.</h2>
+          <p class="muted">Selected milestones from the original project history.</p>
+        </div>
+        <ol class="timeline">
+          <li>
+            <time datetime="2009-12-16">16 Dec 2009</time>
+            <div><strong>0.245</strong><span>Fixed a crash on exit, missing textures on first launch and incorrect vehicle lighting.</span></div>
+          </li>
+          <li>
+            <time datetime="2006-06-28">28 Jun 2006</time>
+            <div><strong>0.243</strong><span>Added GCC 4.1 support and eliminated Visual Studio 2005 compiler warnings.</span></div>
+          </li>
+          <li>
+            <time datetime="2004-04-07">7 Apr 2004</time>
+            <div><strong>0.239</strong><span>Ported to SDL, compiling with Visual C++ 6 and GCC 3.3.1.</span></div>
+          </li>
+          <li>
+            <time datetime="2000-09-20">20 Sep 2000</time>
+            <div><strong>0.223</strong><span>Networked mode working on Windows 95 and 98.</span></div>
+          </li>
+          <li>
+            <span class="timeline-date">Earlier</span>
+            <div><strong>0.190–0.222</strong><span>First release, Linux joystick support, networking, BeOS support, force feedback and vehicle fixes.</span></div>
+          </li>
+        </ol>
+      </div>
+    </section>
+
+    <section class="section archive-note" id="archive">
+      <div class="container split">
+        <div>
+          <p class="eyebrow">A note from the archive</p>
+          <h2>Open graphics drivers</h2>
+        </div>
+        <div class="prose">
+          <p>The original CarWorld website included a 2009 appeal for open graphics drivers. It argued that open drivers give users longer hardware support, freedom of platform choice and fewer artificial restrictions.</p>
+          <p>This historical statement has been condensed for the modern site. It is retained as part of the project’s story and should not be read as current purchasing advice.</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-grid">
+      <div>
+        <a class="wordmark wordmark-light" href="./">Car<span>World</span></a>
+        <p>An open-source driving simulator by Marcus Hewat.</p>
+      </div>
+      <nav class="footer-links" aria-label="Project links">
+        <a href="https://github.com/UltraFly/carworld">Source code</a>
+        <a href="https://github.com/UltraFly/carworld/releases">Releases</a>
+        <a href="https://github.com/UltraFly/carworld/issues">Issues</a>
+        <a href="https://sourceforge.net/projects/carworld/">SourceForge archive</a>
+      </nav>
+    </div>
+  </footer>
 </body>
 </html>
