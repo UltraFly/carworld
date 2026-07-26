@@ -177,7 +177,7 @@ void OpenDataFile(ifstream &infile, const char *FileName)
 	{
 		FullPath = FileName;
 		//cout << "trying \"" << FullPath << "\"..." << endl;
-		infile.open(FullPath.c_str(), ios::in | ios::binary);
+		infile.open(FullPath.c_str(), ios::in);
 	}
 //try in the home directory
 	const char* HomeDirectory = getenv("HOME");
