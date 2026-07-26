@@ -16,4 +16,4 @@ CMakeUserPresets.json
 
 # CarWorld runtime files
 /carworld.cfg
-/carworld.log
+/log.txt
