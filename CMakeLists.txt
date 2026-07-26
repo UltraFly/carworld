@@ -64,9 +64,15 @@ target_link_libraries(
 if(MSVC)
     target_compile_definitions(carworld PRIVATE WIN32 _CRT_SECURE_NO_WARNINGS)
     target_compile_options(carworld PRIVATE /W3 /EHsc)
+    target_link_options(
+        carworld
+        PRIVATE
+            "$<$<CONFIG:Debug>:/DEBUG>"
+            "$<$<CONFIG:RelWithDebInfo>:/DEBUG>"
+    )
     set_property(
         TARGET carworld
-        PROPERTY VS_DEBUGGER_WORKING_DIRECTORY "$<TARGET_FILE_DIR:carworld>"
+        PROPERTY VS_DEBUGGER_WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
     )
 else()
     target_compile_options(carworld PRIVATE -Wall -Wextra)
