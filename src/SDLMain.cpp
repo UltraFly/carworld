@@ -5,9 +5,14 @@
 #include "H_Main.h"
 
 #include "CarWorldClient.h"
+#if CARWORLD_ENABLE_NETWORKING
+#include "CarWorldNet.h"
+#include "CarWorldServer.h"
+#endif
 #include "SDLJoystick.h"
 
 #include <ctype.h>
+#include <cstdlib>
 #include <iostream>
 #include <map>
 
@@ -18,6 +23,9 @@
 
 #include <SDL3/SDL.h>
 #include <SDL3/SDL_main.h>
+#if CARWORLD_ENABLE_NETWORKING
+#include <SDL3_net/SDL_net.h>
+#endif
 
 HWindow::~HWindow() {}
 HJoystick::~HJoystick(){}
@@ -206,12 +214,43 @@ int main(int argc, char *argv[])
 {
 	cout << "Hello" << endl;
 	streambuf* cout_streambuf = cout.rdbuf();
-	HglApplication* app = NULL;
+	HApplication* app = NULL;
+	HglApplication* graphical_app = NULL;
+	bool sdl_initialized = false;
+#if CARWORLD_ENABLE_NETWORKING
+	bool network_initialized = false;
+#endif
 	try
 	{
+#if CARWORLD_ENABLE_NETWORKING
+		int server_argument = find(argc,argv,"-server");
+		bool server_mode = server_argument!=argc;
+		Uint16 server_port = DEFAULT_PORT;
+		if (server_mode && server_argument+1<argc)
+		{
+			char *end = NULL;
+			long port = strtol(argv[server_argument+1], &end, 10);
+			if (end==argv[server_argument+1] || *end!='\0' ||
+				port<1 || port>65535)
+				throw HException("server port must be an integer from 1 to 65535.");
+			server_port = static_cast<Uint16>(port);
+		}
+#else
+		bool server_mode = false;
+#endif
 
-		if (!SDL_Init(SDL_INIT_VIDEO | SDL_INIT_JOYSTICK | SDL_INIT_HAPTIC))
+		SDL_InitFlags subsystems = server_mode
+			? 0
+			: SDL_INIT_VIDEO | SDL_INIT_JOYSTICK | SDL_INIT_HAPTIC;
+		if (!SDL_Init(subsystems))
 			throw HException(string("SDL could not initialize: ")+SDL_GetError());
+		sdl_initialized = true;
+
+#if CARWORLD_ENABLE_NETWORKING
+		if (!NET_Init())
+			throw HException(string("SDL_net could not initialize: ")+SDL_GetError());
+		network_initialized = true;
+#endif
 
 		{
 			int CompileVer = SDL_VERSION;
@@ -232,66 +271,81 @@ int main(int argc, char *argv[])
 		{
 			cout << ((SDL_BYTEORDER==SDL_LIL_ENDIAN) ? "little endian" : "big endian") << endl;
 		}
-		
-		bool full_screen = find(argc,argv,"-f")!=argc;
-		app = new CarWorldClient(full_screen);
+
+#if CARWORLD_ENABLE_NETWORKING
+		if (server_mode)
+			app = new CarWorldServer(server_port);
+		else
+#endif
+		{
+			bool full_screen = find(argc,argv,"-f")!=argc;
+			graphical_app = new CarWorldClient(full_screen);
+			app = graphical_app;
+		}
 
 		bool done = false;
 		Uint64 CurrentTime = SDL_GetTicks();
 		while (!done)
 		{
-			//SDL_PumpEvents();
-			SDL_Event event;
-			while (SDL_PollEvent(&event))
+			if (graphical_app!=NULL)
 			{
-				switch(event.type)
+				SDL_Event event;
+				while (SDL_PollEvent(&event))
 				{
-				case SDL_EVENT_KEY_DOWN:
+					switch(event.type)
 					{
+					case SDL_EVENT_KEY_DOWN:
 						if (event.key.key==SDLK_ESCAPE)
 							done = true;
 						else
-						{
-							app->key_down(event.key.scancode, event.key.key);
-						}
-					}
-					break;
-				case SDL_EVENT_TEXT_INPUT:
-					{
-						app->text_input(event.text.text);
-					}
-					break;
-			//BUG support window resizing here...
-				case SDL_EVENT_WINDOW_RESIZED:
-					{
+							graphical_app->key_down(
+								event.key.scancode,
+								event.key.key
+							);
+						break;
+					case SDL_EVENT_TEXT_INPUT:
+						graphical_app->text_input(event.text.text);
+						break;
+					case SDL_EVENT_WINDOW_RESIZED:
 //BUG if i call SDL_SetVideoMode() on win32 i lose all textures and lists...
 #ifndef WIN32
-							//SDL_SetVideoMode(event.window.data1, event.window.data2, bpp, flags);
+						//SDL_SetVideoMode(event.window.data1, event.window.data2, bpp, flags);
 #endif //WIN32
-						app->resize(event.window.data1, event.window.data2);
+						graphical_app->resize(
+							event.window.data1,
+							event.window.data2
+						);
+						break;
+					case SDL_EVENT_WINDOW_FOCUS_GAINED:
+						graphical_app->set_active(true);
+						break;
+					case SDL_EVENT_WINDOW_FOCUS_LOST:
+						graphical_app->set_active(false);
+						break;
+					case SDL_EVENT_QUIT:
+						done = true;
+						break;
 					}
-					break;
-				case SDL_EVENT_WINDOW_FOCUS_GAINED:
-					app->set_active(true);
-					break;
-				case SDL_EVENT_WINDOW_FOCUS_LOST:
-					app->set_active(false);
-					break;
-					
-				case SDL_EVENT_QUIT:
-					done = true;
-					break;
 				}
 			}
 			Uint64 NewTime = SDL_GetTicks();
 			app->on_idle(static_cast<unsigned int>(NewTime-CurrentTime));
 			CurrentTime = NewTime;
-			app->draw();
+			if (graphical_app!=NULL)
+				graphical_app->draw();
+			else
+				SDL_Delay(1);
 		}
 		delete app;
 		app = NULL;
+		graphical_app = NULL;
 		cout.rdbuf(cout_streambuf);
+#if CARWORLD_ENABLE_NETWORKING
+		NET_Quit();
+		network_initialized = false;
+#endif
 		SDL_Quit();
+		sdl_initialized = false;
 		return 0;
 	}
 	catch (const HException &E)
@@ -306,6 +360,12 @@ int main(int argc, char *argv[])
 	//free resources
 	//we do this last in case it crashes...
 		delete app;
+#if CARWORLD_ENABLE_NETWORKING
+		if (network_initialized)
+			NET_Quit();
+#endif
+		if (sdl_initialized)
+			SDL_Quit();
 
 		return 1;
 	}

@@ -3,14 +3,14 @@
 #define _CAR_WORLD_SERVER_H_
 
 #include "H_Main.h"
-#include "SDL_net.h"
+#include <SDL3_net/SDL_net.h>
 #include "CarWorldNet.h"
 #include "CarWorld.h"
 
 class CarWorldServer : public HApplication
 {
 public:
-	CarWorldServer(short port);
+	CarWorldServer(Uint16 port);
 	virtual ~CarWorldServer();
 //overrided inherited methods
 	const char *name();
@@ -22,18 +22,36 @@ public:
 	void GetState(CWVehicleState vehicle[MAX_VEHICLES]);
 
 //actions on the server
-	bool AddClient(int id, ClientRequest *request);
-	bool UpdateClient(int id, ClientGamestate *state);
-	bool RemoveClient(int id, ClientDisconnect *discon);
+	bool AddClient(
+		int id,
+		const ClientRequest &request,
+		NET_Address *address,
+		Uint16 port
+	);
+	bool UpdateClient(int id, ClientGamestate &state);
+	bool RemoveClient(int id, const ClientDisconnect &disconnect);
 
-//datagram sendin methods:
+	//datagram sendin methods:
 	void SendConfirmation(int id);
 	void SendGamestate(int id);
-	void SendDisconnect(int id);
 private:
+	struct ClientConnection
+	{
+		CWVehicle *vehicle;
+		NET_Address *address;
+		Uint16 port;
+	};
+
+	int AllocateClientID() const;
+	int FindClient(NET_Address *address, Uint16 port) const;
+	bool IsClientEndpoint(int id, NET_Address *address, Uint16 port) const;
+	bool ReopenSocket();
+	bool SendPacket(int id, const void *data, int size);
+
 	CarWorld *m_CarWorld;
-	map<int,CWVehicle*> m_Clients;
-	UDPsocket m_Socket;
+	map<int,ClientConnection> m_Clients;
+	NET_DatagramSocket *m_Socket;
+	Uint16 m_Port;
 };
 
 #endif //_CAR_WORLD_SERVER_H_

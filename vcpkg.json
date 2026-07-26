@@ -12,6 +12,7 @@
       "features": [
         "png"
       ]
-    }
+    },
+    "sdl3-net"
   ]
 }

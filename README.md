@@ -23,7 +23,7 @@ Studio 2026.
 - OpenGL rendering with textured models and projected shadows
 - SDL-based windowing, input, image loading, joystick, and force-feedback support
 - Interactive in-game console
-- Historical experimental networked client/server code (disabled by default)
+- Experimental networked client/server mode using SDL3_net
 - Linux and Windows project files
 
 ## Requirements
@@ -33,6 +33,7 @@ The source currently references:
 - A C++ compiler
 - SDL3
 - SDL3_image
+- SDL3_net
 - OpenGL and GLU
 
 The dependencies are acquired automatically through the repository's
@@ -61,7 +62,7 @@ repository.
 Open the repository folder in Visual Studio. Visual Studio will detect
 [`CMakePresets.json`](CMakePresets.json); select **Windows x64 — Visual Studio
 2026**, then choose either the Debug or Release build preset. During the first
-configuration, vcpkg downloads and builds SDL3, SDL3_image, and their
+configuration, vcpkg downloads and builds SDL3, SDL3_image, SDL3_net, and their
 transitive dependencies.
 
 The equivalent command-line workflow from a Visual Studio developer PowerShell
@@ -104,25 +105,25 @@ runtime errors are written to the application log.
 
 ## Networking
 
-Network play is disabled in the SDL3 build. The legacy implementation depends
-on SDL2_net and has not yet been ported to SDL3_net. CMake exposes the
-`CARWORLD_ENABLE_NETWORKING` option, which defaults to `OFF`; enabling it
-currently stops configuration with an explanation rather than silently
-building incomplete networking support.
+Network play uses SDL3_net datagram sockets and is enabled by default. It can
+be omitted by configuring CMake with
+`-DCARWORLD_ENABLE_NETWORKING=OFF`.
 
-Historically, a server was started with:
+Start a server on the default UDP port (12000) with:
 
 ```text
 carworld -server
 ```
 
-A running client could then use the in-game console:
+An alternate port can be supplied after `-server`. A running client can connect
+from the in-game console:
 
 ```text
-join <server-name>
+join <server-name> [port]
 ```
 
-The source is retained as a reference for a future SDL3_net port.
+Networking retains the historical native-structure protocol, so peers should
+use the same CarWorld build and CPU architecture.
 
 ## Documentation
 

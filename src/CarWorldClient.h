@@ -13,7 +13,7 @@ using namespace std;
 #include "CarWorld.h"
 
 #if CARWORLD_ENABLE_NETWORKING
-#include <SDL_net.h>
+#include <SDL3_net/SDL_net.h>
 #endif
 
 #include <queue>
@@ -55,7 +55,7 @@ public:
 
 #if CARWORLD_ENABLE_NETWORKING
 //connect to a network server
-	void join(const char *host, short port);
+	void join(const char *host, Uint16 port);
 #endif
 
 	void write_cfg(ostream &out);
@@ -74,10 +74,14 @@ private:
 	HJoystick *CurrentJoystick;
 #if CARWORLD_ENABLE_NETWORKING
 //network
-	UDPsocket m_socket;
+	NET_DatagramSocket *m_socket;
+	NET_Address *m_serverAddress;
+	Uint16 m_serverPort;
 	int ID;
+	void CloseNetworkConnection(bool notify_server);
+	bool SendPacket(const void *data, int size);
 	void SendState();
-	bool RecieveState();
+	bool ReceiveState();
 	map<int,CWVehicle*> m_Opponents;
 #endif
 //CarWorld

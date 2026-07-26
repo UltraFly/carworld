@@ -8,6 +8,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <cstring>
 #include <iostream>
 #include "H_Variable.h"
 #include <SDL3/SDL_keyboard.h>
@@ -52,8 +53,18 @@ public:
 			cout << "usage: join <server name> [<port>]\n";
 		else
 		{
-			short port = (c.size()==3) ? (short)atoi(c[2].c_str()) : DEFAULT_PORT;
-			CWC->join(c[1].c_str(),port);
+			long port = DEFAULT_PORT;
+			if (c.size()==3)
+			{
+				char *end = NULL;
+				port = strtol(c[2].c_str(), &end, 10);
+				if (end==c[2].c_str() || *end!='\0' || port<1 || port>65535)
+				{
+					cout << "port must be an integer from 1 to 65535.\n";
+					return;
+				}
+			}
+			CWC->join(c[1].c_str(), static_cast<Uint16>(port));
 		}
 #else
 		(void)c;
@@ -106,7 +117,9 @@ CarWorldClient::CarWorldClient(bool full_screen) :
 	CurrentJoystick(NULL),
 #if CARWORLD_ENABLE_NETWORKING
 	m_socket(NULL),
-	ID(0),
+	m_serverAddress(NULL),
+	m_serverPort(0),
+	ID(-1),
 #endif
 	m_Vehicle(NULL),
 	m_CarWorld(NULL)
@@ -185,6 +198,9 @@ CarWorldClient::~CarWorldClient()
 	write_cfg(cfg_file);
 
 	//cout.rdbuf(&hbuf);
+#if CARWORLD_ENABLE_NETWORKING
+	CloseNetworkConnection(true);
+#endif
 	delete RealJoystick;
 	delete FakeJoystick;
 	for (map<string,HExecutable *>::iterator I = m_Executables.begin(); I != m_Executables.end() ; I++)
@@ -195,19 +211,6 @@ CarWorldClient::~CarWorldClient()
 	delete m_Hgl;
 	m_Hgl = NULL;
 
-#if CARWORLD_ENABLE_NETWORKING
-	if (m_socket!=NULL)
-	{
-	//disconnect from the server
-		UDPpacket* packet = SDLNet_AllocPacket(sizeof(ClientDisconnect));
-		ClientDisconnect* disc = (ClientDisconnect*)packet->data;
-		disc->ClientNumber = ID;
-		disc->DatagramType = CLIENT_DISCONNECT;
-		SDLNet_UDP_Send(m_socket, 0, packet);
-		SDLNet_UDP_Close(m_socket);
-		SDLNet_FreePacket(packet);
-	}
-#endif
 	cout << name() << " terminated.\n";
 }
 
@@ -281,48 +284,151 @@ void CarWorldClient::print_version()
 }
 
 #if CARWORLD_ENABLE_NETWORKING
-void CarWorldClient::join(const char *host, short port)
+void CarWorldClient::CloseNetworkConnection(bool notify_server)
 {
-//close previous socket
-	SDLNet_UDP_Close(m_socket);
-//open the socket
-	cout << "trying to connect to: " << host << ":" << port << "...\n";
-	m_socket = SDLNet_UDP_Open(0);
-	IPaddress address;
-	SDLNet_ResolveHost(&address, host, port);
-	SDLNet_UDP_Bind(m_socket, 0, &address);
-	//request to join the game
+	if (notify_server && m_socket!=NULL && m_serverAddress!=NULL && ID>=0)
 	{
-		UDPpacket* packet = SDLNet_AllocPacket(sizeof(ClientRequest));
-		ClientRequest* request = (ClientRequest*)packet->data;
-		request->ClientNumber = 0;
-		request->DatagramType = CLIENT_CONNECT;
-		request->VersionNumber = CW_VERSION;
-		SDLNet_UDP_Send(m_socket, 0, packet);
-		SDLNet_FreePacket(packet);
+		ClientDisconnect disconnect = {};
+		disconnect.ClientNumber = ID;
+		disconnect.DatagramType = CLIENT_DISCONNECT;
+		NET_SendDatagram(
+			m_socket,
+			m_serverAddress,
+			m_serverPort,
+			&disconnect,
+			static_cast<int>(sizeof(disconnect))
+		);
+	}
 
-	}
-//get the confirmation
+	if (m_socket!=NULL)
 	{
-		UDPpacket* packet = SDLNet_AllocPacket(sizeof(ServerConfirm));
-		SDLNet_UDP_Recv(m_socket, packet);
-		ServerConfirm* confirm = (ServerConfirm*)packet->data;
-		ID = confirm->ClientNumber;
-		//initiate the opponents:
-		m_Opponents.clear();
-		m_Opponents[ID] = m_Vehicle;
-		for (int i = 0; i<confirm->N; i++)
-		{
-			int new_id = confirm->ClientNumbers[i];
-			if (new_id != ID)
-			{
-				m_Opponents[new_id] = new CWVehicle(DEFAULT_VEHICLE);
-				m_CarWorld->add(m_Opponents[new_id]);
-				m_Opponents[new_id]->draw_init();
-			}
-		}
-		SDLNet_FreePacket(packet);
+		NET_DestroyDatagramSocket(m_socket);
+		m_socket = NULL;
 	}
+	if (m_serverAddress!=NULL)
+	{
+		NET_UnrefAddress(m_serverAddress);
+		m_serverAddress = NULL;
+	}
+	m_serverPort = 0;
+	ID = -1;
+}
+
+bool CarWorldClient::SendPacket(const void *data, int size)
+{
+	if (m_socket==NULL || m_serverAddress==NULL)
+		return false;
+	if (!NET_SendDatagram(m_socket, m_serverAddress, m_serverPort, data, size))
+	{
+		cout << "network send failed: " << SDL_GetError() << "\n";
+		CloseNetworkConnection(false);
+		return false;
+	}
+	return true;
+}
+
+void CarWorldClient::join(const char *host, Uint16 port)
+{
+	const Sint32 ConnectionTimeout = 5000;
+
+	CloseNetworkConnection(true);
+	cout << "trying to connect to: " << host << ":" << port << "...\n";
+
+	m_serverAddress = NET_ResolveHostname(host);
+	if (m_serverAddress==NULL)
+	{
+		cout << "could not resolve server: " << SDL_GetError() << "\n";
+		return;
+	}
+	NET_Status resolution = NET_WaitUntilResolved(
+		m_serverAddress,
+		ConnectionTimeout
+	);
+	if (resolution!=NET_SUCCESS)
+	{
+		cout << (resolution==NET_WAITING
+			? "server name resolution timed out.\n"
+			: string("could not resolve server: ")+SDL_GetError()+"\n");
+		CloseNetworkConnection(false);
+		return;
+	}
+
+	m_socket = NET_CreateDatagramSocket(NULL, 0, 0);
+	if (m_socket==NULL)
+	{
+		cout << "could not create client socket: " << SDL_GetError() << "\n";
+		CloseNetworkConnection(false);
+		return;
+	}
+	m_serverPort = port;
+
+	ClientRequest request = {};
+	request.ClientNumber = 0;
+	request.DatagramType = CLIENT_CONNECT;
+	request.VersionNumber = CW_VERSION;
+	if (!SendPacket(&request, static_cast<int>(sizeof(request))))
+	{
+		CloseNetworkConnection(false);
+		return;
+	}
+
+	void *sockets[] = {m_socket};
+	int ready = NET_WaitUntilInputAvailable(sockets, 1, ConnectionTimeout);
+	if (ready<=0)
+	{
+		cout << (ready==0
+			? "connection timed out waiting for the server.\n"
+			: string("network receive failed: ")+SDL_GetError()+"\n");
+		CloseNetworkConnection(false);
+		return;
+	}
+
+	NET_Datagram *packet = NULL;
+	if (!NET_ReceiveDatagram(m_socket, &packet) || packet==NULL)
+	{
+		cout << "could not receive server confirmation: "
+			<< SDL_GetError() << "\n";
+		CloseNetworkConnection(false);
+		return;
+	}
+
+	ServerConfirm confirm = {};
+	bool valid =
+		packet->buflen==static_cast<int>(sizeof(confirm)) &&
+		packet->port==m_serverPort &&
+		NET_CompareAddresses(packet->addr, m_serverAddress)==0;
+	if (valid)
+	{
+		memcpy(&confirm, packet->buf, sizeof(confirm));
+		valid =
+			confirm.DatagramType==SERVER_CONFIRM &&
+			confirm.ClientNumber>=0 &&
+			confirm.N>=1 &&
+			confirm.N<=MAX_VEHICLES;
+	}
+	NET_DestroyDatagram(packet);
+
+	if (!valid)
+	{
+		cout << "server returned an invalid confirmation packet.\n";
+		CloseNetworkConnection(false);
+		return;
+	}
+
+	ID = confirm.ClientNumber;
+	m_Opponents.clear();
+	m_Opponents[ID] = m_Vehicle;
+	for (int i = 0; i<confirm.N; i++)
+	{
+		int new_id = confirm.ClientNumbers[i];
+		if (new_id != ID)
+		{
+			m_Opponents[new_id] = new CWVehicle(DEFAULT_VEHICLE);
+			m_CarWorld->add(m_Opponents[new_id]);
+			m_Opponents[new_id]->draw_init();
+		}
+	}
+	cout << "connected as client " << ID << ".\n";
 }
 #endif
 
@@ -408,43 +514,60 @@ void CarWorldClient::resize(unsigned int width, unsigned int weight)
 #if CARWORLD_ENABLE_NETWORKING
 void CarWorldClient::SendState()
 {
-	UDPpacket* packet = SDLNet_AllocPacket(sizeof(ClientGamestate));
-	ClientGamestate* state = (ClientGamestate*)packet->data;
-	state->ClientNumber = ID;
-	state->DatagramType = CLIENT_GAMESTATE;
-	state->vehicle = m_Vehicle->GetState();
-	SDLNet_UDP_Send(m_socket, 0, packet);
-	SDLNet_FreePacket(packet);
+	ClientGamestate state = {};
+	state.ClientNumber = ID;
+	state.DatagramType = CLIENT_GAMESTATE;
+	state.vehicle = m_Vehicle->GetState();
+	SendPacket(&state, static_cast<int>(sizeof(state)));
 }
 
-bool CarWorldClient::RecieveState()
+bool CarWorldClient::ReceiveState()
 {
-	UDPpacket* packet = SDLNet_AllocPacket(sizeof(ServerGamestate));
-	ServerGamestate* state = (ServerGamestate*)packet->data;
-	if (SDLNet_UDP_Recv(m_socket, packet)>0 && packet->len == sizeof(ServerGamestate))
+	NET_Datagram *packet = NULL;
+	if (!NET_ReceiveDatagram(m_socket, &packet))
 	{
-	//update the states of the opponents
-		for (int i=0 ; i<state->N ; i++)
-		{
-			int new_id = state->ClientNumbers[i];
-			if (new_id!=ID)
-			{
-				map<int,CWVehicle*>::iterator I = m_Opponents.find(new_id);
-				if (I==m_Opponents.end()) //the client is not in the list yet
-				{
-				//add the new vehicle
-					m_Opponents[new_id] = new CWVehicle(DEFAULT_VEHICLE);
-					m_CarWorld->add(m_Opponents[new_id]);
-					m_Opponents[new_id]->draw_init();
-				}
-				m_Opponents[new_id]->SetState(state->vehicle[i]);
-			}
-		}
-		SDLNet_FreePacket(packet);
-		return true;
+		cout << "network receive failed: " << SDL_GetError() << "\n";
+		CloseNetworkConnection(false);
+		return false;
 	}
-	SDLNet_FreePacket(packet);
-	return false;
+	if (packet==NULL)
+		return false;
+
+	ServerGamestate state = {};
+	bool valid =
+		packet->buflen==static_cast<int>(sizeof(state)) &&
+		packet->port==m_serverPort &&
+		NET_CompareAddresses(packet->addr, m_serverAddress)==0;
+	if (valid)
+	{
+		memcpy(&state, packet->buf, sizeof(state));
+		valid =
+			state.DatagramType==SERVER_GAMESTATE &&
+			state.N>=0 &&
+			state.N<=MAX_VEHICLES;
+	}
+	NET_DestroyDatagram(packet);
+	if (!valid)
+		return false;
+
+//update the states of the opponents
+	for (int i=0 ; i<state.N ; i++)
+	{
+		int new_id = state.ClientNumbers[i];
+		if (new_id!=ID)
+		{
+			map<int,CWVehicle*>::iterator I = m_Opponents.find(new_id);
+			if (I==m_Opponents.end()) //the client is not in the list yet
+			{
+			//add the new vehicle
+				m_Opponents[new_id] = new CWVehicle(DEFAULT_VEHICLE);
+				m_CarWorld->add(m_Opponents[new_id]);
+				m_Opponents[new_id]->draw_init();
+			}
+			m_Opponents[new_id]->SetState(state.vehicle[i]);
+		}
+	}
+	return true;
 }
 #endif
 
@@ -464,10 +587,10 @@ void CarWorldClient::on_idle(unsigned int elapsed_time)
 	{
 		//cout.rdbuf(&hbuf);
 #if CARWORLD_ENABLE_NETWORKING
-		if (m_socket!=NULL)
+		if (m_socket!=NULL && ID>=0)
 		{
 			static unsigned int time_since_send = 0;
-			if (RecieveState())
+			if (ReceiveState())
 			{
 				SendState();
 				time_since_send = 0;

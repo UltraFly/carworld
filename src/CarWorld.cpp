@@ -53,6 +53,20 @@ void CarWorld::add(CWVehicle* AVehicle)
 	add(new SateliteCam(AVehicle));
 }
 
+void CarWorld::remove(CWFeature* AFeature)
+{
+	for (list<CWFeature*>::iterator I=m_Features.begin();
+		I!=m_Features.end(); I++)
+	{
+		if (*I==AFeature)
+		{
+			delete *I;
+			m_Features.erase(I);
+			return;
+		}
+	}
+}
+
 //precondition: m_Camera is a pointer to a CWFeature in m_Features
 void CarWorld::next_camera()
 {

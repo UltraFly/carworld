@@ -23,6 +23,7 @@ public:
 	~CarWorld();
 	void add(CWFeature* AFeature);
 	void add(CWVehicle* AVehicle);
+	void remove(CWFeature* AFeature);
 	void next_camera();
 	void DrawOnScreen();
 
