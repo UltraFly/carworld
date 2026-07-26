@@ -6,8 +6,12 @@
   "license": "GPL-3.0-only",
   "builtin-baseline": "40f3c709db80acf154ac4b17a1f83c564ebd022e",
   "dependencies": [
-    "sdl2",
-    "sdl2-image",
-    "sdl2-net"
+    "sdl3",
+    {
+      "name": "sdl3-image",
+      "features": [
+        "png"
+      ]
+    }
   ]
 }

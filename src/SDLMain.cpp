@@ -16,7 +16,8 @@
 #include <sys/timeb.h>
 #include <time.h>
 
-#include <SDL.h>
+#include <SDL3/SDL.h>
+#include <SDL3/SDL_main.h>
 
 HWindow::~HWindow() {}
 HJoystick::~HJoystick(){}
@@ -48,27 +49,45 @@ void HErrorExit(const char *E)
 //CLASS HSDLWindow
 HSDLWindow::HSDLWindow(const char* name, int width, int height, bool full_screen)
 {
-	Uint32 flags = SDL_WINDOW_OPENGL;
+	SDL_WindowFlags flags = SDL_WINDOW_OPENGL;
 	if (full_screen)
-		flags |= SDL_WINDOW_FULLSCREEN_DESKTOP; //| SDL_WINDOW_BORDERLESS
+		flags |= SDL_WINDOW_FULLSCREEN; //| SDL_WINDOW_BORDERLESS
 	else
 		flags |= SDL_WINDOW_RESIZABLE;
 	displayWindow = SDL_CreateWindow(
 		name,
-		SDL_WINDOWPOS_UNDEFINED,
-		SDL_WINDOWPOS_UNDEFINED,
 		width,
 		height,
 		flags
 	);
+	if (displayWindow==NULL)
+		throw HException(string("SDL could not create a window: ")+SDL_GetError());
 
 	glContext = SDL_GL_CreateContext(displayWindow);
+	if (glContext==NULL)
+	{
+		SDL_DestroyWindow(displayWindow);
+		displayWindow = NULL;
+		throw HException(string("SDL could not create an OpenGL context: ")+SDL_GetError());
+	}
+	if (!SDL_StartTextInput(displayWindow))
+	{
+		SDL_GL_DestroyContext(glContext);
+		SDL_DestroyWindow(displayWindow);
+		glContext = NULL;
+		displayWindow = NULL;
+		throw HException(string("SDL could not enable text input: ")+SDL_GetError());
+	}
 }
 
 HSDLWindow::~HSDLWindow()
 {
-	SDL_GL_DeleteContext(glContext);
-	SDL_DestroyWindow(displayWindow);
+	if (displayWindow!=NULL)
+		SDL_StopTextInput(displayWindow);
+	if (glContext!=NULL)
+		SDL_GL_DestroyContext(glContext);
+	if (displayWindow!=NULL)
+		SDL_DestroyWindow(displayWindow);
 }
 
 const char *HSDLWindow::GetKeyboardDescription()
@@ -78,20 +97,27 @@ const char *HSDLWindow::GetKeyboardDescription()
 
 bool HSDLWindow::IsPressed(SDL_Scancode k)
 {
-	const Uint8* keys = SDL_GetKeyboardState(NULL);
+	const bool* keys = SDL_GetKeyboardState(NULL);
 	if (keys==NULL)
 		return false;
-	return keys[k]!=0;
+	return keys[k];
 }
 
 HJoystick* HSDLWindow::GetJoystick()
 {
-	return new SDLJoystick(0);
+	SDLJoystick* joystick = new SDLJoystick(0);
+	if (!joystick->IsValid())
+	{
+		delete joystick;
+		return NULL;
+	}
+	return joystick;
 }
 
 void HSDLWindow::MakeCurrent()
 {
-	SDL_GL_MakeCurrent(displayWindow, glContext);
+	if (!SDL_GL_MakeCurrent(displayWindow, glContext))
+		throw HException(string("SDL could not activate the OpenGL context: ")+SDL_GetError());
 }
 
 void HSDLWindow::SwapBuffers()
@@ -101,14 +127,14 @@ void HSDLWindow::SwapBuffers()
 
 int HSDLWindow::getWidth()
 {
-	int w,h;
+	int w=0,h=0;
 	SDL_GetWindowSize(displayWindow, &w, &h);
 	return w;
 }
 
 int HSDLWindow::getHeight()
 {
-	int w,h;
+	int w=0,h=0;
 	SDL_GetWindowSize(displayWindow, &w, &h);
 	return h;
 }
@@ -183,18 +209,23 @@ int main(int argc, char *argv[])
 	try
 	{
 
-		SDL_Init(SDL_INIT_VIDEO | SDL_INIT_JOYSTICK | SDL_INIT_TIMER);
+		if (!SDL_Init(SDL_INIT_VIDEO | SDL_INIT_JOYSTICK))
+			throw HException(string("SDL could not initialize: ")+SDL_GetError());
 
 		{
-			SDL_version CompileVer;
-			SDL_VERSION(&CompileVer);
-			cout << "SDL compile time version: " << (int)CompileVer.major << "." << (int)CompileVer.minor << "." << (int)CompileVer.patch << endl;
+			int CompileVer = SDL_VERSION;
+			cout << "SDL compile time version: "
+				<< SDL_VERSIONNUM_MAJOR(CompileVer) << "."
+				<< SDL_VERSIONNUM_MINOR(CompileVer) << "."
+				<< SDL_VERSIONNUM_MICRO(CompileVer) << endl;
 		}
 
 		{
-			SDL_version DynamicVer;
-			SDL_GetVersion(&DynamicVer);
-			cout << "SDL run time version: " << (int)DynamicVer.major << "." << (int)DynamicVer.minor << "." << (int)DynamicVer.patch << endl;
+			int DynamicVer = SDL_GetVersion();
+			cout << "SDL run time version: "
+				<< SDL_VERSIONNUM_MAJOR(DynamicVer) << "."
+				<< SDL_VERSIONNUM_MINOR(DynamicVer) << "."
+				<< SDL_VERSIONNUM_MICRO(DynamicVer) << endl;
 		}
 
 		{
@@ -202,10 +233,10 @@ int main(int argc, char *argv[])
 		}
 		
 		bool full_screen = find(argc,argv,"-f")!=argc;
-		HglApplication* app = new CarWorldClient(full_screen);
+		app = new CarWorldClient(full_screen);
 
 		bool done = false;
-		Uint32 CurrentTime = SDL_GetTicks();
+		Uint64 CurrentTime = SDL_GetTicks();
 		while (!done)
 		{
 			//SDL_PumpEvents();
@@ -214,46 +245,39 @@ int main(int argc, char *argv[])
 			{
 				switch(event.type)
 				{
-				case SDL_KEYDOWN:
+				case SDL_EVENT_KEY_DOWN:
 					{
-						if (event.key.keysym.sym==SDLK_ESCAPE)
+						if (event.key.key==SDLK_ESCAPE)
 							done = true;
 						else
 						{
-							app->key_down(event.key.keysym.scancode, event.key.keysym.sym);
+							app->key_down(event.key.scancode, event.key.key);
 						}
 					}
 					break;
-				case SDL_TEXTINPUT:
+				case SDL_EVENT_TEXT_INPUT:
 					{
 						app->text_input(event.text.text);
 					}
 					break;
 			//BUG support window resizing here...
-				case SDL_WINDOWEVENT:
+				case SDL_EVENT_WINDOW_RESIZED:
 					{
-						switch (event.window.event)
-						{
-						case SDL_WINDOWEVENT_RESIZED:
 //BUG if i call SDL_SetVideoMode() on win32 i lose all textures and lists...
 #ifndef WIN32
 							//SDL_SetVideoMode(event.window.data1, event.window.data2, bpp, flags);
 #endif //WIN32
-							app->resize(event.window.data1, event.window.data2);
-							break;
-						default:
-							break;
-						}
+						app->resize(event.window.data1, event.window.data2);
 					}
 					break;
 					
-				case SDL_QUIT:
+				case SDL_EVENT_QUIT:
 					done = true;
 					break;
 				}
 			}
-			Uint32 NewTime = SDL_GetTicks();
-			app->on_idle(NewTime-CurrentTime);
+			Uint64 NewTime = SDL_GetTicks();
+			app->on_idle(static_cast<unsigned int>(NewTime-CurrentTime));
 			CurrentTime = NewTime;
 			app->draw();
 		}

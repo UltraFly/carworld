@@ -1,16 +1,20 @@
 
 #include "H_Standard.h"
 #include "CarWorldClient.h"
+#if CARWORLD_ENABLE_NETWORKING
 #include "CarWorldNet.h"
+#endif
 #include "CWVersion.h"
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <iostream>
 #include "H_Variable.h"
-#include <SDL_keyboard.h>
+#include <SDL3/SDL_keyboard.h>
 
+#if CARWORLD_ENABLE_NETWORKING
 #define CLIENT_TIMEOUT 200
+#endif
 
 
 static const char * const help_text  =
@@ -43,6 +47,7 @@ public:
 	JoinServer(CarWorldClient *CWC) : CWC(CWC) {}
 	void exec(const Command &c)
 	{
+#if CARWORLD_ENABLE_NETWORKING
 		if ((c.size()!=2) && (c.size()!=3))
 			cout << "usage: join <server name> [<port>]\n";
 		else
@@ -50,6 +55,10 @@ public:
 			short port = (c.size()==3) ? (short)atoi(c[2].c_str()) : DEFAULT_PORT;
 			CWC->join(c[1].c_str(),port);
 		}
+#else
+		(void)c;
+		cout << "networking is disabled in this build.\n";
+#endif
 	}
 	virtual ~JoinServer() {}
 private:
@@ -95,8 +104,10 @@ CarWorldClient::CarWorldClient(bool full_screen) :
 	RealJoystick(NULL),
 	FakeJoystick(NULL),
 	CurrentJoystick(NULL),
+#if CARWORLD_ENABLE_NETWORKING
 	m_socket(NULL),
 	ID(0),
+#endif
 	m_Vehicle(NULL),
 	m_CarWorld(NULL)
 {
@@ -188,6 +199,7 @@ CarWorldClient::~CarWorldClient()
 	delete m_Hgl;
 	m_Hgl = NULL;
 
+#if CARWORLD_ENABLE_NETWORKING
 	if (m_socket!=NULL)
 	{
 	//disconnect from the server
@@ -199,6 +211,7 @@ CarWorldClient::~CarWorldClient()
 		SDLNet_UDP_Close(m_socket);
 		SDLNet_FreePacket(packet);
 	}
+#endif
 	cout << name() << " terminated.\n";
 }
 
@@ -271,6 +284,7 @@ void CarWorldClient::print_version()
 	PrintAllScreenModes(cout);
 }
 
+#if CARWORLD_ENABLE_NETWORKING
 void CarWorldClient::join(const char *host, short port)
 {
 //close previous socket
@@ -314,6 +328,7 @@ void CarWorldClient::join(const char *host, short port)
 		SDLNet_FreePacket(packet);
 	}
 }
+#endif
 
 void CarWorldClient::write_cfg(ostream &out)
 {
@@ -378,6 +393,7 @@ void CarWorldClient::resize(unsigned int width, unsigned int weight)
 	Hgl::ResizeWindow(ClientRect);
 }
 
+#if CARWORLD_ENABLE_NETWORKING
 void CarWorldClient::SendState()
 {
 	UDPpacket* packet = SDLNet_AllocPacket(sizeof(ClientGamestate));
@@ -418,6 +434,7 @@ bool CarWorldClient::RecieveState()
 	SDLNet_FreePacket(packet);
 	return false;
 }
+#endif
 
 //update the controles of a vehicle with the current position of the joystick
 static void UpdateCommand(CWCommand *Command, HJoystick *Joystick)
@@ -434,6 +451,7 @@ void CarWorldClient::on_idle(unsigned int elapsed_time)
 	if (m_window != NULL)
 	{
 		//cout.rdbuf(&hbuf);
+#if CARWORLD_ENABLE_NETWORKING
 		if (m_socket!=NULL)
 		{
 			static unsigned int time_since_send = 0;
@@ -450,6 +468,7 @@ void CarWorldClient::on_idle(unsigned int elapsed_time)
 				time_since_send = 0;
 			}
 		}
+#endif
 		UpdateCommand(&m_Vehicle->MyCommand, CurrentJoystick);
 		m_CarWorld->update(elapsed_time);
 		draw();

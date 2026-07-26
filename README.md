@@ -23,7 +23,7 @@ Studio 2026.
 - OpenGL rendering with textured models and projected shadows
 - SDL-based windowing, input, image loading, and joystick support
 - Interactive in-game console
-- Experimental networked client/server mode
+- Historical experimental networked client/server code (disabled by default)
 - Linux and Windows project files
 
 ## Requirements
@@ -31,9 +31,8 @@ Studio 2026.
 The source currently references:
 
 - A C++ compiler
-- SDL2
-- SDL2_image
-- SDL2_net
+- SDL3
+- SDL3_image
 - OpenGL and GLU
 
 The dependencies are acquired automatically through the repository's
@@ -62,7 +61,7 @@ repository.
 Open the repository folder in Visual Studio. Visual Studio will detect
 [`CMakePresets.json`](CMakePresets.json); select **Windows x64 — Visual Studio
 2026**, then choose either the Debug or Release build preset. During the first
-configuration, vcpkg downloads and builds SDL2, SDL2_image, SDL2_net, and their
+configuration, vcpkg downloads and builds SDL3, SDL3_image, and their
 transitive dependencies.
 
 The equivalent command-line workflow from a Visual Studio developer PowerShell
@@ -99,7 +98,13 @@ The application uses `carworld.cfg` as its historical configuration filename.
 
 ## Networking
 
-Network play is experimental. Historically, a server was started with:
+Network play is disabled in the SDL3 build. The legacy implementation depends
+on SDL2_net and has not yet been ported to SDL3_net. CMake exposes the
+`CARWORLD_ENABLE_NETWORKING` option, which defaults to `OFF`; enabling it
+currently stops configuration with an explanation rather than silently
+building incomplete networking support.
+
+Historically, a server was started with:
 
 ```text
 carworld -server
@@ -111,7 +116,7 @@ A running client could then use the in-game console:
 join <server-name>
 ```
 
-This functionality has not yet been verified on current systems.
+The source is retained as a reference for a future SDL3_net port.
 
 ## Documentation
 

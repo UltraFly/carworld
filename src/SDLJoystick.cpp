@@ -1,24 +1,33 @@
 
 #include "SDLJoystick.h"
-#include <SDL_joystick.h>
+#include <SDL3/SDL_joystick.h>
 
 SDLJoystick::SDLJoystick(int index) :
-	device_index(index),
 	name("ERROR"),
 	joystick(NULL)
 {
-	int NumJoy = SDL_NumJoysticks();
+	int NumJoy = 0;
+	SDL_JoystickID* joysticks = SDL_GetJoysticks(&NumJoy);
 	if (index<0 || index>=NumJoy)
+	{
+		SDL_free(joysticks);
 		return;
-	joystick = SDL_JoystickOpen(device_index);
-	name = SDL_JoystickName(joystick);
-	//SDL_JoystickEventState(SDL_QUERY, SDL_ENABLE or SDL_IGNORE);
+	}
+	joystick = SDL_OpenJoystick(joysticks[index]);
+	SDL_free(joysticks);
+	if (joystick!=NULL)
+	{
+		const char* joystick_name = SDL_GetJoystickName(joystick);
+		name = joystick_name!=NULL ? joystick_name : "SDL joystick";
+	}
 }
 
 
 //Initialize the DirectInput variables.
 SDLJoystick::~SDLJoystick()
 {
+	if (joystick!=NULL)
+		SDL_CloseJoystick(joystick);
 }
 
 bool SDLJoystick::IsValid()
@@ -35,21 +44,21 @@ int SDLJoystick::GetNumAxis()
 {
 	if (!IsValid())
 		return 0;
-	return SDL_JoystickNumAxes(joystick);
+	return SDL_GetNumJoystickAxes(joystick);
 }
 
 int SDLJoystick::GetNumButtons()
 {
 	if (!IsValid())
 		return 0;
-	return SDL_JoystickNumButtons(joystick);
+	return SDL_GetNumJoystickButtons(joystick);
 }
 
 void SDLJoystick::UpdateState()
 {
 	if (!IsValid())
 		return;
-	//SDL_JoystickUpdate();
+	SDL_UpdateJoysticks();
 }
 
 REAL SDLJoystick::GetAxisPos(int i)
@@ -57,7 +66,7 @@ REAL SDLJoystick::GetAxisPos(int i)
 	if (!IsValid())
 		return 0;
 	UpdateState();
-	Sint16 SIntPos = SDL_JoystickGetAxis(joystick, i);
+	Sint16 SIntPos = SDL_GetJoystickAxis(joystick, i);
 	return -REAL(SIntPos)/32768.0f;
 }
 
@@ -65,7 +74,7 @@ bool SDLJoystick::GetButtonPos(int i)
 {
 	if (!IsValid())
 		return 0;
-	return SDL_JoystickGetButton(joystick, i)!=0;
+	return SDL_GetJoystickButton(joystick, i);
 }
 
 //Acquire or unacquire the mouse, depending on if the app is active

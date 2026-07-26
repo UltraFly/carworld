@@ -14,7 +14,8 @@ the project easier to build, run, understand, and maintain are welcome.
 
 - Verifying and improving the CMake build on Windows, Linux, and macOS
 - Reproducible platform-specific build instructions
-- SDL2, SDL2_image, and SDL2_net compatibility fixes
+- SDL3 and SDL3_image compatibility fixes
+- Porting the disabled legacy networking code to SDL3_net
 - Compiler-warning and portability fixes
 - Runtime bug reports with reproduction steps
 - Documentation and accessibility improvements

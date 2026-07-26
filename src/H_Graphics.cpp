@@ -7,7 +7,7 @@
 #include <string>
 #include "H_Graphics.h"
 #include "H_Texture.h"
-#include <SDL.h>
+#include <SDL3/SDL.h>
 #include <GL/glu.h>
 
 Hgl *Hgl::curr = NULL;

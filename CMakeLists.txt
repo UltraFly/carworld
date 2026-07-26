@@ -7,9 +7,22 @@ project(
     LANGUAGES CXX
 )
 
-find_package(SDL2 CONFIG REQUIRED)
-find_package(SDL2_image CONFIG REQUIRED)
-find_package(SDL2_net CONFIG REQUIRED)
+option(
+    CARWORLD_ENABLE_NETWORKING
+    "Build the legacy CarWorld networking implementation"
+    OFF
+)
+
+if(CARWORLD_ENABLE_NETWORKING)
+    message(
+        FATAL_ERROR
+        "Networking has not yet been ported to SDL3_net. "
+        "Configure with CARWORLD_ENABLE_NETWORKING=OFF."
+    )
+endif()
+
+find_package(SDL3 CONFIG REQUIRED)
+find_package(SDL3_image CONFIG REQUIRED)
 find_package(OpenGL REQUIRED)
 
 if(NOT TARGET OpenGL::GLU)
@@ -21,8 +34,6 @@ set(CARWORLD_SOURCES
     src/CarWorldClasses.cpp
     src/CarWorldClient.cpp
     src/CarWorldMain.cpp
-    src/CarWorldNet.cpp
-    src/CarWorldServer.cpp
     src/CWCamera.cpp
     src/CWVehicle.cpp
     src/H_Geometry.cpp
@@ -49,14 +60,17 @@ endif()
 
 target_compile_features(carworld PRIVATE cxx_std_17)
 target_include_directories(carworld PRIVATE src)
+target_compile_definitions(
+    carworld
+    PRIVATE
+        CARWORLD_ENABLE_NETWORKING=$<BOOL:${CARWORLD_ENABLE_NETWORKING}>
+)
 
 target_link_libraries(
     carworld
     PRIVATE
-        $<TARGET_NAME_IF_EXISTS:SDL2::SDL2main>
-        $<IF:$<TARGET_EXISTS:SDL2::SDL2>,SDL2::SDL2,SDL2::SDL2-static>
-        $<IF:$<TARGET_EXISTS:SDL2_image::SDL2_image>,SDL2_image::SDL2_image,SDL2_image::SDL2_image-static>
-        $<IF:$<TARGET_EXISTS:SDL2_net::SDL2_net>,SDL2_net::SDL2_net,SDL2_net::SDL2_net-static>
+        SDL3::SDL3
+        $<IF:$<TARGET_EXISTS:SDL3_image::SDL3_image>,SDL3_image::SDL3_image,SDL3_image::SDL3_image-static>
         OpenGL::GL
         OpenGL::GLU
 )
@@ -91,9 +105,8 @@ add_custom_command(
 install(TARGETS carworld RUNTIME DESTINATION . BUNDLE DESTINATION .)
 if(WIN32)
     install(FILES
-        "$<TARGET_FILE_DIR:carworld>/SDL2.dll"
-        "$<TARGET_FILE_DIR:carworld>/SDL2_image.dll"
-        "$<TARGET_FILE_DIR:carworld>/SDL2_net.dll"
+        "$<TARGET_FILE_DIR:carworld>/SDL3.dll"
+        "$<TARGET_FILE_DIR:carworld>/SDL3_image.dll"
         "$<TARGET_FILE_DIR:carworld>/libpng16.dll"
         "$<TARGET_FILE_DIR:carworld>/z.dll"
         DESTINATION .

@@ -2,8 +2,8 @@
 #include "H_Standard.h"
 #include "H_Graphics.h"
 #include "H_Texture.h"
-#include <SDL.h>
-#include <SDL_image.h>
+#include <SDL3/SDL.h>
+#include <SDL3_image/SDL_image.h>
 
 //CLASS Texture
 Texture::Texture(const char *FileName) : MyReference(Reference::GetReference(FileName))
@@ -125,13 +125,20 @@ void Texture::Reference::LoadImage(const char *FileName)
 		}
 	 
 	// get the number of channels in the SDL surface
-		GLint nOfColors = surface->format->BytesPerPixel;
+		const SDL_PixelFormatDetails* format = SDL_GetPixelFormatDetails(surface->format);
+		if (format==NULL)
+		{
+			SDL_DestroySurface(surface);
+			throw HException(string("SDL could not inspect : \"")+FileName+ "\"." + string(SDL_GetError()));
+		}
+
+		GLint nOfColors = format->bytes_per_pixel;
 		GLenum texture_format;
 		switch (nOfColors)
 		{
 		case 4:     // contains an alpha channel
 			{
-				if (surface->format->Rmask == 0x000000ff)
+				if (format->Rmask == 0x000000ff)
 						texture_format = GL_RGBA;
 				else
 						texture_format = GL_BGRA;
@@ -139,15 +146,15 @@ void Texture::Reference::LoadImage(const char *FileName)
 			break;
 		case 3:     // no alpha channel
 			{
-				if (surface->format->Rmask == 0x000000ff)
+				if (format->Rmask == 0x000000ff)
 						texture_format = GL_RGB;
 				else
 						texture_format = GL_BGR;
 			}
 			break;
 		default:
+			SDL_DestroySurface(surface);
 			throw HException(string("The image : \"")+FileName+("\" is not truecolor."));
-			break;
 		}
 	        
 		// Have OpenGL generate a TexIndex object handle for us
@@ -161,7 +168,7 @@ void Texture::Reference::LoadImage(const char *FileName)
 						  texture_format, GL_UNSIGNED_BYTE, surface->pixels );
 		
 		cout << "opened "<< surface->w << "x" << surface->h <<" image file: \"" << FileName << "\"" << endl;
-		SDL_FreeSurface(surface);
+		SDL_DestroySurface(surface);
 
 		ApplyMode(Hgl::GetCurrent().GetTextureMode());
 	} 

@@ -10,8 +10,11 @@ using namespace std;
 #include "H_Input.h"
 #include "H_Prompt.h"
 #include "H_Variable.h"
-#include "SDL_net.h"
 #include "CarWorld.h"
+
+#if CARWORLD_ENABLE_NETWORKING
+#include <SDL_net.h>
+#endif
 
 #include <queue>
 
@@ -49,8 +52,10 @@ public:
 	void print_help();
 	void print_version();
 
+#if CARWORLD_ENABLE_NETWORKING
 //connect to a network server
 	void join(const char *host, short port);
+#endif
 
 	void write_cfg(ostream &out);
 public:
@@ -66,12 +71,14 @@ private:
 	HJoystick *RealJoystick;
 	KeyJoystick *FakeJoystick;
 	HJoystick *CurrentJoystick;
+#if CARWORLD_ENABLE_NETWORKING
 //network
 	UDPsocket m_socket;
 	int ID;
 	void SendState();
 	bool RecieveState();
 	map<int,CWVehicle*> m_Opponents;
+#endif
 //CarWorld
 	CWVehicle *m_Vehicle;
 	CarWorld *m_CarWorld;
