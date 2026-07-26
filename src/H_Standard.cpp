@@ -165,6 +165,14 @@ size_t Command::size() const
 	return data.size();
 }
 
+istream &ReadTextLine(istream &in, string &line)
+{
+	getline(in, line);
+	if (!line.empty() && line[line.size()-1] == '\r')
+		line.erase(line.size()-1);
+	return in;
+}
+
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -189,7 +197,7 @@ void OpenDataFile(ifstream &infile, const char *FileName)
 		FullPath += "/.carworld/";
 		FullPath += FileName;
 		//cout << "trying \"" << FullPath << "\"..." << endl;
-		infile.open(FullPath.c_str(), ios::in | ios::binary);
+		infile.open(FullPath.c_str(), ios::in);
 	}
 //try in the installation directory
 	if (!infile)
@@ -198,7 +206,7 @@ void OpenDataFile(ifstream &infile, const char *FileName)
 		FullPath = "/usr/share/carworld/";
 		FullPath += FileName;
 		//cout << "trying \"" << FullPath << "\"..." << endl;
-		infile.open(FullPath.c_str(), ios::in | ios::binary);
+		infile.open(FullPath.c_str(), ios::in);
 	}
 
 	if (!infile)

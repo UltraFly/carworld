@@ -49,6 +49,7 @@ private:
 string PathOf(const string &AString);
 string TitleOf(const string &AString);
 void OpenDataFile(ifstream &infile, const char *FileName);
+istream &ReadTextLine(istream &in, string &line);
 istream &EatWhite(istream &in);
 
 template <class T> string to_string(T x)

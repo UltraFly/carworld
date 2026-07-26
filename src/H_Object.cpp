@@ -179,14 +179,14 @@ void OFFObject::readfile(const char* FileName)
 		IsSmooth = true;
 		if (infile.peek() == 'o' || infile.peek() == 'O')
 		{
-			char TrashText[150];
-			infile.getline(TrashText,150);
-			IsTextured = (strcmp(TrashText,"OFF2")==0);
+			string TrashText;
+			ReadTextLine(infile, TrashText);
+			IsTextured = (TrashText == "OFF2");
 		}
 		if (IsTextured)
 		{
-			char TextureName[150];
-			infile.getline(TextureName,150);
+			string TextureName;
+			ReadTextLine(infile, TextureName);
 			string TextureFile = PathOf(FileName)+'/'+TextureName;
 			//H_NEW_ONE(MyTexture, Texture((char*)TextureFile));
 			MyTexture = new Texture(TextureFile.c_str());

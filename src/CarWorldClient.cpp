@@ -221,16 +221,15 @@ void CarWorldClient::toggleconsole()
 void CarWorldClient::execute_cfg(const char *FileName)
 {
 	cout << "executing " << FileName << "...\n";
-	char buffer[1024];
+	string buffer;
 	ifstream in(FileName, ios::in);
 	if (!in)
 	{
 		cout << "could not open \"" << FileName << "\"\n";
 	}
-	else while (!in.eof())
+	else while (ReadTextLine(in, buffer))
 	{
-		in.getline(buffer,1024);
-		pars_command(buffer);
+		pars_command(buffer.c_str());
 	}
 }
 

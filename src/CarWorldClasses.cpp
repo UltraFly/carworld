@@ -49,7 +49,7 @@ CWLandscape::CWLandscape(const char *file_name)
 {
 	try
 	{
-		char BlockName[1024];
+		string BlockName;
 
 		Ref CurrentRef;
 		CurrentRef.reset();
@@ -58,10 +58,10 @@ CWLandscape::CWLandscape(const char *file_name)
 
 		unsigned int NbWorldBlocks;
 		infile >> NbWorldBlocks;
-		infile.getline(BlockName, 1024);
+		ReadTextLine(infile, BlockName);
 		for (unsigned int i=0 ; i<NbWorldBlocks ; i++)
 		{
-			infile.getline(BlockName, 1024);
+			ReadTextLine(infile, BlockName);
 			string ThisPath = PathOf(file_name);
 			string BlockFile = ThisPath+'/'+BlockName;
 			MyWorldBlocks.push_back(WorldBlock());
